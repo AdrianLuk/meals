@@ -5,22 +5,59 @@ import Review from "./form-sections/Review";
 import axios from "axios";
 
 export class Form extends Component {
-    async componentDidMount() {
-        const data = await axios.get("http://meals:8888/wp-json/wp/v2/types");
-        console.log(data.data);
+    state = {
+        types: {},
+        packages: [],
+        goals: [],
+        carbs: []
+    };
+    componentDidMount() {
+        this.getData();
     }
-    render() {
+    getData = async () => {
+        const getTypes = await axios.get("/wp-json/wp/v2/types");
+        const getGoals = await axios.get("/wp-json/wp/v2/goals");
+        const getPackages = await axios.get("/wp-json/wp/v2/packages");
+
+        Promise.all([getTypes, getPackages, getGoals]).then(res => {
+            this.setState({
+                types: res[0].data,
+                packages: res[1].data,
+                goals: res[2].data
+            });
+        });
+        console.log(this.state.packages);
+        console.log(this.state.goals);
+        console.log(this.state.carbs);
+    };
+    renderSections = () => {
         const { step } = this.props;
+        if (!step) {
+            return <div>Loading</div>;
+        }
         switch (step) {
             case 1:
-                return <Choose />;
+                return (
+                    <Choose
+                        meta={this.state.types.packages}
+                        packages={this.state.packages}
+                    />
+                );
             case 2:
-                return <Customize />;
+                return (
+                    <Customize
+                        meta={this.state.types}
+                        goals={this.state.goals}
+                    />
+                );
             case 3:
                 return <Review />;
             default:
-                return null;
+                return <div>Loading</div>;
         }
+    };
+    render() {
+        return this.renderSections();
     }
 }
 
