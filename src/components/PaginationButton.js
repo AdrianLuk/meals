@@ -1,8 +1,8 @@
 import React from "react";
 
-const PaginationButton = ({ text, handleStepChange, isDisabled }) => {
+const PaginationButton = ({ text, handleStepChange, isDisabled, type }) => {
     return (
-        <button disabled={isDisabled} onClick={handleStepChange}>
+        <button type={type} disabled={isDisabled} onClick={handleStepChange}>
             {text}
         </button>
     );

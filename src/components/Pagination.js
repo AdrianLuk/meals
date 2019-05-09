@@ -6,12 +6,13 @@ const Pagination = ({ step, handleNextStepChange, handlePrevStepChange }) => {
         <div>
             <PaginationButton
                 isDisabled={step <= 1 ? true : false}
+                type="button"
                 text="Back"
                 handleStepChange={handlePrevStepChange}
             />
             <PaginationButton
-                isDisabled={step > 3 ? true : false}
-                text="Next"
+                text={step > 2 ? "Submit" : "Next"}
+                type={step > 2 ? "submit" : "button"}
                 handleStepChange={handleNextStepChange}
             />
         </div>
