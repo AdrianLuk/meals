@@ -16,8 +16,8 @@ export class Form extends Component {
     }
     getData = async () => {
         const getTypes = await axios.get("/wp-json/wp/v2/types");
-        const getGoals = await axios.get("/wp-json/wp/v2/goals");
         const getPackages = await axios.get("/wp-json/wp/v2/packages");
+        const getGoals = await axios.get("/wp-json/wp/v2/goals");
 
         Promise.all([getTypes, getPackages, getGoals]).then(res => {
             this.setState({
@@ -26,10 +26,14 @@ export class Form extends Component {
                 goals: res[2].data
             });
         });
-        console.log(this.state.packages);
-        console.log(this.state.goals);
-        console.log(this.state.carbs);
+        // console.log(this.state.packages);
+        // console.log(this.state.goals);
+        // console.log(this.state.carbs);
     };
+    // Handle fields change
+    // handleChange = input => e => {
+    //     this.setState({ [input]: e.target.value });
+    // };
     renderSections = () => {
         const { step } = this.props;
         if (!step) {
@@ -39,7 +43,7 @@ export class Form extends Component {
             case 1:
                 return (
                     <Choose
-                        meta={this.state.types.packages}
+                        meta={this.state.types}
                         packages={this.state.packages}
                     />
                 );

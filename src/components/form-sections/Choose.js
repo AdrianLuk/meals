@@ -9,7 +9,7 @@ export class Choose extends Component {
 
     render() {
         console.log(this.props);
-        return <div>Hi</div>;
+        return <div>Choose</div>;
     }
 }
 
