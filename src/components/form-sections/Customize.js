@@ -3,7 +3,7 @@ import React, { Component } from "react";
 export class Customize extends Component {
     render() {
         console.log(this.props);
-        const { handleSelect, carbs } = this.props;
+        const { handleSelect, carbs, meta } = this.props;
         const carbList = carbs.map(carb => (
             <div onClick={handleSelect("selectedGoal", carb)} key={carb.id}>
                 <div>{carb.title.rendered}</div>
@@ -19,7 +19,12 @@ export class Customize extends Component {
                 />
             </div>
         ));
-        return <div>{carbList}</div>;
+        return (
+            <div>
+                {carbList}
+                {meta.packages.description}
+            </div>
+        );
     }
 }
 
