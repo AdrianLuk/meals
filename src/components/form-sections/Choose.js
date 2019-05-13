@@ -21,8 +21,24 @@ export class Choose extends Component {
                 style={{ display: "flex" }}
                 onClick={handleSelect("selectedPackage", packageItem)}
                 key={packageItem.id}>
-                <div>{packageItem.title.rendered}</div>
-                <div>{packageItem.acf.price}</div>
+                <div
+                    style={{
+                        color:
+                            packageItem.id === selectedPackage.id
+                                ? "red"
+                                : "black"
+                    }}>
+                    {packageItem.title.rendered}
+                </div>
+                <div
+                    style={{
+                        color:
+                            packageItem.id === selectedPackage.id
+                                ? "red"
+                                : "black"
+                    }}>
+                    {packageItem.acf.price}
+                </div>
             </div>
         ));
         const goalList = goals.map(goal => (
@@ -36,10 +52,13 @@ export class Choose extends Component {
         return (
             <Fragment>
                 {packageList}
+                <hr />
                 <div>
                     {selectedPackage.title && selectedPackage.title.rendered}
+                    <hr />
                     {selectedGoal.title && selectedGoal.title.rendered}
                 </div>
+                <hr />
                 {goalList}
             </Fragment>
         );
