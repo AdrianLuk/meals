@@ -9,7 +9,9 @@ export class Form extends Component {
         types: {},
         packages: [],
         goals: [],
-        carbs: []
+        carbs: [],
+        selectedPackage: {},
+        selectedGoal: {}
     };
     componentDidMount() {
         this.getData();
@@ -18,12 +20,14 @@ export class Form extends Component {
         const getTypes = await axios.get("/wp-json/wp/v2/types");
         const getPackages = await axios.get("/wp-json/wp/v2/packages");
         const getGoals = await axios.get("/wp-json/wp/v2/goals");
+        const getCarbs = await axios.get("/wp-json/wp/v2/carbs");
 
-        Promise.all([getTypes, getPackages, getGoals]).then(res => {
+        Promise.all([getTypes, getPackages, getGoals, getCarbs]).then(res => {
             this.setState({
                 types: res[0].data,
                 packages: res[1].data,
-                goals: res[2].data
+                goals: res[2].data,
+                carbs: res[3].data
             });
         });
         // console.log(this.state.packages);
@@ -34,6 +38,10 @@ export class Form extends Component {
     // handleChange = input => e => {
     //     this.setState({ [input]: e.target.value });
     // };
+    handleSelect = (state, selection) => e => {
+        console.log(selection);
+        this.setState({ [state]: selection });
+    };
     renderSections = () => {
         const { step } = this.props;
         if (!step) {
@@ -45,13 +53,18 @@ export class Form extends Component {
                     <Choose
                         meta={this.state.types}
                         packages={this.state.packages}
+                        goals={this.state.goals}
+                        handleSelect={this.handleSelect}
+                        selectedPackage={this.state.selectedPackage}
+                        selectedGoal={this.state.selectedGoal}
                     />
                 );
             case 2:
                 return (
                     <Customize
                         meta={this.state.types}
-                        goals={this.state.goals}
+                        carbs={this.state.carbs}
+                        handleSelect={this.handleSelect}
                     />
                 );
             case 3:
