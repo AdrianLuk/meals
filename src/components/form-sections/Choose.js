@@ -12,6 +12,7 @@ export class Choose extends Component {
         const {
             packages,
             goals,
+            meta,
             handleSelect,
             selectedPackage,
             selectedGoal
@@ -60,6 +61,7 @@ export class Choose extends Component {
                 </div>
                 <hr />
                 {goalList}
+                {meta.packages && meta.packages.description}
             </Fragment>
         );
     }

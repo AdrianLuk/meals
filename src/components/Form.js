@@ -10,8 +10,13 @@ export class Form extends Component {
         packages: [],
         goals: [],
         carbs: [],
+        meats: [],
+        vegetables: [],
         selectedPackage: {},
-        selectedGoal: {}
+        selectedGoal: {},
+        selectedCarb: {},
+        selectedMeat: {},
+        selectedVegetable: {}
     };
     componentDidMount() {
         this.getData();
@@ -20,14 +25,27 @@ export class Form extends Component {
         const getTypes = await axios.get("/wp-json/wp/v2/types");
         const getPackages = await axios.get("/wp-json/wp/v2/packages");
         const getGoals = await axios.get("/wp-json/wp/v2/goals");
-        const getCarbs = await axios.get("/wp-json/wp/v2/carbs");
+        const getCarbs = await axios.get("/wp-json/wp/v2/carbs?order=asc");
+        const getMeats = await axios.get("/wp-json/wp/v2/meats?order=asc");
+        const getVegetables = await axios.get(
+            "/wp-json/wp/v2/vegetables?order=asc"
+        );
 
-        Promise.all([getTypes, getPackages, getGoals, getCarbs]).then(res => {
+        Promise.all([
+            getTypes,
+            getPackages,
+            getGoals,
+            getCarbs,
+            getMeats,
+            getVegetables
+        ]).then(res => {
             this.setState({
                 types: res[0].data,
                 packages: res[1].data,
                 goals: res[2].data,
-                carbs: res[3].data
+                carbs: res[3].data,
+                meats: res[4].data,
+                vegetables: res[5].data
             });
         });
         // console.log(this.state.packages);
@@ -64,6 +82,8 @@ export class Form extends Component {
                     <Customize
                         meta={this.state.types}
                         carbs={this.state.carbs}
+                        meats={this.state.meats}
+                        vegetables={this.state.vegetables}
                         handleSelect={this.handleSelect}
                     />
                 );
