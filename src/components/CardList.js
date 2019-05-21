@@ -1,24 +1,33 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
+import SelectDropdown from "./SelectDropdown";
 
 export class CardList extends Component {
     render() {
-        const { group, handleSelect, stateKey, groupName } = this.props;
-        return (
-            <div
-                onClick={handleSelect(stateKey, group.post_title)}
-                key={group.id}>
-                <div>{group.post_title}</div>
-                {/*
-                <select>
-                    {group.acf.variations &&
-                        group.acf.variations.map((variation, index) => (
-                            <option key={index} value={variation.variation}>
-                                {variation.variation}
-                            </option>
-                        ))}
-                        </select>*/}
-            </div>
-        );
+        const {
+            groups,
+            handleSelect,
+            stateKey,
+            groupName,
+            variantKey
+        } = this.props;
+        const groupRow =
+            groups &&
+            groups.map(group => (
+                <div
+                    key={group.id}
+                    onClick={handleSelect(stateKey, group.post_title)}>
+                    <div>{group.post_title}</div>
+                    {group.acf.variations && (
+                        <SelectDropdown
+                            stateKey={stateKey}
+                            variantKey={variantKey}
+                            handleSelect={handleSelect}
+                            options={group.acf.variations}
+                        />
+                    )}
+                </div>
+            ));
+        return <Fragment>{groupRow}</Fragment>;
     }
 }
 

@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react";
+import CardItem from "../CardItem_Title";
 // import axios from "axios";
 
 export class Choose extends Component {
@@ -8,60 +9,62 @@ export class Choose extends Component {
     };
 
     render() {
-        console.log(this.props);
+        // console.log(this.props);
         const {
             packages,
             goals,
             meta,
             handleSelect,
             selectedPackage,
-            selectedGoal
+            handlePackageAmountIncrement,
+            handlePackageAmountDecrement,
+            selectedGoal,
+            packageAmount
         } = this.props;
         const packageList = packages.map(packageItem => (
-            <div
-                style={{ display: "flex" }}
-                onClick={handleSelect("selectedPackage", packageItem)}
-                key={packageItem.id}>
-                <div
-                    style={{
-                        color:
-                            packageItem.id === selectedPackage.id
-                                ? "red"
-                                : "black"
-                    }}>
-                    {packageItem.title.rendered}
-                </div>
-                <div
-                    style={{
-                        color:
-                            packageItem.id === selectedPackage.id
-                                ? "red"
-                                : "black"
-                    }}>
-                    {packageItem.acf.price}
-                </div>
-            </div>
+            <CardItem
+                key={packageItem.id}
+                item={packageItem}
+                stateKey="selectedPackage"
+                selectedItem={selectedPackage}
+                handleSelect={handleSelect}
+                buttonText="Select"
+            />
         ));
         const goalList = goals.map(goal => (
-            <div onClick={handleSelect("selectedGoal", goal)} key={goal.id}>
-                <div>{goal.title.rendered}</div>
-                <div
-                    dangerouslySetInnerHTML={{ __html: goal.excerpt.rendered }}
-                />
-            </div>
+            <CardItem
+                key={goal.id}
+                item={goal}
+                selectedItem={selectedGoal}
+                handleSelect={handleSelect}
+                stateKey="selectedGoal"
+                description={goal.excerpt.rendered}
+                buttonText="Select"
+            />
         ));
         return (
             <Fragment>
-                {packageList}
+                <article>
+                    <p>{meta.packages && meta.packages.description}</p>
+                    <div className="grid-x grid-margin-x align-justify">
+                        {packageList}
+                    </div>
+                </article>
                 <hr />
+                <div>
+                    <span onClick={handlePackageAmountDecrement}> - </span>
+                    <span onClick={handlePackageAmountIncrement}> + </span>
+                </div>
                 <div>
                     {selectedPackage.title && selectedPackage.title.rendered}
                     <hr />
                     {selectedGoal.title && selectedGoal.title.rendered}
                 </div>
-                <hr />
-                {goalList}
-                {meta.packages && meta.packages.description}
+                <article>
+                    <div className="grid-x grid-margin-x align-justify">
+                        {goalList}
+                    </div>
+                </article>
             </Fragment>
         );
     }
