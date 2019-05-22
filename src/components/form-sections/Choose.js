@@ -16,10 +16,9 @@ export class Choose extends Component {
             meta,
             handleSelect,
             selectedPackage,
-            handlePackageAmountIncrement,
-            handlePackageAmountDecrement,
             selectedGoal,
-            packageAmount
+            handlePackageSelect
+            // packageAmount
         } = this.props;
         const packageList = packages.map(packageItem => (
             <CardItem
@@ -27,14 +26,17 @@ export class Choose extends Component {
                 item={packageItem}
                 stateKey="selectedPackage"
                 selectedItem={selectedPackage}
-                handleSelect={handleSelect}
+                handleSelect={handlePackageSelect}
+                handlePackageSelect={handlePackageSelect}
                 buttonText="Select"
+                group="packages"
             />
         ));
         const goalList = goals.map(goal => (
             <CardItem
                 key={goal.id}
                 item={goal}
+                group="goals"
                 selectedItem={selectedGoal}
                 handleSelect={handleSelect}
                 stateKey="selectedGoal"
@@ -44,27 +46,18 @@ export class Choose extends Component {
         ));
         return (
             <Fragment>
-                <article>
+                <div>
                     <p>{meta.packages && meta.packages.description}</p>
                     <div className="grid-x grid-margin-x align-justify">
                         {packageList}
                     </div>
-                </article>
+                </div>
                 <hr />
                 <div>
-                    <span onClick={handlePackageAmountDecrement}> - </span>
-                    <span onClick={handlePackageAmountIncrement}> + </span>
-                </div>
-                <div>
-                    {selectedPackage.title && selectedPackage.title.rendered}
-                    <hr />
-                    {selectedGoal.title && selectedGoal.title.rendered}
-                </div>
-                <article>
                     <div className="grid-x grid-margin-x align-justify">
                         {goalList}
                     </div>
-                </article>
+                </div>
             </Fragment>
         );
     }

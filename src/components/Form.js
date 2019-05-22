@@ -22,7 +22,7 @@ export class Form extends Component {
         carbVariant: null,
         meatVariant: null,
         vegetableVariant: null,
-        customizationCount: null,
+        customizationCount: 0,
         customizations: []
     };
     componentDidMount() {
@@ -65,16 +65,36 @@ export class Form extends Component {
     // handleChange = input => e => {
     //     this.setState({ [input]: e.target.value });
     // };
-    handlePackageAmountIncrement = event => {
+    handleCustomizationAmountIncrement = event => {
         event.preventDefault();
-        this.setState({ packageAmount: this.state.packageAmount + 1 });
-    };
-    handlePackageAmountDecrement = event => {
-        event.preventDefault();
-        if (this.state.packageAmount === 0) {
+        if (
+            +this.state.customizationCount ===
+            +this.state.selectedPackage.acf.meal_count
+        ) {
             return false;
         }
-        this.setState({ packageAmount: this.state.packageAmount - 1 });
+        this.setState({
+            customizationCount: +this.state.customizationCount + 1
+        });
+    };
+    handleCustomizationAmountDecrement = event => {
+        event.preventDefault();
+        if (this.state.customizationCount === 0) {
+            return false;
+        }
+        this.setState({
+            customizationCount: +this.state.customizationCount - 1
+        });
+    };
+    handlePackageSelect = selection => e => {
+        e.preventDefault();
+        console.log(selection);
+        if (selection.acf) {
+            this.setState({
+                selectedPackage: selection,
+                customizationCount: selection.acf.meal_count
+            });
+        }
     };
     handleSelect = (state, selection) => e => {
         e.preventDefault();
@@ -94,14 +114,8 @@ export class Form extends Component {
                         meta={this.state.types}
                         packages={this.state.packages}
                         goals={this.state.goals}
-                        packageAmount={this.state.packageAmount}
-                        handlePackageAmountDecrement={
-                            this.handlePackageAmountDecrement
-                        }
-                        handlePackageAmountIncrement={
-                            this.handlePackageAmountIncrement
-                        }
                         handleSelect={this.handleSelect}
+                        handlePackageSelect={this.handlePackageSelect}
                         selectedPackage={this.state.selectedPackage}
                         selectedGoal={this.state.selectedGoal}
                     />
@@ -112,7 +126,15 @@ export class Form extends Component {
                         meta={this.state.types}
                         carbs={this.state.carbs}
                         meats={this.state.meats}
+                        customizations={this.state.customizations}
                         vegetables={this.state.vegetables}
+                        customizationCount={this.state.customizationCount}
+                        handleCustomizationAmountDecrement={
+                            this.handleCustomizationAmountDecrement
+                        }
+                        handleCustomizationAmountIncrement={
+                            this.handleCustomizationAmountIncrement
+                        }
                         handleSelect={this.handleSelect}
                     />
                 );
@@ -128,7 +150,7 @@ export class Form extends Component {
                 <div className="grid-container">
                     {this.renderSections()}
                     <Total
-                        itemCount={this.state.packageAmount}
+                        itemCount={+this.state.customizationCount}
                         packagePrice={this.state.selectedPackage}
                         selectedGoal={this.state.selectedGoal.id}
                     />

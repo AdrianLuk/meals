@@ -7,27 +7,41 @@ export class CardList extends Component {
             groups,
             handleSelect,
             stateKey,
-            groupName,
+            // groupName,
             variantKey
         } = this.props;
         const groupRow =
             groups &&
             groups.map(group => (
-                <div
-                    key={group.id}
-                    onClick={handleSelect(stateKey, group.post_title)}>
-                    <div>{group.post_title}</div>
-                    {group.acf.variations && (
-                        <SelectDropdown
-                            stateKey={stateKey}
-                            variantKey={variantKey}
-                            handleSelect={handleSelect}
-                            options={group.acf.variations}
-                        />
-                    )}
+                <div className="card small-12 large-4" key={group.id}>
+                    <div className="card-divider">{group.post_title}</div>
+                    <div className="card-section">
+                        {group.acf.variations && (
+                            <SelectDropdown
+                                stateKey={stateKey}
+                                variantKey={variantKey}
+                                handleSelect={handleSelect}
+                                options={group.acf.variations}
+                            />
+                        )}
+                    </div>
+                    <button
+                        style={{
+                            padding: "1rem",
+                            borderTop: "1px solid black"
+                        }}
+                        onClick={handleSelect(stateKey, group.post_title)}>
+                        Select
+                    </button>
                 </div>
             ));
-        return <Fragment>{groupRow}</Fragment>;
+        return (
+            <Fragment>
+                <div className="grid-x grid-margin-x align-justify">
+                    {groupRow}
+                </div>
+            </Fragment>
+        );
     }
 }
 
