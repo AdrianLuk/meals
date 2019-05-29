@@ -3,16 +3,39 @@ import CardList from "../CardList";
 
 export class Customize extends Component {
     state = {
+        customizationId: null,
         selectedMeat: {},
+        meatVariant: "",
         selectedCarb: {},
+        carbVariant: "",
         selectedVeg: []
+    };
+    componentDidMount() {}
+    handleSelection = (groupKey, selection, variantName, variant) => e => {
+        e.preventDefault();
+        this.setState({ [groupKey]: selection, [variantName]: variant });
+    };
+    handleVegClick = selectedVeggie => e => {
+        e.preventDefault();
+        // console.log(selectedVeggie);
+        const alreadySelected = this.state.selectedVeg.includes(selectedVeggie);
+        if (alreadySelected) {
+            const vegList = this.state.selectedVeg.filter(
+                veg => veg !== selectedVeggie
+            );
+            this.setState({ selectedVeg: vegList });
+        } else {
+            const vegList = [...this.state.selectedVeg, selectedVeggie];
+            this.setState({ selectedVeg: vegList });
+        }
     };
     render() {
         // console.log(this.props);
         const {
-            handleSelect,
+            // handleSelect,
             carbs,
             meats,
+            vegetables,
             customizationCount,
             customizations,
             handleCustomizationAmountIncrement,
@@ -51,7 +74,6 @@ export class Customize extends Component {
                         <input
                             className="input-group-field"
                             type="number"
-                            name="quantity"
                             readOnly
                             value={customizationCount}
                         />
@@ -68,18 +90,49 @@ export class Customize extends Component {
                 <CardList
                     groupName="carbs"
                     stateKey="selectedCarb"
+                    selected={this.state.selectedCarb}
                     variantKey="carbVariant"
-                    handleSelect={handleSelect}
+                    handleSelect={this.handleSelection}
                     groups={carbs}
                 />
                 <hr />
                 <CardList
                     groupName="meats"
                     stateKey="selectedMeat"
+                    selected={this.state.selectedMeat}
                     variantKey="meatVariant"
-                    handleSelect={handleSelect}
+                    handleSelect={this.handleSelection}
                     groups={meats}
                 />
+                <div className="grid-x grid-margin-x align-spaced">
+                    {vegetables &&
+                        vegetables.map(veg => (
+                            <div className="card small-12 large-4" key={veg.id}>
+                                <div
+                                    style={{
+                                        backgroundColor: this.state.selectedVeg.includes(
+                                            veg.post_title
+                                        )
+                                            ? "#168b95"
+                                            : "#e6e6e6"
+                                    }}
+                                    className="card-divider">
+                                    {veg.post_title}
+                                </div>
+
+                                <button
+                                    style={{
+                                        padding: "1rem",
+                                        borderTop: "1px solid black"
+                                    }}
+                                    onClick={this.handleVegClick(
+                                        veg.post_title
+                                    )}>
+                                    Select
+                                </button>
+                            </div>
+                        ))}
+                </div>
             </div>
         );
     }

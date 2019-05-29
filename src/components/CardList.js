@@ -1,43 +1,42 @@
 import React, { Component, Fragment } from "react";
-import SelectDropdown from "./SelectDropdown";
+// import SelectDropdown from "./SelectDropdown";
+import CardItemWithPic from "./CardItem_Picture";
 
 export class CardList extends Component {
+    // constructor(props){
+    //     super(props);
+    //     this.dropdown = React.createRef();
+    // }
+    state = {};
+    handleVariationChange = e => {
+        console.log(e);
+    };
     render() {
         const {
             groups,
             handleSelect,
             stateKey,
+            selected,
             // groupName,
             variantKey
         } = this.props;
+        console.log(selected.post_title);
         const groupRow =
             groups &&
             groups.map(group => (
-                <div className="card small-12 large-4" key={group.id}>
-                    <div className="card-divider">{group.post_title}</div>
-                    <div className="card-section">
-                        {group.acf.variations && (
-                            <SelectDropdown
-                                stateKey={stateKey}
-                                variantKey={variantKey}
-                                handleSelect={handleSelect}
-                                options={group.acf.variations}
-                            />
-                        )}
-                    </div>
-                    <button
-                        style={{
-                            padding: "1rem",
-                            borderTop: "1px solid black"
-                        }}
-                        onClick={handleSelect(stateKey, group.post_title)}>
-                        Select
-                    </button>
-                </div>
+                <CardItemWithPic
+                    key={group.id}
+                    group={group}
+                    selected={selected}
+                    handleSelect={handleSelect}
+                    handleVariationChange={this.handleVariationChange}
+                    stateKey={stateKey}
+                    variantKey={variantKey}
+                />
             ));
         return (
             <Fragment>
-                <div className="grid-x grid-margin-x align-justify">
+                <div className="grid-x grid-margin-x align-spaced">
                     {groupRow}
                 </div>
             </Fragment>
