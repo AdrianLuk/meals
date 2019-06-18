@@ -1,47 +1,60 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment } from "react";
 // import SelectDropdown from "./SelectDropdown";
 import CardItemWithPic from "./CardItem_Picture";
 
-export class CardList extends Component {
+export const CardList = ({
+    groups,
+    handleSelect,
+    stateKey,
+    selected,
+    selectedVariant,
+    // groupName,
+    variantKey
+}) => {
     // constructor(props){
     //     super(props);
     //     this.dropdown = React.createRef();
     // }
-    state = {};
-    handleVariationChange = e => {
-        console.log(e);
-    };
-    render() {
-        const {
-            groups,
-            handleSelect,
-            stateKey,
-            selected,
-            // groupName,
-            variantKey
-        } = this.props;
-        console.log(selected.post_title);
-        const groupRow =
-            groups &&
-            groups.map(group => (
-                <CardItemWithPic
-                    key={group.id}
-                    group={group}
-                    selected={selected}
-                    handleSelect={handleSelect}
-                    handleVariationChange={this.handleVariationChange}
-                    stateKey={stateKey}
-                    variantKey={variantKey}
-                />
-            ));
-        return (
-            <Fragment>
-                <div className="grid-x grid-margin-x align-spaced">
-                    {groupRow}
-                </div>
-            </Fragment>
-        );
-    }
-}
+    // state = {
+    //     variant: "",
+    //     selectedVariant: ""
+    // };
+
+    // render() {
+    // const {
+    //     groups,
+    //     handleSelect,
+    //     stateKey,
+    //     selected,
+    //     selectedVariant,
+    //     // groupName,
+    //     variantKey
+    // } = this.props;
+    // console.log(selected.post_title);
+    // console.log(groups);
+    const foodItemRow =
+        groups &&
+        groups.map(group => (
+            <CardItemWithPic
+                key={group.id}
+                group={group}
+                selected={selected}
+                handleSelect={handleSelect}
+                selectedVariant={selectedVariant}
+                // handleVariationChange={this.handleVariationChange}
+                stateKey={stateKey}
+                variantKey={variantKey}
+            />
+        ));
+    return (
+        <Fragment>
+            <div className="grid-x grid-margin-x align-spaced">
+                {foodItemRow}
+                {selectedVariant}
+            </div>
+        </Fragment>
+    );
+    // }
+};
 
 export default CardList;

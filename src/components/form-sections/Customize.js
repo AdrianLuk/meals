@@ -3,7 +3,7 @@ import CardList from "../CardList";
 
 export class Customize extends Component {
     state = {
-        customizationId: null,
+        customizationId: 1,
         selectedMeat: {},
         meatVariant: "",
         selectedCarb: {},
@@ -11,9 +11,11 @@ export class Customize extends Component {
         selectedVeg: []
     };
     componentDidMount() {}
-    handleSelection = (groupKey, selection, variantName, variant) => e => {
-        e.preventDefault();
+    handleSelect = (groupKey, selection, variantName, variant) => e => {
+        // e.stopPropagation();
+        console.log("triggered selection");
         this.setState({ [groupKey]: selection, [variantName]: variant });
+        e.preventDefault();
     };
     handleVegClick = selectedVeggie => e => {
         e.preventDefault();
@@ -55,7 +57,7 @@ export class Customize extends Component {
         //         </select>
         //     </div>
         // ));
-        console.log(customizations);
+        // console.log(customizations);
         return (
             <div>
                 <div>
@@ -91,8 +93,9 @@ export class Customize extends Component {
                     groupName="carbs"
                     stateKey="selectedCarb"
                     selected={this.state.selectedCarb}
+                    selectedVariant={this.state.carbVariant}
                     variantKey="carbVariant"
-                    handleSelect={this.handleSelection}
+                    handleSelect={this.handleSelect}
                     groups={carbs}
                 />
                 <hr />
@@ -100,8 +103,9 @@ export class Customize extends Component {
                     groupName="meats"
                     stateKey="selectedMeat"
                     selected={this.state.selectedMeat}
+                    selectedVariant={this.state.meatVariant}
                     variantKey="meatVariant"
-                    handleSelect={this.handleSelection}
+                    handleSelect={this.handleSelect}
                     groups={meats}
                 />
                 <div className="grid-x grid-margin-x align-spaced">

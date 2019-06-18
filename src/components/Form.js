@@ -135,7 +135,7 @@ export class Form extends Component {
                         handleCustomizationAmountIncrement={
                             this.handleCustomizationAmountIncrement
                         }
-                        handleSelect={this.handleSelect}
+                        // handleSelect={this.handleSelect}
                     />
                 );
             case 3:
