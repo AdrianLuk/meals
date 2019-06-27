@@ -1,11 +1,13 @@
 import React, { Fragment, useState, useEffect } from "react";
 import SelectDropdown from "./SelectDropdown";
+// import SplitButton from "./SplitButton";
 
 const CardItemWithPic = ({
     handleSelect,
     group,
     stateKey,
     variantKey,
+    setVariant,
     selected
 }) => {
     // console.log(selected.id);
@@ -21,36 +23,24 @@ const CardItemWithPic = ({
             setIsActive(false);
         }
     }, [selected.id, group.id, isActive]);
-    useEffect(() => {
-        handleSelect(stateKey, group, variantKey, dropdownValue);
-    }, [dropdownValue, group, handleSelect, stateKey, variantKey]);
     const getDropdownValue = e => {
-        setDropdownValue(e);
-        // if (selected.id === group.id) {
         console.log("gdv");
-        handleSelect(stateKey, group, variantKey, e);
-        //     console.log(e);
-        // }
-        // console.log(dropdownValue);
-    };
-    const handleVariationChange = (stateKey, group, variantKey, e) => {
-        // console.log(e);
         setDropdownValue(e);
-        handleSelect(stateKey, group, variantKey, e);
-        console.log("hvc");
     };
     return (
         <Fragment>
             <div
                 style={{
-                    flex: "0 1 auto",
-                    backgroundColor: isActive ? "red" : "inherit"
+                    flex: "0 1 auto"
                 }}
-                className="card small-12 large-4"
+                className={
+                    "card small-12 large-4 card__item card__item--picture " +
+                    (isActive ? "card__item--active" : "")
+                }
                 key={group.id}>
                 <img
-                    style={{ maxHeight: 200 }}
-                    src={group.featured_image}
+                    className="card-img"
+                    src={group.thumbnail}
                     alt={group.post_title}
                 />
                 <div className="card-divider">{group.post_title}</div>
@@ -60,28 +50,32 @@ const CardItemWithPic = ({
                             group={group}
                             stateKey={stateKey}
                             variantKey={variantKey}
-                            handleVariationChange={handleVariationChange}
                             options={group.acf.variations}
                             handleSelect={handleSelect}
+                            setVariant={setVariant}
                             selected={selected}
                             dropdownValue={dropdownValue}
                             getDropdown={getDropdownValue}
                         />
                     )}
+                    <button
+                        onClick={e => {
+                            e.preventDefault();
+                            handleSelect(group);
+                            setVariant(dropdownValue);
+                        }}
+                        className={"input-group select-button "}>
+                        <span className="input-group-field select-button__text">
+                            {isActive ? "Selected" : "Select"}
+                        </span>
+                        <span
+                            className={
+                                "input-group-label select-button__icon fa " +
+                                (isActive ? "fa-check" : "fa-arrow-right")
+                            }
+                        />
+                    </button>
                 </div>
-                <button
-                    style={{
-                        padding: "1rem",
-                        borderTop: "1px solid black"
-                    }}
-                    onClick={handleSelect(
-                        stateKey,
-                        group,
-                        variantKey,
-                        dropdownValue
-                    )}>
-                    Select
-                </button>
             </div>
         </Fragment>
     );

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import CardItem from "../CardItem_Title";
 // import axios from "axios";
 
@@ -28,7 +28,7 @@ export class Choose extends Component {
                 selectedItem={selectedPackage}
                 handleSelect={handlePackageSelect}
                 handlePackageSelect={handlePackageSelect}
-                buttonText="Select"
+                buttonText={`$${packageItem.acf.price}`}
                 group="packages"
             />
         ));
@@ -41,24 +41,24 @@ export class Choose extends Component {
                 handleSelect={handleSelect}
                 stateKey="selectedGoal"
                 description={goal.excerpt.rendered}
-                buttonText="Select"
+                buttonText={goal.acf.portion_price}
             />
         ));
         return (
-            <Fragment>
+            <section className="section--choose">
                 <div>
                     <p>{meta.packages && meta.packages.description}</p>
-                    <div className="grid-x grid-margin-x align-justify">
+                    <div className="grid-x grid-margin-x align-large-justify align-spaced">
                         {packageList}
                     </div>
                 </div>
                 <hr />
                 <div>
-                    <div className="grid-x grid-margin-x align-justify">
+                    <div className="grid-x grid-margin-x align-large-justify align-spaced">
                         {goalList}
                     </div>
                 </div>
-            </Fragment>
+            </section>
         );
     }
 }

@@ -8,30 +8,10 @@ export const CardList = ({
     stateKey,
     selected,
     selectedVariant,
+    setVariant,
     // groupName,
     variantKey
 }) => {
-    // constructor(props){
-    //     super(props);
-    //     this.dropdown = React.createRef();
-    // }
-    // state = {
-    //     variant: "",
-    //     selectedVariant: ""
-    // };
-
-    // render() {
-    // const {
-    //     groups,
-    //     handleSelect,
-    //     stateKey,
-    //     selected,
-    //     selectedVariant,
-    //     // groupName,
-    //     variantKey
-    // } = this.props;
-    // console.log(selected.post_title);
-    // console.log(groups);
     const foodItemRow =
         groups &&
         groups.map(group => (
@@ -41,6 +21,7 @@ export const CardList = ({
                 selected={selected}
                 handleSelect={handleSelect}
                 selectedVariant={selectedVariant}
+                setVariant={setVariant}
                 // handleVariationChange={this.handleVariationChange}
                 stateKey={stateKey}
                 variantKey={variantKey}
@@ -48,13 +29,11 @@ export const CardList = ({
         ));
     return (
         <Fragment>
-            <div className="grid-x grid-margin-x align-spaced">
+            <div className="grid-x grid-margin-x align-center">
                 {foodItemRow}
-                {selectedVariant}
             </div>
         </Fragment>
     );
-    // }
 };
 
 export default CardList;

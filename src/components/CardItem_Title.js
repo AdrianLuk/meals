@@ -1,4 +1,5 @@
 import React from "react";
+import SplitButton from "./SplitButton";
 
 const CardItem = ({
     handleSelect,
@@ -11,34 +12,26 @@ const CardItem = ({
     group
 }) => {
     return (
-        <div className="card text-center small-12 large-4">
-            <div
-                className="card-divider align-center"
-                style={{
-                    color: item.id === selectedItem.id ? "red" : "black"
-                }}>
-                {item.title.rendered}
-            </div>
+        <div
+            className={
+                "card text-center small-12 large-4 card__item card__item--title " +
+                (item.id === selectedItem.id ? "card__item--active" : "")
+            }>
+            <div className="card-divider">{item.title.rendered}</div>
             <div className="card-section">
                 {description && (
                     <div dangerouslySetInnerHTML={{ __html: description }} />
                 )}
-                <div
-                    style={{
-                        color: item.id === selectedItem.id ? "red" : "black"
-                    }}>
-                    {item.acf.price}
-                </div>
+                <SplitButton
+                    item={item}
+                    stateKey={stateKey}
+                    group={group}
+                    handleSelect={handleSelect}
+                    handlePackageSelect={handlePackageSelect}
+                    text={buttonText}
+                    isActive={item.id === selectedItem.id ? true : false}
+                />
             </div>
-            <button
-                style={{ padding: "1rem", borderTop: "1px solid black" }}
-                onClick={
-                    group === "goals"
-                        ? handleSelect(stateKey, item)
-                        : handlePackageSelect(item)
-                }>
-                {buttonText}
-            </button>
         </div>
     );
 };

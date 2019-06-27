@@ -1,0 +1,39 @@
+$dark-teal: #168b95;
+$medium-teal: #41bdc7;
+$light-teal: #b7f3f8;
+$orange: #e57101;
+$white: #fff;
+$offwhite: #eee;
+$dark-grey: #333;
+$medium-grey: #aaa;
+$light-grey: #ccc;
+// pagination
+.pagination {
+    &__list {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+    &__item {
+        padding: 0.8rem 2.5rem;
+        border-radius: 50px;
+        color: $medium-grey;
+        font-weight: bold;
+        text-transform: uppercase;
+        border: 2px solid $medium-grey;
+        margin: 0 0.5rem;
+        &:hover {
+            cursor: pointer;
+        }
+        &--active {
+            background-color: $dark-teal;
+            color: $white;
+            border-color: $dark-teal;
+            &:hover {
+                background-color: $white;
+                color: $orange;
+                border-color: $dark-teal;
+            }
+        }
+    }
+}

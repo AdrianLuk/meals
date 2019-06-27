@@ -1,3 +1,13 @@
+$dark-teal: #168b95;
+$medium-teal: #41bdc7;
+$light-teal: #b7f3f8;
+$orange: #e57101;
+$white: #fff;
+$offwhite: #eee;
+$dark-grey: #333;
+$medium-grey: #aaa;
+$light-grey: #ccc;
+
 body {
     margin: 0;
 }
@@ -20,6 +30,120 @@ body {
         .circle {
             border-radius: 50%;
             padding: 0.25em 0.8em;
+        }
+    }
+}
+.blue-arrow {
+    background: none;
+    padding: 1rem;
+    border-radius: 50px;
+    color: $white;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    min-width: 200px;
+    transition: all 0.2s ease-in !important;
+    cursor: pointer;
+    margin: 0.5rem;
+    &:after {
+        content: "\f061";
+        font-family: "FontAwesome";
+        font-size: 1rem;
+        padding: 1rem 0;
+        padding-left: 1rem;
+        margin-left: 1rem;
+    }
+}
+.select-button {
+    border-radius: 50px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    min-width: 200px;
+    // transition: all 0.2s ease-in !important;
+    cursor: pointer;
+    margin: 0.5rem auto;
+    width: auto;
+    &__text {
+        padding: 1rem;
+        color: $dark-grey;
+    }
+    &__icon {
+        padding: 1rem;
+        border-top-right-radius: 50px !important;
+        border-bottom-right-radius: 50px !important;
+        background-color: $medium-grey;
+        color: $white;
+    }
+}
+.card {
+    &__item {
+        margin: 0 0.5rem 1rem;
+        .card {
+            &-divider {
+                text-transform: uppercase;
+                font-size: 1.25rem;
+                font-weight: bold;
+                justify-content: center;
+                color: $dark-grey;
+            }
+            &-img {
+                max-height: 200px;
+                position: relative;
+            }
+            &-section {
+                .blue-arrow {
+                    background-color: #eee;
+                }
+                .select-button {
+                    background-color: #eee;
+                }
+            }
+        }
+        &--title {
+            .card {
+                &-divider {
+                    padding: 1rem 0;
+                    background-color: $offwhite;
+                }
+            }
+        }
+        &--picture {
+            .card {
+                &-divider {
+                    padding: 1rem 0 0;
+                    background-color: transparent !important;
+                }
+                &-img {
+                    filter: grayscale(1);
+                }
+            }
+        }
+        &--active {
+            .card {
+                &-divider {
+                    color: $dark-teal;
+                    background-color: $light-teal;
+                }
+                &-img {
+                    filter: grayscale(0);
+                }
+                &-section {
+                    .blue-arrow {
+                        background-color: $dark-teal;
+                    }
+                    .select-button {
+                        background-color: $dark-teal;
+                        &__text {
+                            color: $white;
+                        }
+                        &__icon {
+                            background-color: $medium-teal;
+                        }
+                    }
+                }
+            }
         }
     }
 }

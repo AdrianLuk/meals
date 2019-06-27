@@ -1,47 +1,29 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 const SelectDropdown = ({
     options,
     selected,
     handleSelect,
-    stateKey,
-    variantKey,
+    setVariant,
     group,
-    getDropdown,
-    handleVariationChange
+    getDropdown
 }) => {
     const [value, setValue] = useState(options[0].variation);
     useEffect(() => {
         getDropdown(value);
-        if (group.id === selected.id) {
-            // console.log("t");
-            handleSelect(stateKey, group, variantKey, value);
-        }
-    }, [
-        getDropdown,
-        group.id,
-        selected.id,
-        handleVariationChange,
-        value,
-        group,
-        handleSelect,
-        stateKey,
-        variantKey
-    ]);
-    const ref = useRef();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value]);
     return (
         <select
-            ref={ref}
+            style={{ borderRadius: 20, paddingLeft: "1rem" }}
             value={value}
             onChange={e => {
-                // console.log(e.target.value);
-                // handleSelect(stateKey, group, variantKey, e.target.value);
-                // handleVariationChange(e.target.value);
-                // e.stopPropagation();
-                console.log("changed");
+                e.preventDefault();
+                if (selected.id === group.id) {
+                    handleSelect(group);
+                    setVariant(e.target.value);
+                }
                 setValue(e.target.value);
-
-                // getDropdown(e.target.value);
             }}>
             {options.map((option, index) => (
                 <option key={index} value={option.variation}>

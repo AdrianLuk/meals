@@ -1,145 +1,192 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import CardList from "../CardList";
 
-export class Customize extends Component {
-    state = {
-        customizationId: 1,
-        selectedMeat: {},
-        meatVariant: "",
-        selectedCarb: {},
-        carbVariant: "",
-        selectedVeg: []
+const Customize = ({
+    carbs,
+    meats,
+    vegetables,
+    customizationCount,
+    addToOrder,
+    currentCustomizationId,
+    // customizations,
+    handleCustomizationAmountIncrement,
+    handleCustomizationAmountDecrement
+}) => {
+    // eslint-disable-next-line no-unused-vars
+    const [customizationId, setCustomizationId] = useState(1);
+    const [selectedMeat, setSelectedMeat] = useState({});
+    const [meatVariant, setMeatVariant] = useState("");
+    const [selectedCarb, setSelectedCarb] = useState({});
+    const [carbVariant, setCarbVariant] = useState("");
+    const [selectedVeg, setSelectedVeg] = useState([]);
+    let customization = {
+        currentCustomizationId,
+        selectedMeat,
+        meatVariant,
+        selectedCarb,
+        carbVariant,
+        selectedVeg,
+        customizationCount
     };
-    componentDidMount() {}
-    handleSelect = (groupKey, selection, variantName, variant) => e => {
-        // e.stopPropagation();
-        console.log("triggered selection");
-        this.setState({ [groupKey]: selection, [variantName]: variant });
-        e.preventDefault();
-    };
-    handleVegClick = selectedVeggie => e => {
+    useEffect(() => {
+        console.log(customization);
+        // setCustomization({
+        //     customizationId,
+        //     selectedMeat,
+        //     meatVariant,
+        //     selectedCarb,
+        //     carbVariant,
+        //     selectedVeg
+        // });
+        addToOrder(customization);
+        return () => {};
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [
+        customizationId,
+        selectedMeat,
+        meatVariant,
+        selectedCarb,
+        carbVariant,
+        selectedVeg,
+        customizationCount
+    ]);
+    useEffect(() => {
+        return () => {
+            setSelectedMeat({});
+            setMeatVariant("");
+            setSelectedCarb({});
+            setCarbVariant("");
+            setSelectedVeg([]);
+        };
+    }, [currentCustomizationId]);
+    // console.log(customization);
+    // addToOrder(customization);
+    // useEffect(() => {
+    //     console.log(customization.meatVariant);
+    //     console.log(meatVariant);
+    //     return () => {
+    //         addToOrder(
+    //             customizationId,
+    //             selectedMeat,
+    //             meatVariant,
+    //             selectedCarb,
+    //             carbVariant,
+    //             selectedVeg
+    //         );
+    //     };
+    // }, [
+    //     addToOrder,
+    //     carbVariant,
+    //     customization,
+    //     customizationId,
+    //     meatVariant,
+    //     selectedCarb,
+    //     selectedMeat,
+    //     selectedVeg
+    // ]);
+    const handleVegClick = selectedVeggie => e => {
         e.preventDefault();
         // console.log(selectedVeggie);
-        const alreadySelected = this.state.selectedVeg.includes(selectedVeggie);
+        const alreadySelected = selectedVeg.includes(selectedVeggie);
         if (alreadySelected) {
-            const vegList = this.state.selectedVeg.filter(
-                veg => veg !== selectedVeggie
-            );
-            this.setState({ selectedVeg: vegList });
+            const vegList = selectedVeg.filter(veg => veg !== selectedVeggie);
+            setSelectedVeg(vegList);
         } else {
-            const vegList = [...this.state.selectedVeg, selectedVeggie];
-            this.setState({ selectedVeg: vegList });
+            const vegList = [...selectedVeg, selectedVeggie];
+            setSelectedVeg(vegList);
         }
     };
-    render() {
-        // console.log(this.props);
-        const {
-            // handleSelect,
-            carbs,
-            meats,
-            vegetables,
-            customizationCount,
-            customizations,
-            handleCustomizationAmountIncrement,
-            handleCustomizationAmountDecrement
-        } = this.props;
-        // const foodGroups = [carbs, meats];
-
-        // const carbList = carbs.map(carb => (
-        //     <div onClick={handleSelect("selectedGoal", carb)} key={carb.id}>
-        //         <div>{carb.title.rendered}</div>
-        //         <select>
-        //             {carb.acf.variations.map((variation, index) => (
-        //                 <option key={index} value={variation.variation}>
-        //                     {variation.variation}
-        //                 </option>
-        //             ))}
-        //         </select>
-        //     </div>
-        // ));
-        // console.log(customizations);
-        return (
+    return (
+        <section className="section--customize">
             <div>
-                <div>
-                    <p> Choose number of meals for this customization </p>
-                    <div
-                        className="input-group plus-minus-input align-center"
-                        style={{ width: 200 }}>
-                        <div className="input-group-button">
-                            <button
-                                onClick={handleCustomizationAmountDecrement}
-                                type="button"
-                                className="button hollow circle">
-                                <i className="fa fa-minus" aria-hidden="true" />
-                            </button>
-                        </div>
-                        <input
-                            className="input-group-field"
-                            type="number"
-                            readOnly
-                            value={customizationCount}
-                        />
-                        <div className="input-group-button">
-                            <button
-                                onClick={handleCustomizationAmountIncrement}
-                                type="button"
-                                className="button hollow circle">
-                                <i className="fa fa-plus" aria-hidden="true" />
-                            </button>
-                        </div>
+                <p> Choose number of meals for this customization </p>
+                <div
+                    className="input-group plus-minus-input align-center"
+                    style={{ width: 200 }}>
+                    <div className="input-group-button">
+                        <button
+                            onClick={handleCustomizationAmountDecrement}
+                            type="button"
+                            className="button hollow circle">
+                            <i className="fa fa-minus" aria-hidden="true" />
+                        </button>
+                    </div>
+                    <input
+                        className="input-group-field"
+                        type="number"
+                        readOnly
+                        value={customizationCount}
+                    />
+                    <div className="input-group-button">
+                        <button
+                            onClick={handleCustomizationAmountIncrement}
+                            type="button"
+                            className="button hollow circle">
+                            <i className="fa fa-plus" aria-hidden="true" />
+                        </button>
                     </div>
                 </div>
-                <CardList
-                    groupName="carbs"
-                    stateKey="selectedCarb"
-                    selected={this.state.selectedCarb}
-                    selectedVariant={this.state.carbVariant}
-                    variantKey="carbVariant"
-                    handleSelect={this.handleSelect}
-                    groups={carbs}
-                />
-                <hr />
-                <CardList
-                    groupName="meats"
-                    stateKey="selectedMeat"
-                    selected={this.state.selectedMeat}
-                    selectedVariant={this.state.meatVariant}
-                    variantKey="meatVariant"
-                    handleSelect={this.handleSelect}
-                    groups={meats}
-                />
-                <div className="grid-x grid-margin-x align-spaced">
-                    {vegetables &&
-                        vegetables.map(veg => (
-                            <div className="card small-12 large-4" key={veg.id}>
-                                <div
-                                    style={{
-                                        backgroundColor: this.state.selectedVeg.includes(
-                                            veg.post_title
-                                        )
-                                            ? "#168b95"
-                                            : "#e6e6e6"
-                                    }}
-                                    className="card-divider">
-                                    {veg.post_title}
-                                </div>
-
+            </div>
+            <CardList
+                groupName="carbs"
+                stateKey="selectedCarb"
+                selected={selectedCarb}
+                selectedVariant={carbVariant}
+                variantKey="carbVariant"
+                handleSelect={setSelectedCarb}
+                setVariant={setCarbVariant}
+                groups={carbs}
+            />
+            <hr />
+            <CardList
+                groupName="meats"
+                stateKey="selectedMeat"
+                selected={selectedMeat}
+                selectedVariant={meatVariant}
+                variantKey="meatVariant"
+                handleSelect={setSelectedMeat}
+                setVariant={setMeatVariant}
+                groups={meats}
+            />
+            <hr />
+            <div className="grid-x grid-margin-x align-center">
+                {vegetables &&
+                    vegetables.map(veg => (
+                        <div
+                            className={
+                                "card small-12 large-4 card__item card__item--picture " +
+                                (selectedVeg.includes(veg.post_title)
+                                    ? "card__item--active"
+                                    : "")
+                            }
+                            key={veg.id}>
+                            <div className="card-divider">{veg.post_title}</div>
+                            <div className="card-section">
                                 <button
-                                    style={{
-                                        padding: "1rem",
-                                        borderTop: "1px solid black"
-                                    }}
-                                    onClick={this.handleVegClick(
-                                        veg.post_title
-                                    )}>
-                                    Select
+                                    onClick={handleVegClick(veg.post_title)}
+                                    className={"input-group select-button "}>
+                                    <span className="input-group-field select-button__text">
+                                        {selectedVeg.includes(veg.post_title)
+                                            ? "Selected"
+                                            : "Select"}
+                                    </span>
+                                    <span
+                                        className={
+                                            "input-group-label select-button__icon fa " +
+                                            (selectedVeg.includes(
+                                                veg.post_title
+                                            )
+                                                ? "fa-check"
+                                                : "fa-arrow-right")
+                                        }
+                                    />
                                 </button>
                             </div>
-                        ))}
-                </div>
+                        </div>
+                    ))}
             </div>
-        );
-    }
-}
+        </section>
+    );
+};
 
 export default Customize;

@@ -1,5 +1,7 @@
 import React, { Component, Fragment } from "react";
+import StepList from "./steps/StepList";
 import Choose from "./form-sections/Choose";
+import Pagination from "./pagination/Pagination";
 import Customize from "./form-sections/Customize";
 import Review from "./form-sections/Review";
 import Total from "./Total";
@@ -7,6 +9,7 @@ import axios from "axios";
 
 export class Form extends Component {
     state = {
+        step: 1,
         types: {},
         packages: [],
         goals: [],
@@ -16,17 +19,21 @@ export class Form extends Component {
         selectedPackage: {},
         packageAmount: 1,
         selectedGoal: {},
-        selectedCarb: {},
-        selectedMeat: {},
-        selectedVegetable: {},
-        carbVariant: null,
-        meatVariant: null,
-        vegetableVariant: null,
-        customizationCount: 0,
-        customizations: []
+        currentCustomizationCount: 0,
+        currentCustomizationId: 1,
+        customizationsRemaining: null,
+        totalCustomizations: 0,
+        currentCustomization: {},
+        customizations: [],
+        comments: ""
     };
     componentDidMount() {
         this.getData();
+    }
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.selectedPackage.id !== this.state.selectedPackage.id) {
+            this.setState({ customizations: [] });
+        }
     }
     getData = async () => {
         const getTypes = await axios.get("/wp-json/wp/v2/types");
@@ -65,25 +72,101 @@ export class Form extends Component {
     // handleChange = input => e => {
     //     this.setState({ [input]: e.target.value });
     // };
+    scrollToTop = () => {
+        document
+            .getElementById("form-anchor")
+            .scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    isEmptyObject = object => {
+        if (
+            Object.entries(object).length === 0 &&
+            object.constructor === Object
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+    handlePrevStepChange = event => {
+        event.preventDefault();
+        this.setState({ step: this.state.step - 1 });
+    };
+    handleNextStepChange = event => {
+        event.preventDefault();
+        if (this.state.step === 1) {
+            if (
+                this.isEmptyObject(this.state.selectedPackage) ||
+                this.isEmptyObject(this.state.selectedGoal)
+            ) {
+            } else {
+                this.setState({ step: this.state.step + 1 });
+                this.scrollToTop();
+            }
+        } else if (this.state.step === 2) {
+            // this.addCustomizationToOrder();
+            if (this.state.customizationsRemaining > 0) {
+                this.saveCustomization(this.state.currentCustomization);
+            }
+            if (
+                this.state.customizationsRemaining -
+                    this.state.currentCustomizationCount >
+                0
+            ) {
+                this.setState({
+                    step: 2,
+                    currentCustomization: {},
+                    currentCustomizationId:
+                        this.state.currentCustomizationId + 1
+                });
+                this.scrollToTop();
+            } else {
+                this.setState({ step: this.state.step + 1 });
+                this.scrollToTop();
+            }
+        } else {
+            this.setState({ step: this.state.step + 1 });
+            this.scrollToTop();
+        }
+    };
+    addCustomizationToOrder = customization => {
+        console.log(customization);
+        // const customizations = [...this.state.customizations, customization];
+        // console.log(customizations);
+        // this.saveCustomization(customizations);
+        this.setState({ currentCustomization: customization });
+    };
+    saveCustomization = customization => {
+        const customizations = [...this.state.customizations, customization];
+        this.setState({
+            customizations: customizations,
+            currentCustomization: {},
+            currentCustomizationCount:
+                this.state.customizationsRemaining -
+                this.state.currentCustomizationCount,
+            customizationsRemaining:
+                this.state.customizationsRemaining -
+                this.state.currentCustomizationCount
+        });
+    };
     handleCustomizationAmountIncrement = event => {
         event.preventDefault();
         if (
-            +this.state.customizationCount ===
-            +this.state.selectedPackage.acf.meal_count
+            +this.state.currentCustomizationCount ===
+            +this.state.customizationsRemaining
         ) {
             return false;
         }
         this.setState({
-            customizationCount: +this.state.customizationCount + 1
+            currentCustomizationCount: +this.state.currentCustomizationCount + 1
         });
     };
     handleCustomizationAmountDecrement = event => {
         event.preventDefault();
-        if (this.state.customizationCount === 0) {
+        if (this.state.currentCustomizationCount === 0) {
             return false;
         }
         this.setState({
-            customizationCount: +this.state.customizationCount - 1
+            currentCustomizationCount: +this.state.currentCustomizationCount - 1
         });
     };
     handlePackageSelect = selection => e => {
@@ -92,7 +175,9 @@ export class Form extends Component {
         if (selection.acf) {
             this.setState({
                 selectedPackage: selection,
-                customizationCount: selection.acf.meal_count
+                currentCustomizationCount: +selection.acf.meal_count,
+                totalCustomizations: +selection.acf.meal_count,
+                customizationsRemaining: +selection.acf.meal_count
             });
         }
     };
@@ -103,7 +188,7 @@ export class Form extends Component {
     };
 
     renderSections = () => {
-        const { step } = this.props;
+        const { step } = this.state;
         if (!step) {
             return <div>Loading</div>;
         }
@@ -128,18 +213,29 @@ export class Form extends Component {
                         meats={this.state.meats}
                         customizations={this.state.customizations}
                         vegetables={this.state.vegetables}
-                        customizationCount={this.state.customizationCount}
+                        currentCustomizationId={
+                            this.state.currentCustomizationId
+                        }
+                        customizationCount={
+                            this.state.currentCustomizationCount
+                        }
                         handleCustomizationAmountDecrement={
                             this.handleCustomizationAmountDecrement
                         }
                         handleCustomizationAmountIncrement={
                             this.handleCustomizationAmountIncrement
                         }
-                        // handleSelect={this.handleSelect}
+                        addToOrder={this.addCustomizationToOrder}
                     />
                 );
             case 3:
-                return <Review />;
+                return (
+                    <Review
+                        customizations={this.state.customizations}
+                        selectedPackage={this.state.selectedPackage}
+                        selectedGoal={this.state.selectedGoal}
+                    />
+                );
             default:
                 return <div>Loading</div>;
         }
@@ -147,14 +243,24 @@ export class Form extends Component {
     render() {
         return (
             <Fragment>
+                <StepList step={this.state.step} />
                 <div className="grid-container">
                     {this.renderSections()}
                     <Total
-                        itemCount={+this.state.customizationCount}
+                        itemCount={+this.state.totalCustomizations}
                         packagePrice={this.state.selectedPackage}
                         selectedGoal={this.state.selectedGoal.id}
                     />
                 </div>
+                <Pagination
+                    canProceed={
+                        !this.isEmptyObject(this.state.selectedPackage) &&
+                        !this.isEmptyObject(this.state.selectedGoal)
+                    }
+                    handleNextStepChange={this.handleNextStepChange}
+                    handlePrevStepChange={this.handlePrevStepChange}
+                    step={this.state.step}
+                />
             </Fragment>
         );
     }
