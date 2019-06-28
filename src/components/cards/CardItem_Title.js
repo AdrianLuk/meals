@@ -1,5 +1,5 @@
 import React from "react";
-import SplitButton from "./SplitButton";
+import SplitButton from "../SplitButton";
 
 const CardItem = ({
     handleSelect,

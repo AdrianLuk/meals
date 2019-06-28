@@ -32,5 +32,6 @@
     "devDependencies": {
         "node-sass": "^4.12.0"
     },
-    "proxy": "http://almojuela.com/fitaxxmeals"
+    "proxy": "http://almojuela.com/fitaxxmeals",
+    "homepage": "http://almojuela.com/fitaxxmeals/wp-content/themes/fitaxxmeals/page-templates"
 }

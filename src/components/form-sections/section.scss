@@ -1,0 +1,23 @@
+$dark-teal: #168b95;
+$medium-teal: #41bdc7;
+$light-teal: #b7f3f8;
+$orange: #e57101;
+$white: #fff;
+$offwhite: #eee;
+$dark-grey: #333;
+$medium-grey: #aaa;
+$light-grey: #ccc;
+
+//Section styling
+.section {
+    &__heading {
+        color: $dark-teal;
+        text-transform: uppercase;
+        font-weight: bold;
+        padding: 0 0.8rem;
+    }
+    &__subheading {
+        text-align: left;
+        padding: 0 0.9rem;
+    }
+}

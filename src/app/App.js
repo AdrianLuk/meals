@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 
 import Form from "../components/Form";
-import "./foundation.min.css";
+// import "./foundation.min.css";
 import "./App.scss";
 
 export class App extends Component {

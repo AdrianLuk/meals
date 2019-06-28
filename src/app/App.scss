@@ -10,7 +10,16 @@ $light-grey: #ccc;
 
 body {
     margin: 0;
+    font-family: "Montserrat", sans-serif;
 }
+// a,
+// button {
+//     &:focus {
+//         &:focus {
+//             outline: none !important;
+//         }
+//     }
+// }
 .plus-minus-input {
     align-items: center;
     margin: auto;
@@ -77,9 +86,11 @@ body {
         color: $white;
     }
 }
+// Cards
 .card {
     &__item {
         margin: 0 0.5rem 1rem;
+        flex: 0 1 auto;
         .card {
             &-divider {
                 text-transform: uppercase;
@@ -135,6 +146,7 @@ body {
                     }
                     .select-button {
                         background-color: $dark-teal;
+
                         &__text {
                             color: $white;
                         }

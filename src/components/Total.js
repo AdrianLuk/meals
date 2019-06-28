@@ -2,7 +2,7 @@ import React from "react";
 
 const Total = ({ itemCount, packagePrice, selectedGoal }) => {
     return (
-        <div style={{ position: "fixed", top: "2%", right: "2%" }}>
+        <div style={{}}>
             {itemCount}
             {" Items"}{" "}
             {packagePrice.acf &&

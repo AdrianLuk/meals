@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import CardItem from "../CardItem_Title";
+import CardItem from "../cards/CardItem_Title";
+import "./section.scss";
 // import axios from "axios";
 
 export class Choose extends Component {
@@ -13,7 +14,6 @@ export class Choose extends Component {
         const {
             packages,
             goals,
-            meta,
             handleSelect,
             selectedPackage,
             selectedGoal,
@@ -29,6 +29,9 @@ export class Choose extends Component {
                 handleSelect={handlePackageSelect}
                 handlePackageSelect={handlePackageSelect}
                 buttonText={`$${packageItem.acf.price}`}
+                description={`${
+                    packageItem.acf.meal_count
+                } Personal Sized Meals`}
                 group="packages"
             />
         ));
@@ -45,16 +48,25 @@ export class Choose extends Component {
             />
         ));
         return (
-            <section className="section--choose">
-                <div>
-                    <p>{meta.packages && meta.packages.description}</p>
-                    <div className="grid-x grid-margin-x align-large-justify align-spaced">
+            <section className="section section--choose">
+                <div className="section__item">
+                    <h2 className="section__heading">Select a Package</h2>
+                    <p className="section__subheading">
+                        Choose how many meals you intend to eat per day for six
+                        (6) days.
+                    </p>
+                    <div className="section__grid grid-x grid-margin-x align-large-justify align-spaced">
                         {packageList}
                     </div>
                 </div>
                 <hr />
-                <div>
-                    <div className="grid-x grid-margin-x align-large-justify align-spaced">
+                <div className="section__item">
+                    <h2 className="section__heading">Select Your Goal</h2>
+                    <p className="section__subheading">
+                        We have 3 sizes for you to choose from: 4oz, 6oz, and
+                        8oz (+$1), to help you lose, maintain, and gain weight.
+                    </p>
+                    <div className="section__grid grid-x grid-margin-x align-large-justify align-spaced">
                         {goalList}
                     </div>
                 </div>

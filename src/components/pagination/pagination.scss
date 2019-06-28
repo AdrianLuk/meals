@@ -16,7 +16,7 @@ $light-grey: #ccc;
     }
     &__item {
         padding: 0.8rem 2.5rem;
-        border-radius: 50px;
+        border-radius: 50px !important;
         color: $medium-grey;
         font-weight: bold;
         text-transform: uppercase;

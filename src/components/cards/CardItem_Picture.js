@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import SelectDropdown from "./SelectDropdown";
+import SelectDropdown from "../SelectDropdown";
 // import SplitButton from "./SplitButton";
 
 const CardItemWithPic = ({
@@ -12,7 +12,6 @@ const CardItemWithPic = ({
 }) => {
     // console.log(selected.id);
     // console.log(group.id);
-
     const [isActive, setIsActive] = useState(false);
     const [dropdownValue, setDropdownValue] = useState("");
     useEffect(() => {
@@ -24,25 +23,23 @@ const CardItemWithPic = ({
         }
     }, [selected.id, group.id, isActive]);
     const getDropdownValue = e => {
-        console.log("gdv");
         setDropdownValue(e);
     };
     return (
         <Fragment>
             <div
-                style={{
-                    flex: "0 1 auto"
-                }}
                 className={
                     "card small-12 large-4 card__item card__item--picture " +
                     (isActive ? "card__item--active" : "")
                 }
                 key={group.id}>
-                <img
-                    className="card-img"
-                    src={group.thumbnail}
-                    alt={group.post_title}
-                />
+                {group.thumbnail && (
+                    <img
+                        className="card-img"
+                        src={group.thumbnail}
+                        alt={group.post_title}
+                    />
+                )}
                 <div className="card-divider">{group.post_title}</div>
                 <div className="card-section">
                     {group.acf.variations && (

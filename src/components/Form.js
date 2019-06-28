@@ -8,25 +8,30 @@ import Total from "./Total";
 import axios from "axios";
 
 export class Form extends Component {
-    state = {
-        step: 1,
-        types: {},
-        packages: [],
-        goals: [],
-        carbs: [],
-        meats: [],
-        vegetables: [],
-        selectedPackage: {},
-        packageAmount: 1,
-        selectedGoal: {},
-        currentCustomizationCount: 0,
-        currentCustomizationId: 1,
-        customizationsRemaining: null,
-        totalCustomizations: 0,
-        currentCustomization: {},
-        customizations: [],
-        comments: ""
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            step: 1,
+            types: {},
+            packages: [],
+            goals: [],
+            carbs: [],
+            meats: [],
+            vegetables: [],
+            selectedPackage: {},
+            packageAmount: 1,
+            selectedGoal: {},
+            currentCustomizationCount: 0,
+            currentCustomizationId: 1,
+            customizationsRemaining: null,
+            totalCustomizations: 0,
+            currentCustomization: {},
+            customizations: [],
+            comments: "",
+            isDataLoaded: false
+        };
+        this.baseURL = "https://almojuela.com/fitaxxmeals";
+    }
     componentDidMount() {
         this.getData();
     }
@@ -36,15 +41,21 @@ export class Form extends Component {
         }
     }
     getData = async () => {
-        const getTypes = await axios.get("/wp-json/wp/v2/types");
+        const getTypes = await axios.get(`${this.baseURL}/wp-json/wp/v2/types`);
         const getPackages = await axios.get(
-            "/wp-json/wp/v2/packages?order=asc"
+            `${this.baseURL}/wp-json/wp/v2/packages?order=asc`
         );
-        const getGoals = await axios.get("/wp-json/wp/v2/goals?order=asc");
-        const getCarbs = await axios.get("/wp-json/wp/v2/carbs?order=asc");
-        const getMeats = await axios.get("/wp-json/wp/v2/meats?order=asc");
+        const getGoals = await axios.get(
+            `${this.baseURL}/wp-json/wp/v2/goals?order=asc`
+        );
+        const getCarbs = await axios.get(
+            `${this.baseURL}/wp-json/wp/v2/carbs?order=asc`
+        );
+        const getMeats = await axios.get(
+            `${this.baseURL}/wp-json/wp/v2/meats?order=asc`
+        );
         const getVegetables = await axios.get(
-            "/wp-json/wp/v2/vegetables?order=asc"
+            `${this.baseURL}/wp-json/wp/v2/vegetables?order=asc`
         );
 
         Promise.all([
@@ -61,7 +72,8 @@ export class Form extends Component {
                 goals: res[2].data,
                 carbs: res[3].data,
                 meats: res[4].data,
-                vegetables: res[5].data
+                vegetables: res[5].data,
+                isDataLoaded: true
             });
         });
         // console.log(this.state.packages);
@@ -241,17 +253,20 @@ export class Form extends Component {
         }
     };
     render() {
+        if (!this.state.isDataLoaded) {
+            return <div>Loading...</div>;
+        }
         return (
             <Fragment>
-                <StepList step={this.state.step} />
-                <div className="grid-container">
-                    {this.renderSections()}
+                <div className="grid-container grid-x align-justify align-middle">
+                    <StepList step={this.state.step} />
                     <Total
                         itemCount={+this.state.totalCustomizations}
                         packagePrice={this.state.selectedPackage}
                         selectedGoal={this.state.selectedGoal.id}
                     />
                 </div>
+                <div className="grid-container">{this.renderSections()}</div>
                 <Pagination
                     canProceed={
                         !this.isEmptyObject(this.state.selectedPackage) &&

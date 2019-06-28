@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import CardList from "../CardList";
+import CardList from "../cards/CardList";
+import "./section.scss";
 
 const Customize = ({
     carbs,
@@ -29,15 +30,7 @@ const Customize = ({
         customizationCount
     };
     useEffect(() => {
-        console.log(customization);
-        // setCustomization({
-        //     customizationId,
-        //     selectedMeat,
-        //     meatVariant,
-        //     selectedCarb,
-        //     carbVariant,
-        //     selectedVeg
-        // });
+        // console.log(customization);
         addToOrder(customization);
         return () => {};
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,31 +52,6 @@ const Customize = ({
             setSelectedVeg([]);
         };
     }, [currentCustomizationId]);
-    // console.log(customization);
-    // addToOrder(customization);
-    // useEffect(() => {
-    //     console.log(customization.meatVariant);
-    //     console.log(meatVariant);
-    //     return () => {
-    //         addToOrder(
-    //             customizationId,
-    //             selectedMeat,
-    //             meatVariant,
-    //             selectedCarb,
-    //             carbVariant,
-    //             selectedVeg
-    //         );
-    //     };
-    // }, [
-    //     addToOrder,
-    //     carbVariant,
-    //     customization,
-    //     customizationId,
-    //     meatVariant,
-    //     selectedCarb,
-    //     selectedMeat,
-    //     selectedVeg
-    // ]);
     const handleVegClick = selectedVeggie => e => {
         e.preventDefault();
         // console.log(selectedVeggie);
@@ -97,8 +65,8 @@ const Customize = ({
         }
     };
     return (
-        <section className="section--customize">
-            <div>
+        <section className="section section--customize">
+            <div className="customize-counter">
                 <p> Choose number of meals for this customization </p>
                 <div
                     className="input-group plus-minus-input align-center"
@@ -128,7 +96,7 @@ const Customize = ({
                 </div>
             </div>
             <CardList
-                groupName="carbs"
+                groupName="carb"
                 stateKey="selectedCarb"
                 selected={selectedCarb}
                 selectedVariant={carbVariant}
@@ -139,7 +107,7 @@ const Customize = ({
             />
             <hr />
             <CardList
-                groupName="meats"
+                groupName="meat"
                 stateKey="selectedMeat"
                 selected={selectedMeat}
                 selectedVariant={meatVariant}
@@ -149,41 +117,60 @@ const Customize = ({
                 groups={meats}
             />
             <hr />
-            <div className="grid-x grid-margin-x align-center">
-                {vegetables &&
-                    vegetables.map(veg => (
-                        <div
-                            className={
-                                "card small-12 large-4 card__item card__item--picture " +
-                                (selectedVeg.includes(veg.post_title)
-                                    ? "card__item--active"
-                                    : "")
-                            }
-                            key={veg.id}>
-                            <div className="card-divider">{veg.post_title}</div>
-                            <div className="card-section">
-                                <button
-                                    onClick={handleVegClick(veg.post_title)}
-                                    className={"input-group select-button "}>
-                                    <span className="input-group-field select-button__text">
-                                        {selectedVeg.includes(veg.post_title)
-                                            ? "Selected"
-                                            : "Select"}
-                                    </span>
-                                    <span
+            <div className="section__item">
+                <h2 className="section__heading">Select Your Vegetables</h2>
+                <p className="section__subheading">
+                    Select as many vegetable options as you'd like
+                </p>
+                <div className="grid-x grid-margin-x align-center">
+                    {vegetables &&
+                        vegetables.map(veg => (
+                            <div
+                                className={
+                                    "card small-12 large-4 card__item card__item--picture " +
+                                    (selectedVeg.includes(veg.post_title)
+                                        ? "card__item--active"
+                                        : "")
+                                }
+                                key={veg.id}>
+                                {veg.thumbnail && (
+                                    <img
+                                        className="card-img"
+                                        src={veg.thumbnail}
+                                        alt={veg.post_title}
+                                    />
+                                )}
+                                <div className="card-divider">
+                                    {veg.post_title}
+                                </div>
+                                <div className="card-section">
+                                    <button
+                                        onClick={handleVegClick(veg.post_title)}
                                         className={
-                                            "input-group-label select-button__icon fa " +
-                                            (selectedVeg.includes(
+                                            "input-group select-button "
+                                        }>
+                                        <span className="input-group-field select-button__text">
+                                            {selectedVeg.includes(
                                                 veg.post_title
                                             )
-                                                ? "fa-check"
-                                                : "fa-arrow-right")
-                                        }
-                                    />
-                                </button>
+                                                ? "Selected"
+                                                : "Select"}
+                                        </span>
+                                        <span
+                                            className={
+                                                "input-group-label select-button__icon fa " +
+                                                (selectedVeg.includes(
+                                                    veg.post_title
+                                                )
+                                                    ? "fa-check"
+                                                    : "fa-arrow-right")
+                                            }
+                                        />
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                </div>
             </div>
         </section>
     );

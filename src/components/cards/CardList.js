@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 // import SelectDropdown from "./SelectDropdown";
 import CardItemWithPic from "./CardItem_Picture";
 
@@ -9,7 +9,7 @@ export const CardList = ({
     selected,
     selectedVariant,
     setVariant,
-    // groupName,
+    groupName,
     variantKey
 }) => {
     const foodItemRow =
@@ -28,11 +28,13 @@ export const CardList = ({
             />
         ));
     return (
-        <Fragment>
+        <div className="section__item">
+            <h2 className="section__heading">{`Select your ${groupName}`}</h2>
+            <p className="section__subheading">{`Select one ${groupName} option per order`}</p>
             <div className="grid-x grid-margin-x align-center">
                 {foodItemRow}
             </div>
-        </Fragment>
+        </div>
     );
 };
 
