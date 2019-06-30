@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Table from "../Table";
+import Table from "../table/Table";
 import "./section.scss";
 
 export class Review extends Component {

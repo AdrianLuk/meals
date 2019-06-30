@@ -258,7 +258,7 @@ export class Form extends Component {
         }
         return (
             <Fragment>
-                <div className="grid-container grid-x align-justify align-middle">
+                <div className="form__header grid-container grid-x align-justify align-middle">
                     <StepList step={this.state.step} />
                     <Total
                         itemCount={+this.state.totalCustomizations}

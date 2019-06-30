@@ -1,16 +1,4 @@
-$dark-teal: #168b95;
-$orange: #e57101;
-$medium-grey: #aaa;
-$medium: 40rem;
-$large: 64rem;
-
-/// responsive mixin
-@mixin breakpoint($breakpoint) {
-    @media screen and (min-width: $breakpoint) {
-        @content;
-    }
-}
-
+@import "../../shared";
 .step-list {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -58,17 +46,19 @@ $large: 64rem;
             line-height: 2rem;
             margin: auto;
             display: none;
+            font-size: 1rem;
             @include breakpoint($large) {
                 display: block;
-                width: 3rem;
-                height: 3rem;
-                line-height: 2.75rem;
+                width: 2rem;
+                height: 2rem;
+                line-height: 1.75rem;
             }
         }
         .step-name {
             font-size: 0.8rem;
             margin-left: 0.5rem;
             text-align: center;
+            text-transform: uppercase;
             @include breakpoint($medium) {
                 font-size: 1.125rem;
             }

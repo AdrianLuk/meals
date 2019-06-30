@@ -1,0 +1,45 @@
+@import "../../shared";
+.table {
+    tbody,
+    tfoot,
+    thead {
+        border: none;
+        background-color: transparent;
+    }
+    &.unstriped tbody tr {
+        border-bottom: none;
+    }
+    &__head {
+        text-transform: uppercase;
+        border-bottom: 1px solid $black !important;
+    }
+    &__footer {
+        text-transform: uppercase;
+        border-top: 1px solid $black !important;
+    }
+    &__row {
+        &--bold {
+            td {
+                font-weight: bold;
+            }
+        }
+        &--indent-1 {
+            td {
+                &:first-child {
+                    @include breakpoint($large) {
+                        text-indent: 1rem;
+                    }
+                }
+            }
+        }
+        &--indent-1-5 {
+            td {
+                &:first-child {
+                    @include breakpoint($large) {
+                        text-indent: 1.5rem;
+                    }
+                }
+            }
+        }
+    }
+}

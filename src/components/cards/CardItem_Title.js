@@ -5,6 +5,7 @@ const CardItem = ({
     handleSelect,
     handlePackageSelect,
     item,
+    cardTitle,
     selectedItem,
     buttonText,
     description,
@@ -17,11 +18,9 @@ const CardItem = ({
                 "card text-center small-12 large-4 card__item card__item--title " +
                 (item.id === selectedItem.id ? "card__item--active" : "")
             }>
-            <div className="card-divider">{item.title.rendered}</div>
+            <div className="card-divider">{cardTitle}</div>
             <div className="card-section">
-                {description && (
-                    <div dangerouslySetInnerHTML={{ __html: description }} />
-                )}
+                {description && <p>{description}</p>}
                 <SplitButton
                     item={item}
                     stateKey={stateKey}

@@ -67,7 +67,9 @@ const Customize = ({
     return (
         <section className="section section--customize">
             <div className="customize-counter">
-                <p> Choose number of meals for this customization </p>
+                <h5 className="section__heading text-center">
+                    Choose number of meals for this customization
+                </h5>
                 <div
                     className="input-group plus-minus-input align-center"
                     style={{ width: 200 }}>
@@ -79,12 +81,9 @@ const Customize = ({
                             <i className="fa fa-minus" aria-hidden="true" />
                         </button>
                     </div>
-                    <input
-                        className="input-group-field"
-                        type="number"
-                        readOnly
-                        value={customizationCount}
-                    />
+                    <span className="input-group-field">
+                        {customizationCount}
+                    </span>
                     <div className="input-group-button">
                         <button
                             onClick={handleCustomizationAmountIncrement}
@@ -104,6 +103,7 @@ const Customize = ({
                 handleSelect={setSelectedCarb}
                 setVariant={setCarbVariant}
                 groups={carbs}
+                hasNone={true}
             />
             <hr />
             <CardList
@@ -115,6 +115,7 @@ const Customize = ({
                 handleSelect={setSelectedMeat}
                 setVariant={setMeatVariant}
                 groups={meats}
+                hasNone={false}
             />
             <hr />
             <div className="section__item">
@@ -122,7 +123,7 @@ const Customize = ({
                 <p className="section__subheading">
                     Select as many vegetable options as you'd like
                 </p>
-                <div className="grid-x grid-margin-x align-center">
+                <div className="section__grid grid-x grid-margin-x align-center">
                     {vegetables &&
                         vegetables.map(veg => (
                             <div

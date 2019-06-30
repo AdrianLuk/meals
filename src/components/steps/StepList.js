@@ -4,7 +4,7 @@ import "./steps.scss";
 
 const StepList = ({ step }) => {
     return (
-        <div className="step-list">
+        <div className="step-list cell small-12 large-9">
             <div className={"step-item " + (step >= 1 ? "is-active" : "")}>
                 <div className="step-index">1</div>
                 <div className="step-name">Choose</div>
@@ -17,7 +17,7 @@ const StepList = ({ step }) => {
             <hr className={"step-separator " + (step > 2 ? "is-active" : "")} />
             <div className={"step-item " + (step === 3 ? "is-active" : "")}>
                 <div className="step-index">3</div>
-                <div className="step-name">Review</div>
+                <div className="step-name">Review &amp; Confirm</div>
             </div>
         </div>
     );

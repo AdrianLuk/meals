@@ -1,16 +1,12 @@
-$dark-teal: #168b95;
-$medium-teal: #41bdc7;
-$light-teal: #b7f3f8;
-$orange: #e57101;
-$white: #fff;
-$offwhite: #eee;
-$dark-grey: #333;
-$medium-grey: #aaa;
-$light-grey: #ccc;
+@import "../shared";
 
 body {
     margin: 0;
     font-family: "Montserrat", sans-serif;
+}
+
+.font-weight-bold {
+    font-weight: bold;
 }
 // a,
 // button {
@@ -20,6 +16,27 @@ body {
 //         }
 //     }
 // }
+.form__header {
+    margin-bottom: 1rem;
+    .total {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        &__label {
+            text-transform: uppercase;
+            padding: calc(1rem + 1px);
+            background: $offwhite;
+            font-weight: bold;
+            color: $medium-grey;
+        }
+        &__price {
+            padding: 1rem;
+            border: 1px solid $medium-grey;
+            font-weight: bold;
+        }
+    }
+}
 .plus-minus-input {
     align-items: center;
     margin: auto;
@@ -27,18 +44,25 @@ body {
         text-align: center;
         margin-left: 0.5rem;
         margin-right: 0.5rem;
-        padding: 1rem;
-
+        border: 1px solid $dark-teal;
+        color: $orange;
+        padding: 0.5rem 1rem;
+        font-weight: bold;
         &::-webkit-inner-spin-button,
         ::-webkit-outer-spin-button {
             appearance: none;
         }
     }
-
     .input-group-button {
         .circle {
             border-radius: 50%;
-            padding: 0.25em 0.8em;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            padding: 0;
+            border-color: $dark-teal;
+            background-color: $dark-teal;
+            color: $white;
         }
     }
 }
@@ -65,7 +89,7 @@ body {
 }
 .select-button {
     border-radius: 50px;
-    color: #fff;
+    color: $white;
     text-decoration: none;
     font-weight: bold;
     text-transform: uppercase;
@@ -75,7 +99,11 @@ body {
     margin: 0.5rem auto;
     width: auto;
     &__text {
+        line-height: 1.1;
         padding: 1rem;
+        background-color: $offwhite;
+        border-top-left-radius: 50px !important;
+        border-bottom-left-radius: 50px !important;
         color: $dark-grey;
     }
     &__icon {
@@ -84,6 +112,17 @@ body {
         border-bottom-right-radius: 50px !important;
         background-color: $medium-grey;
         color: $white;
+    }
+    &--is-active {
+        .select-button__text {
+            background-color: $dark-teal;
+            border-color: $dark-teal;
+            color: $white;
+        }
+        .select-button__icon {
+            background-color: $medium-teal;
+            border-color: $medium-teal;
+        }
     }
 }
 // Cards
@@ -146,12 +185,13 @@ body {
                     }
                     .select-button {
                         background-color: $dark-teal;
-
                         &__text {
                             color: $white;
+                            background-color: $dark-teal;
                         }
                         &__icon {
                             background-color: $medium-teal;
+                            border-color: $medium-teal;
                         }
                     }
                 }

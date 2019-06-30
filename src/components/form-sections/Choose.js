@@ -33,6 +33,7 @@ export class Choose extends Component {
                     packageItem.acf.meal_count
                 } Personal Sized Meals`}
                 group="packages"
+                cardTitle={packageItem.title.rendered}
             />
         ));
         const goalList = goals.map(goal => (
@@ -43,8 +44,13 @@ export class Choose extends Component {
                 selectedItem={selectedGoal}
                 handleSelect={handleSelect}
                 stateKey="selectedGoal"
-                description={goal.excerpt.rendered}
-                buttonText={goal.acf.portion_price}
+                description={goal.acf.portion_description}
+                buttonText={
+                    parseInt(goal.acf.portion_price) > 0
+                        ? `$${parseInt(goal.acf.portion_price).toFixed(2)}`
+                        : `FREE`
+                }
+                cardTitle={goal.acf.portion_goal}
             />
         ));
         return (

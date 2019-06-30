@@ -1,12 +1,4 @@
-$dark-teal: #168b95;
-$medium-teal: #41bdc7;
-$light-teal: #b7f3f8;
-$orange: #e57101;
-$white: #fff;
-$offwhite: #eee;
-$dark-grey: #333;
-$medium-grey: #aaa;
-$light-grey: #ccc;
+@import "../../shared";
 // pagination
 .pagination {
     &__list {
