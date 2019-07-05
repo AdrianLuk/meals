@@ -1,13 +1,26 @@
 import React, { Fragment } from "react";
 import "./table.scss";
-
-const Table = ({ customizations, selectedPackage, goal }) => {
-    console.log(customizations);
-    console.log(selectedPackage);
-    console.log(goal);
+const isEmptyObject = object => {
+    if (Object.entries(object).length === 0 && object.constructor === Object) {
+        return true;
+    } else {
+        return false;
+    }
+};
+const Table = ({
+    customizations,
+    selectedPackage,
+    goal,
+    selectedDelivery,
+    deliveryOption
+}) => {
+    // console.log(selectedDelivery);
+    // console.log(customizations);
+    // console.log(selectedPackage);
+    // console.log(goal);
     return (
         <table className="table text-uppercase unstriped">
-            <thead class="table__head">
+            <thead className="table__head">
                 <tr>
                     <th>Order Summary</th>
                     <th className="text-center">QTY</th>
@@ -15,12 +28,10 @@ const Table = ({ customizations, selectedPackage, goal }) => {
                 </tr>
             </thead>
             <tbody>
-                <tr className="table__row--bold table__row--indent-1">
+                <tr className="table__row table__row--bold table__row--indent-1">
                     <td>{selectedPackage.title.rendered}</td>
                     <td />
-                    <td className="text-center">{`$${
-                        selectedPackage.acf.price
-                    }`}</td>
+                    <td>{`$${selectedPackage.acf.price}`}</td>
                 </tr>
                 <tr className="table__row table__row--indent-1-5">
                     <td>{`${selectedPackage.acf.meal_count}-meal pack`}</td>
@@ -30,7 +41,7 @@ const Table = ({ customizations, selectedPackage, goal }) => {
                 <tr className="table__row table__row--indent-1-5">
                     <td>{`${goal.acf.portion_description}`}</td>
                     <td />
-                    <td class="text-center font-weight-bold">
+                    <td>
                         {parseInt(goal.acf.portion_price) > 0
                             ? `$${parseInt(goal.acf.portion_price).toFixed(2)}`
                             : `FREE`}
@@ -38,9 +49,9 @@ const Table = ({ customizations, selectedPackage, goal }) => {
                 </tr>
                 {customizations.map((cust, index) => (
                     <Fragment key={index}>
-                        <tr className="table__row--bold table__row--indent-1">
+                        <tr className="table__row table__row--bold table__row--indent-1">
                             <td>{`Customized Meal ${index + 1}`}</td>
-                            <td class="text-center">{`x${
+                            <td className="text-center">{`x${
                                 cust.customizationCount
                             }`}</td>
                             <td />
@@ -65,15 +76,46 @@ const Table = ({ customizations, selectedPackage, goal }) => {
                                     <td />
                                 </tr>
                             ))}
+                        {cust.comments.length > 0 && (
+                            <tr className="table__row table__row--indent-1-5">
+                                <td>{cust.comments}</td>
+                                <td />
+                                <td />
+                            </tr>
+                        )}
                     </Fragment>
                 ))}
+                {!isEmptyObject(selectedDelivery) &&
+                    deliveryOption === "delivery" && (
+                        <Fragment>
+                            <tr className="table__row table__row--bold table__row--indent-1">
+                                <td>Delivery Location</td>
+                                <td />
+                                <td />
+                            </tr>
+                            <tr className="table__row table__row--indent-1-5">
+                                <td>{selectedDelivery.location}</td>
+                                <td />
+                                <td>{`$${parseInt(
+                                    selectedDelivery.price
+                                ).toFixed(2)}`}</td>
+                            </tr>
+                        </Fragment>
+                    )}
             </tbody>
             <tfoot className="table__footer">
-                <th>Order Total</th>
-                <th />
-                <th className="text-center">{`$${(
-                    +selectedPackage.acf.price + (goal.id === 164 ? 1 : 0)
-                ).toFixed(2)}`}</th>
+                <tr>
+                    <th>Order Total</th>
+                    <th />
+                    <th className="text-center">{`$${(
+                        +selectedPackage.acf.price +
+                        +goal.acf.portion_price +
+                        (!isEmptyObject(selectedDelivery) &&
+                        deliveryOption === "delivery"
+                            ? +selectedDelivery.price
+                            : 0)
+                    ).toFixed(2)}`}</th>
+                </tr>
             </tfoot>
         </table>
     );

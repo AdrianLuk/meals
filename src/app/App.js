@@ -16,7 +16,10 @@ export class App extends Component {
     render() {
         return (
             <Fragment>
-                <form action="#" method="post">
+                <form
+                    id="order-form"
+                    action="./inc/process-order.php"
+                    method="post">
                     <div id="form-anchor" />
                     <Form />
                 </form>

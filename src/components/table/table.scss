@@ -41,5 +41,11 @@
                 }
             }
         }
+        td {
+            &:last-child {
+                text-align: center;
+                font-weight: bold;
+            }
+        }
     }
 }

@@ -4,18 +4,31 @@ body {
     margin: 0;
     font-family: "Montserrat", sans-serif;
 }
-
+#root {
+    width: 100%;
+}
 .font-weight-bold {
     font-weight: bold;
 }
-// a,
-// button {
-//     &:focus {
-//         &:focus {
-//             outline: none !important;
-//         }
-//     }
-// }
+.spinner-container {
+    text-align: center;
+    margin-bottom: 2rem;
+    .spinner {
+        color: $dark-teal;
+    }
+}
+.customize {
+    &__textarea {
+        min-height: unset !important;
+        margin: 0 auto;
+        &-container {
+            padding: 0.5rem 1rem;
+        }
+    }
+    &__counter {
+        margin-bottom: 1rem;
+    }
+}
 .form__header {
     margin-bottom: 1rem;
     .total {
@@ -29,6 +42,9 @@ body {
             background: $offwhite;
             font-weight: bold;
             color: $medium-grey;
+            &--border-right {
+                border-right: 1px solid $medium-grey;
+            }
         }
         &__price {
             padding: 1rem;
@@ -40,6 +56,7 @@ body {
 .plus-minus-input {
     align-items: center;
     margin: auto;
+    width: 200px;
     .input-group-field {
         text-align: center;
         margin-left: 0.5rem;
@@ -66,27 +83,27 @@ body {
         }
     }
 }
-.blue-arrow {
-    background: none;
-    padding: 1rem;
-    border-radius: 50px;
-    color: $white;
-    text-decoration: none;
-    font-weight: bold;
-    text-transform: uppercase;
-    min-width: 200px;
-    transition: all 0.2s ease-in !important;
-    cursor: pointer;
-    margin: 0.5rem;
-    &:after {
-        content: "\f061";
-        font-family: "FontAwesome";
-        font-size: 1rem;
-        padding: 1rem 0;
-        padding-left: 1rem;
-        margin-left: 1rem;
-    }
-}
+// .blue-arrow {
+//     background: none;
+//     padding: 1rem;
+//     border-radius: 50px;
+//     color: $white;
+//     text-decoration: none;
+//     font-weight: bold;
+//     text-transform: uppercase;
+//     min-width: 200px;
+//     transition: all 0.2s ease-in !important;
+//     cursor: pointer;
+//     margin: 0.5rem;
+//     &:after {
+//         content: "\f061";
+//         font-family: "FontAwesome";
+//         font-size: 1rem;
+//         padding: 1rem 0;
+//         padding-left: 1rem;
+//         margin-left: 1rem;
+//     }
+// }
 .select-button {
     border-radius: 50px;
     color: $white;
@@ -128,8 +145,11 @@ body {
 // Cards
 .card {
     &__item {
-        margin: 0 0.5rem 1rem;
         flex: 0 1 auto;
+        margin: 0 auto 1rem;
+        @include breakpoint($medium) {
+            margin: 0 0.5rem 1rem;
+        }
         .card {
             &-divider {
                 text-transform: uppercase;

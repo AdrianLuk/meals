@@ -12,23 +12,26 @@ export class Form extends Component {
         super(props);
         this.state = {
             step: 1,
+            isDataLoaded: false,
             types: {},
             packages: [],
             goals: [],
             carbs: [],
             meats: [],
             vegetables: [],
+            shippingOptions: null,
             selectedPackage: {},
             packageAmount: 1,
             selectedGoal: {},
-            currentCustomizationCount: 0,
+            currentCustomizationCount: 1,
             currentCustomizationId: 1,
             customizationsRemaining: null,
             totalCustomizations: 0,
             currentCustomization: {},
             customizations: [],
             comments: "",
-            isDataLoaded: false
+            selectedDeliveryLocation: {},
+            deliveryOption: "delivery"
         };
         this.baseURL = "https://almojuela.com/fitaxxmeals";
     }
@@ -57,14 +60,17 @@ export class Form extends Component {
         const getVegetables = await axios.get(
             `${this.baseURL}/wp-json/wp/v2/vegetables?order=asc`
         );
-
+        const getShippingOptions = await axios.get(
+            `${this.baseURL}/wp-json/acf/v3/options/options`
+        );
         Promise.all([
             getTypes,
             getPackages,
             getGoals,
             getCarbs,
             getMeats,
-            getVegetables
+            getVegetables,
+            getShippingOptions
         ]).then(res => {
             this.setState({
                 types: res[0].data,
@@ -73,6 +79,7 @@ export class Form extends Component {
                 carbs: res[3].data,
                 meats: res[4].data,
                 vegetables: res[5].data,
+                shippingOptions: res[6].data.acf,
                 isDataLoaded: true
             });
         });
@@ -136,7 +143,8 @@ export class Form extends Component {
                 this.scrollToTop();
             }
         } else {
-            this.setState({ step: this.state.step + 1 });
+            console.log("submit");
+            document.getElementById("order-form").submit();
             this.scrollToTop();
         }
     };
@@ -152,9 +160,10 @@ export class Form extends Component {
         this.setState({
             customizations: customizations,
             currentCustomization: {},
-            currentCustomizationCount:
-                this.state.customizationsRemaining -
-                this.state.currentCustomizationCount,
+            // currentCustomizationCount:
+            //     this.state.customizationsRemaining -
+            //     this.state.currentCustomizationCount,
+            currentCustomizationCount: 1,
             customizationsRemaining:
                 this.state.customizationsRemaining -
                 this.state.currentCustomizationCount
@@ -163,18 +172,30 @@ export class Form extends Component {
     handleCustomizationAmountIncrement = event => {
         event.preventDefault();
         if (
-            +this.state.currentCustomizationCount ===
+            +this.state.currentCustomizationCount >=
             +this.state.customizationsRemaining
         ) {
-            return false;
+            this.setState({
+                currentCustomizationCount: +this.state.customizationsRemaining
+            });
+        } else {
+            this.setState({
+                currentCustomizationCount:
+                    +this.state.currentCustomizationCount + 1
+            });
         }
-        this.setState({
-            currentCustomizationCount: +this.state.currentCustomizationCount + 1
-        });
+    };
+    handleCustomizationAmountChange = e => {
+        if (e.target.value > +this.state.customizationsRemaining) {
+            this.setState({
+                currentCustomizationCount: +this.state.customizationsRemaining
+            });
+        }
+        this.setState({ currentCustomizationCount: e.target.value });
     };
     handleCustomizationAmountDecrement = event => {
         event.preventDefault();
-        if (this.state.currentCustomizationCount === 0) {
+        if (this.state.currentCustomizationCount <= 1) {
             return false;
         }
         this.setState({
@@ -187,7 +208,8 @@ export class Form extends Component {
         if (selection.acf) {
             this.setState({
                 selectedPackage: selection,
-                currentCustomizationCount: +selection.acf.meal_count,
+                // currentCustomizationCount: +selection.acf.meal_count,
+                currentCustomizationCount: 1,
                 totalCustomizations: +selection.acf.meal_count,
                 customizationsRemaining: +selection.acf.meal_count
             });
@@ -198,11 +220,21 @@ export class Form extends Component {
         console.log(selection);
         this.setState({ [state]: selection });
     };
-
+    handleDeliverySelect = selected => {
+        this.setState({ selectedDeliveryLocation: selected });
+    };
+    setDeliveryOption = option => e => {
+        e.preventDefault();
+        this.setState({ deliveryOption: option });
+    };
     renderSections = () => {
         const { step } = this.state;
         if (!step) {
-            return <div>Loading</div>;
+            return (
+                <div className="spinner-container">
+                    <span className="spinner fa fa-spin fa-spinner fa-3x fa-fw" />
+                </div>
+            );
         }
         switch (step) {
             case 1:
@@ -234,10 +266,16 @@ export class Form extends Component {
                         handleCustomizationAmountDecrement={
                             this.handleCustomizationAmountDecrement
                         }
+                        handleCustomizationAmountChange={
+                            this.handleCustomizationAmountChange
+                        }
                         handleCustomizationAmountIncrement={
                             this.handleCustomizationAmountIncrement
                         }
                         addToOrder={this.addCustomizationToOrder}
+                        customizationsRemaining={
+                            this.state.customizationsRemaining
+                        }
                     />
                 );
             case 3:
@@ -246,24 +284,44 @@ export class Form extends Component {
                         customizations={this.state.customizations}
                         selectedPackage={this.state.selectedPackage}
                         selectedGoal={this.state.selectedGoal}
+                        selectedDelivery={this.state.selectedDeliveryLocation}
+                        shipping={this.state.shippingOptions}
+                        handleSelect={this.handleDeliverySelect}
+                        deliveryOption={this.state.deliveryOption}
+                        setDeliveryOption={this.setDeliveryOption}
                     />
                 );
             default:
-                return <div>Loading</div>;
+                return (
+                    <div className="spinner-container">
+                        <span className="spinner fa fa-spin fa-spinner fa-3x fa-fw" />
+                    </div>
+                );
         }
     };
     render() {
         if (!this.state.isDataLoaded) {
-            return <div>Loading...</div>;
+            return (
+                <div className="spinner-container">
+                    <span className="spinner fa fa-spin fa-spinner fa-3x fa-fw" />
+                </div>
+            );
         }
         return (
             <Fragment>
                 <div className="form__header grid-container grid-x align-justify align-middle">
                     <StepList step={this.state.step} />
                     <Total
+                        step={this.state.step}
                         itemCount={+this.state.totalCustomizations}
                         packagePrice={this.state.selectedPackage}
-                        selectedGoal={this.state.selectedGoal.id}
+                        selectedGoal={this.state.selectedGoal}
+                        selectedDelivery={this.state.selectedDeliveryLocation}
+                        deliveryOption={this.state.deliveryOption}
+                        totalCustomizations={this.state.totalCustomizations}
+                        customizationsRemaining={
+                            this.state.customizationsRemaining
+                        }
                     />
                 </div>
                 <div className="grid-container">{this.renderSections()}</div>

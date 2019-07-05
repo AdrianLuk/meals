@@ -29,7 +29,7 @@ const CardItemWithPic = ({
         <Fragment>
             <div
                 className={
-                    "card small-12 large-4 card__item card__item--picture " +
+                    "card small-12 medium-6 large-4 card__item card__item--picture " +
                     (isActive ? "card__item--active" : "")
                 }
                 key={group.id}>

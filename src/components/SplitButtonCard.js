@@ -1,22 +1,22 @@
 import React from "react";
 
 const SplitButton = ({
-    handleClick,
     isActive,
-    text
-    // group,
-    // handlePackageSelect,
-    // handleSelect,
-    // stateKey,
-    // item
+    text,
+    group,
+    handlePackageSelect,
+    handleSelect,
+    stateKey,
+    item
 }) => {
     return (
         <button
-            onClick={handleClick}
-            className={
-                "input-group select-button " +
-                (isActive ? "select-button--is-active" : "")
-            }>
+            onClick={
+                group === "goals"
+                    ? handleSelect(stateKey, item)
+                    : handlePackageSelect(item)
+            }
+            className={"input-group select-button "}>
             <span className="input-group-field select-button__text">
                 {text}
             </span>

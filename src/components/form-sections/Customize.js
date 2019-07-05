@@ -10,7 +10,9 @@ const Customize = ({
     addToOrder,
     currentCustomizationId,
     // customizations,
+    customizationsRemaining,
     handleCustomizationAmountIncrement,
+    handleCustomizationAmountChange,
     handleCustomizationAmountDecrement
 }) => {
     // eslint-disable-next-line no-unused-vars
@@ -20,6 +22,8 @@ const Customize = ({
     const [selectedCarb, setSelectedCarb] = useState({});
     const [carbVariant, setCarbVariant] = useState("");
     const [selectedVeg, setSelectedVeg] = useState([]);
+    const [comments, setComments] = useState("");
+    // init object containing all the data for the current customization
     let customization = {
         currentCustomizationId,
         selectedMeat,
@@ -27,7 +31,8 @@ const Customize = ({
         selectedCarb,
         carbVariant,
         selectedVeg,
-        customizationCount
+        customizationCount,
+        comments
     };
     useEffect(() => {
         // console.log(customization);
@@ -41,7 +46,8 @@ const Customize = ({
         selectedCarb,
         carbVariant,
         selectedVeg,
-        customizationCount
+        customizationCount,
+        comments
     ]);
     useEffect(() => {
         return () => {
@@ -50,6 +56,7 @@ const Customize = ({
             setSelectedCarb({});
             setCarbVariant("");
             setSelectedVeg([]);
+            setComments("");
         };
     }, [currentCustomizationId]);
     const handleVegClick = selectedVeggie => e => {
@@ -66,13 +73,11 @@ const Customize = ({
     };
     return (
         <section className="section section--customize">
-            <div className="customize-counter">
+            <div className="customize__counter">
                 <h5 className="section__heading text-center">
                     Choose number of meals for this customization
                 </h5>
-                <div
-                    className="input-group plus-minus-input align-center"
-                    style={{ width: 200 }}>
+                <div className="input-group plus-minus-input align-center">
                     <div className="input-group-button">
                         <button
                             onClick={handleCustomizationAmountDecrement}
@@ -81,9 +86,17 @@ const Customize = ({
                             <i className="fa fa-minus" aria-hidden="true" />
                         </button>
                     </div>
-                    <span className="input-group-field">
-                        {customizationCount}
-                    </span>
+                    <input
+                        type="number"
+                        value={
+                            customizationCount > customizationsRemaining
+                                ? customizationsRemaining
+                                : customizationCount
+                        }
+                        onChange={handleCustomizationAmountChange}
+                        className="input-group-field"
+                        max={customizationsRemaining}
+                    />
                     <div className="input-group-button">
                         <button
                             onClick={handleCustomizationAmountIncrement}
@@ -128,7 +141,7 @@ const Customize = ({
                         vegetables.map(veg => (
                             <div
                                 className={
-                                    "card small-12 large-4 card__item card__item--picture " +
+                                    "card small-12 medium-6 large-4 card__item card__item--picture " +
                                     (selectedVeg.includes(veg.post_title)
                                         ? "card__item--active"
                                         : "")
@@ -171,6 +184,23 @@ const Customize = ({
                                 </div>
                             </div>
                         ))}
+                </div>
+            </div>
+            <hr />
+            <div className="section__item">
+                <h3 className="section__heading">Comments</h3>
+                <p className="section__subheading">
+                    Please add any comments for this customization
+                </p>
+                <div className="customize__textarea-container">
+                    <textarea
+                        className="customize__textarea"
+                        value={comments}
+                        onChange={e => setComments(e.target.value)}
+                        name=""
+                        id=""
+                        rows={4}
+                    />
                 </div>
             </div>
         </section>
