@@ -7,6 +7,11 @@ body {
 #root {
     width: 100%;
 }
+.order {
+    p {
+        text-align: left;
+    }
+}
 .font-weight-bold {
     font-weight: bold;
 }
@@ -22,7 +27,9 @@ body {
         min-height: unset !important;
         margin: 0 auto;
         &-container {
-            padding: 0.5rem 1rem;
+            @include breakpoint($large) {
+                padding: 0.5rem 1rem;
+            }
         }
     }
     &__counter {
@@ -36,20 +43,30 @@ body {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        margin: auto;
+        @include breakpoint($large) {
+            margin: 0;
+        }
         &__label {
             text-transform: uppercase;
-            padding: calc(1rem + 1px);
             background: $offwhite;
             font-weight: bold;
             color: $medium-grey;
+            padding: calc(0.9rem + 1px);
+            @include breakpoint($large) {
+                padding: calc(1rem + 1px);
+            }
             &--border-right {
                 border-right: 1px solid $medium-grey;
             }
         }
         &__price {
-            padding: 1rem;
             border: 1px solid $medium-grey;
             font-weight: bold;
+            padding: 0.9rem;
+            @include breakpoint($large) {
+                padding: 1rem;
+            }
         }
     }
 }
@@ -159,8 +176,9 @@ body {
                 color: $dark-grey;
             }
             &-img {
-                max-height: 200px;
+                height: 200px;
                 position: relative;
+                background-size: cover;
             }
             &-section {
                 .blue-arrow {
@@ -168,6 +186,9 @@ body {
                 }
                 .select-button {
                     background-color: #eee;
+                }
+                p {
+                    text-align: center;
                 }
             }
         }

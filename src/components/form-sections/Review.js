@@ -1,10 +1,22 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import Table from "../table/Table";
 import Logistics from "../logistics/Logistics";
 // import CardItem from "../cards/CardItem_Title";
 import SplitButton from "../SplitButton";
 import "./section.scss";
-
+const useForm = initialValues => {
+    const [values, setValues] = useState(initialValues);
+    return [
+        values,
+        e => {
+            setValues({
+                ...values,
+                [e.target.id]: e.target.value
+            });
+        }
+    ];
+};
+const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 const Review = ({
     customizations,
     selectedPackage,
@@ -13,13 +25,72 @@ const Review = ({
     handleSelect,
     selectedDelivery,
     setDeliveryOption,
-    deliveryOption
+    deliveryOption,
+    deliveryTime,
+    setDeliveryTime,
+    total,
+    handleIsContactValid
 }) => {
+    let [submittedCust, setSubmittedCust] = useState(customizations);
     const [paymentOption, setPaymentOption] = useState("cash");
     const setPayment = option => e => {
         e.preventDefault();
         setPaymentOption(option);
     };
+    const [cityIndex, setCityIndex] = useState("default");
+    const [cityValue, setCityValue] = useState("");
+    const [email, setEmail] = useState("");
+    const [isEmailValid, setIsEmailValid] = useState(true);
+    const [values, handleChange] = useForm({
+        fullName: "",
+        // email: "",
+        phone: "",
+        address: "",
+        address2: "",
+        // city: "",
+        postalCode: "",
+        specialInstructions: ""
+    });
+
+    const checkEmail = () => {
+        setIsEmailValid(emailRegex.test(email));
+        // setEmail(e);
+    };
+    const handleEmail = e => {
+        setEmail(e.target.value);
+        checkEmail();
+    };
+    useEffect(() => {
+        setSubmittedCust(customizations);
+        console.log(customizations);
+        console.log(submittedCust);
+    }, [customizations, submittedCust]);
+
+    useEffect(() => {
+        setCityValue(shipping.delivery_locations[cityIndex]);
+        console.log(cityValue);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cityValue, cityIndex]);
+    useEffect(() => {
+        if (
+            cityIndex !== "default" &&
+            values.fullName !== "" &&
+            values.phone !== "" &&
+            isEmailValid
+        ) {
+            handleIsContactValid(true);
+        } else {
+            handleIsContactValid(false);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cityIndex, isEmailValid, values.fullName, values.phone]);
+    // useEffect(() => {
+    //     submittedCust.forEach(c => {
+    //         const veg = c.selectedVeg.join();
+    //         return { ...c, selectedVeg: veg };
+    //     });
+    //     console.log(submittedCust);
+    // }, [submittedCust]);
     return (
         <Fragment>
             <section className="section section--review">
@@ -37,6 +108,7 @@ const Review = ({
                                 goal={selectedGoal}
                                 selectedDelivery={selectedDelivery}
                                 deliveryOption={deliveryOption}
+                                total={total}
                             />
                         </div>
                         <div className="cell small-12 large-6">
@@ -45,6 +117,16 @@ const Review = ({
                                 shipping={shipping}
                                 setDeliveryOption={setDeliveryOption}
                                 deliveryOption={deliveryOption}
+                                values={values}
+                                handleChange={handleChange}
+                                city={cityIndex}
+                                setCity={setCityIndex}
+                                email={email}
+                                setEmail={handleEmail}
+                                checkEmail={checkEmail}
+                                isEmailValid={isEmailValid}
+                                deliveryTime={deliveryTime}
+                                setDeliveryTime={setDeliveryTime}
                             />
                         </div>
                     </div>
@@ -90,7 +172,12 @@ const Review = ({
                             }>
                             <div className="card-divider">{`E-Transfer`}</div>
                             <div className="card-section">
-                                <p>{`Paid to `}</p>
+                                <p>
+                                    {`Paid to `}
+                                    <a href="mailto:cheryl.almojuela@gmail.com">
+                                        xxxx@xxx.com
+                                    </a>
+                                </p>
                                 <SplitButton
                                     handleClick={setPayment("etransfer")}
                                     text={
@@ -108,6 +195,24 @@ const Review = ({
                         </div>
                     </div>
                 </div>
+                <input type="hidden" name="" value={total} />
+                <input
+                    type="hidden"
+                    name="customizations"
+                    value={JSON.stringify(submittedCust)}
+                />
+                <input type="hidden" name="fullName" value={values.fullName} />
+                <input type="hidden" name="email" value={email} />
+                <input type="hidden" name="phone" value={values.phone} />
+                <input type="hidden" name="address" />
+                <input
+                    type="hidden"
+                    name="addressLine2"
+                    value={values.address2}
+                />
+                <input type="hidden" name="city" />
+                <input type="hidden" name="postalCode" />
+                <input type="hidden" name="specialInstructions" />
             </section>
         </Fragment>
     );

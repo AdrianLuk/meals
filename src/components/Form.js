@@ -31,7 +31,10 @@ export class Form extends Component {
             customizations: [],
             comments: "",
             selectedDeliveryLocation: {},
-            deliveryOption: "delivery"
+            deliveryOption: "delivery",
+            deliveryTime: "",
+            isContactValid: false,
+            canProceed: false
         };
         this.baseURL = "https://almojuela.com/fitaxxmeals";
     }
@@ -41,6 +44,21 @@ export class Form extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.selectedPackage.id !== this.state.selectedPackage.id) {
             this.setState({ customizations: [] });
+        }
+        if (
+            prevState.selectedPackage !== this.state.selectedPackage ||
+            prevState.selectedGoal !== this.state.selectedGoal ||
+            prevState.step !== this.state.step
+        ) {
+            this.handleProceed();
+        }
+        if (this.state.step === 2) {
+            if (
+                prevState.currentCustomization !==
+                this.state.currentCustomization
+            ) {
+                this.handleProceed();
+            }
         }
     }
     getData = async () => {
@@ -80,6 +98,7 @@ export class Form extends Component {
                 meats: res[4].data,
                 vegetables: res[5].data,
                 shippingOptions: res[6].data.acf,
+                deliveryTime: res[6].data.acf.delivery_times[0].timeframe,
                 isDataLoaded: true
             });
         });
@@ -123,8 +142,16 @@ export class Form extends Component {
             }
         } else if (this.state.step === 2) {
             // this.addCustomizationToOrder();
-            if (this.state.customizationsRemaining > 0) {
+            if (
+                this.state.customizationsRemaining > 0 &&
+                (this.state.currentCustomization.carbVariant.length !== 0 &&
+                    this.state.currentCustomization.meatVariant.length !== 0)
+            ) {
                 this.saveCustomization(this.state.currentCustomization);
+            } else if (this.state.customizationsRemaining === 0) {
+                this.setState({ step: this.state.step + 1 });
+            } else {
+                return false;
             }
             if (
                 this.state.customizationsRemaining -
@@ -144,8 +171,9 @@ export class Form extends Component {
             }
         } else {
             console.log("submit");
-            document.getElementById("order-form").submit();
-            this.scrollToTop();
+            if (this.state.isContactValid) {
+                document.getElementById("order-form").submit();
+            }
         }
     };
     addCustomizationToOrder = customization => {
@@ -169,6 +197,26 @@ export class Form extends Component {
                 this.state.currentCustomizationCount
         });
     };
+    handleCustomizationAmountDecrement = event => {
+        event.preventDefault();
+        if (this.state.currentCustomizationCount <= 1) {
+            return false;
+        } else {
+            this.setState({
+                currentCustomizationCount:
+                    +this.state.currentCustomizationCount - 1
+            });
+        }
+    };
+    handleCustomizationAmountChange = e => {
+        if (e.target.value > +this.state.customizationsRemaining) {
+            this.setState({
+                currentCustomizationCount: +this.state.customizationsRemaining
+            });
+        } else {
+            this.setState({ currentCustomizationCount: +e.target.value });
+        }
+    };
     handleCustomizationAmountIncrement = event => {
         event.preventDefault();
         if (
@@ -185,23 +233,6 @@ export class Form extends Component {
             });
         }
     };
-    handleCustomizationAmountChange = e => {
-        if (e.target.value > +this.state.customizationsRemaining) {
-            this.setState({
-                currentCustomizationCount: +this.state.customizationsRemaining
-            });
-        }
-        this.setState({ currentCustomizationCount: e.target.value });
-    };
-    handleCustomizationAmountDecrement = event => {
-        event.preventDefault();
-        if (this.state.currentCustomizationCount <= 1) {
-            return false;
-        }
-        this.setState({
-            currentCustomizationCount: +this.state.currentCustomizationCount - 1
-        });
-    };
     handlePackageSelect = selection => e => {
         e.preventDefault();
         console.log(selection);
@@ -213,6 +244,39 @@ export class Form extends Component {
                 totalCustomizations: +selection.acf.meal_count,
                 customizationsRemaining: +selection.acf.meal_count
             });
+        }
+    };
+    handleProceed = () => {
+        if (this.state.step === 1) {
+            if (
+                !this.isEmptyObject(this.state.selectedPackage) &&
+                !this.isEmptyObject(this.state.selectedGoal)
+            ) {
+                this.setState({ canProceed: true });
+                // return true;
+            } else {
+                this.setState({ canProceed: false });
+                // return false;
+            }
+        }
+        if (this.state.step === 2) {
+            if (
+                this.state.currentCustomization.carbVariant &&
+                this.state.currentCustomization.meatVariant
+            ) {
+                if (
+                    this.state.currentCustomization.carbVariant.length !== 0 &&
+                    this.state.currentCustomization.meatVariant.length !== 0
+                ) {
+                    this.setState({ canProceed: true });
+                    // return true;
+                } else {
+                    this.setState({ canProceed: false });
+                    // return false;
+                }
+            }
+        }
+        if (this.state.step === 3) {
         }
     };
     handleSelect = (state, selection) => e => {
@@ -227,8 +291,27 @@ export class Form extends Component {
         e.preventDefault();
         this.setState({ deliveryOption: option });
     };
+    setDeliveryTime = option => e => {
+        e.preventDefault();
+        this.setState({ deliveryTime: option });
+    };
+    handleIsContactValid = (isValid) => {
+        this.setState({ isContactValid: isValid });
+    };
     renderSections = () => {
         const { step } = this.state;
+        const total =
+            this.state.selectedPackage.acf &&
+            `${(
+                +this.state.selectedPackage.acf.price +
+                (this.state.selectedGoal.acf
+                    ? +this.state.selectedGoal.acf.portion_price
+                    : 0) +
+                (this.state.selectedDeliveryLocation.price &&
+                this.state.deliveryOption === "delivery"
+                    ? +this.state.selectedDeliveryLocation.price
+                    : 0)
+            ).toFixed(2)}`;
         if (!step) {
             return (
                 <div className="spinner-container">
@@ -289,6 +372,10 @@ export class Form extends Component {
                         handleSelect={this.handleDeliverySelect}
                         deliveryOption={this.state.deliveryOption}
                         setDeliveryOption={this.setDeliveryOption}
+                        deliveryTime={this.state.deliveryTime}
+                        setDeliveryTime={this.setDeliveryTime}
+                        total={total}
+                        handleIsContactValid={this.handleIsContactValid}
                     />
                 );
             default:
@@ -300,6 +387,18 @@ export class Form extends Component {
         }
     };
     render() {
+        const total =
+            this.state.selectedPackage.acf &&
+            (
+                +this.state.selectedPackage.acf.price +
+                (this.state.selectedGoal.acf
+                    ? +this.state.selectedGoal.acf.portion_price
+                    : 0) +
+                (this.state.selectedDeliveryLocation.price &&
+                this.state.deliveryOption === "delivery"
+                    ? +this.state.selectedDeliveryLocation.price
+                    : 0)
+            ).toFixed(2);
         if (!this.state.isDataLoaded) {
             return (
                 <div className="spinner-container">
@@ -322,14 +421,12 @@ export class Form extends Component {
                         customizationsRemaining={
                             this.state.customizationsRemaining
                         }
+                        total={total}
                     />
                 </div>
                 <div className="grid-container">{this.renderSections()}</div>
                 <Pagination
-                    canProceed={
-                        !this.isEmptyObject(this.state.selectedPackage) &&
-                        !this.isEmptyObject(this.state.selectedGoal)
-                    }
+                    canProceed={this.state.canProceed}
                     handleNextStepChange={this.handleNextStepChange}
                     handlePrevStepChange={this.handlePrevStepChange}
                     step={this.state.step}

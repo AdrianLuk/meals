@@ -1,43 +1,53 @@
-import React, { useState, Fragment } from "react";
+import React, { Fragment } from "react";
 import SplitButton from "../SplitButton";
 import Cleave from "cleave.js/react";
 import "./logistics.scss";
 // eslint-disable-next-line no-unused-vars
 import CleavePhone from "cleave.js/dist/addons/cleave-phone.ca";
 
-const useForm = initialValues => {
-    const [values, setValues] = useState(initialValues);
-    return [
-        values,
-        e => {
-            setValues({
-                ...values,
-                [e.target.name]: e.target.value
-            });
-        }
-    ];
-};
+// const useForm = initialValues => {
+//     const [values, setValues] = useState(initialValues);
+//     return [
+//         values,
+//         e => {
+//             setValues({
+//                 ...values,
+//                 [e.target.id]: e.target.value
+//             });
+//         }
+//     ];
+// };
+
 const Logistics = ({
     shipping,
     handleSelect,
     setDeliveryOption,
-    deliveryOption
+    deliveryOption,
+    deliveryTime,
+    setDeliveryTime,
+    values,
+    handleChange,
+    city,
+    setCity,
+    email,
+    isEmailValid,
+    checkEmail,
+    setEmail
 }) => {
     // const [deliveryOption, setDeliveryOption] = useState("delivery");
     // const [fullName, setFullName] = useState("");
     // const [email, setEmail] = useState("");
     // const [phone, setPhone] = useState("");
-    const [city, setCity] = useState("default");
-    const [values, handleChange] = useForm({
-        fullName: "",
-        email: "",
-        phone: "",
-        address: "",
-        address2: "",
-        // city: "",
-        postalCode: "",
-        specialInstructions: ""
-    });
+    // const [values, handleChange] = useForm({
+    //     fullName: "",
+    //     email: "",
+    //     phone: "",
+    //     address: "",
+    //     address2: "",
+    //     // city: "",
+    //     postalCode: "",
+    //     specialInstructions: ""
+    // });
     // useEffect(() => {
     //     console.log(values);
     // }, [values]);
@@ -66,41 +76,47 @@ const Logistics = ({
                 <input
                     onChange={handleChange}
                     value={values.fullName}
-                    name="fullName"
+                    id="fullName"
                     placeholder={`Full Name*`}
                     type="text"
-                    className="small-12 cell"
+                    className="small-12 cell logistics__input"
                 />
-                <input
-                    onChange={handleChange}
-                    value={values.email}
-                    name="email"
-                    placeholder={`Email*`}
-                    type="email"
-                    className="small-12 large-6 cell"
-                />
+                <div className="small-12 large-6 cell">
+                    <input
+                        onChange={setEmail}
+                        onBlur={checkEmail}
+                        value={email}
+                        id="email"
+                        placeholder={`Email*`}
+                        type="email"
+                        className="logistics__input"
+                    />
+                    {!isEmailValid && (
+                        <p className="error-msg">Please enter valid email</p>
+                    )}
+                </div>
                 <Cleave
-                    className="small-12 large-6 cell"
+                    className="small-12 large-6 cell logistics__input"
                     options={{ phone: true, phoneRegionCode: "CA" }}
                     onChange={handleChange}
                     placeholder={`Phone Number*`}
-                    name="phone"
+                    id="phone"
                     value={values.phone}
                 />
                 {deliveryOption === "delivery" && (
                     <Fragment>
                         <input
-                            className="small-12 cell"
+                            className="small-12 cell logistics__input"
                             type="text"
-                            name="address"
+                            id="address"
                             onChange={handleChange}
                             value={values.address}
                             placeholder={`Address*`}
                         />
                         <input
-                            className="small-12 cell"
+                            className="small-12 cell logistics__input"
                             type="text"
-                            name="address2"
+                            id="address2"
                             onChange={handleChange}
                             value={values.address2}
                             placeholder={`Address Line 2`}
@@ -113,11 +129,10 @@ const Logistics = ({
                                 setCity(e.target.value);
                             }}
                             value={city}
-                            name="city"
-                            className="small-12 large-6 cell"
-                            placeholder={`City*`}>
+                            id="city"
+                            className="small-12 large-6 cell logistics__input">
                             <option value={`default`} disabled>
-                                City
+                                City*
                             </option>
                             {shipping.delivery_locations.map(
                                 (location, index) => (
@@ -130,9 +145,9 @@ const Logistics = ({
                             )}
                         </select>
                         <Cleave
-                            className="small-12 large-6 cell"
+                            className="small-12 large-6 cell logistics__input"
                             options={{ blocks: [3, 3], uppercase: true }}
-                            name="postalCode"
+                            id="postalCode"
                             onChange={handleChange}
                             value={values.postalCode}
                             placeholder={`Postal Code`}
@@ -142,11 +157,22 @@ const Logistics = ({
                 <input
                     onChange={handleChange}
                     value={values.specialInstructions}
-                    name="specialInstructions"
+                    id="specialInstructions"
                     placeholder={`Special Instructions`}
                     type="text"
-                    className="small-12 cell"
+                    className="small-12 cell logistics__input"
                 />
+                {shipping.delivery_times.map((time, index) => (
+                    <div key={index} className="cell small-12 large-6">
+                        <SplitButton
+                            text={time.timeframe}
+                            isActive={
+                                deliveryTime === time.timeframe ? true : false
+                            }
+                            handleClick={setDeliveryTime(time.timeframe)}
+                        />
+                    </div>
+                ))}
             </div>
         </div>
     );

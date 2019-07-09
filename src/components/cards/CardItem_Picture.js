@@ -34,10 +34,14 @@ const CardItemWithPic = ({
                 }
                 key={group.id}>
                 {group.thumbnail && (
-                    <img
+                    <div
+                        onClick={e => {
+                            e.preventDefault();
+                            handleSelect(group);
+                            setVariant(dropdownValue);
+                        }}
                         className="card-img"
-                        src={group.thumbnail}
-                        alt={group.post_title}
+                        style={{ backgroundImage: `url(${group.thumbnail})` }}
                     />
                 )}
                 <div className="card-divider">{group.post_title}</div>

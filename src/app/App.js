@@ -18,7 +18,9 @@ export class App extends Component {
             <Fragment>
                 <form
                     id="order-form"
-                    action="./inc/process-order.php"
+                    className="order"
+                    action="http://almojuela.com/fitaxxmeals/wp-content/themes/fitaxxmeals/page-templates/inc/process-order.php"
+                    encType="multipart/form-data"
                     method="post">
                     <div id="form-anchor" />
                     <Form />

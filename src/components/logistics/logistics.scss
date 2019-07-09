@@ -1,5 +1,18 @@
+@import "../../shared";
 .logistics {
     &__grid {
+        .error-msg {
+            color: $orange;
+            font-weight: bold;
+        }
+    }
+    &__input {
+        border: 1px solid $dark-grey;
+        background-color: $offwhite;
+        color: $dark-grey;
+        &::placeholder {
+            color: $medium-grey !important;
+        }
     }
     &__buttons {
         margin-bottom: 1rem;

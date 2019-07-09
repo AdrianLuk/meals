@@ -8,7 +8,8 @@ const Total = ({
     selectedDelivery,
     deliveryOption,
     totalCustomizations,
-    customizationsRemaining
+    customizationsRemaining,
+    total
 }) => {
     return (
         <div className="total">
@@ -21,19 +22,7 @@ const Total = ({
                     customizationsRemaining} / ${totalCustomizations}`}</span>
             )}
             <span className="total__label">{`${itemCount} Meals`}</span>
-            {packagePrice.acf && (
-                <span className="total__price">
-                    {`$${(
-                        +packagePrice.acf.price +
-                        (selectedGoal.acf
-                            ? +selectedGoal.acf.portion_price
-                            : 0) +
-                        (selectedDelivery.price && deliveryOption === "delivery"
-                            ? +selectedDelivery.price
-                            : 0)
-                    ).toFixed(2)}`}
-                </span>
-            )}
+            {total && <span className="total__price">{`$${total}`}</span>}
         </div>
     );
 };

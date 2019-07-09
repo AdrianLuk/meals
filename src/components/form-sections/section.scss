@@ -7,10 +7,17 @@
         color: $dark-teal;
         text-transform: uppercase;
         font-weight: bold;
-        padding: 0 0.8rem;
+        text-align: center;
+        @include breakpoint($large) {
+            padding: 0 0.8rem;
+            text-align: left;
+        }
     }
     &__subheading {
-        text-align: left;
-        padding: 0 0.9rem;
+        text-align: center;
+        @include breakpoint($large) {
+            padding: 0 0.9rem;
+            text-align: left;
+        }
     }
 }

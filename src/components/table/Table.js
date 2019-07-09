@@ -12,7 +12,8 @@ const Table = ({
     selectedPackage,
     goal,
     selectedDelivery,
-    deliveryOption
+    deliveryOption,
+    total
 }) => {
     // console.log(selectedDelivery);
     // console.log(customizations);
@@ -107,14 +108,7 @@ const Table = ({
                 <tr>
                     <th>Order Total</th>
                     <th />
-                    <th className="text-center">{`$${(
-                        +selectedPackage.acf.price +
-                        +goal.acf.portion_price +
-                        (!isEmptyObject(selectedDelivery) &&
-                        deliveryOption === "delivery"
-                            ? +selectedDelivery.price
-                            : 0)
-                    ).toFixed(2)}`}</th>
+                    <th className="text-center">{`$${total}`}</th>
                 </tr>
             </tfoot>
         </table>

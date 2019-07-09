@@ -26,12 +26,12 @@ const Customize = ({
     // init object containing all the data for the current customization
     let customization = {
         currentCustomizationId,
-        selectedMeat,
+        customizationCount,
+        // selectedMeat,
         meatVariant,
-        selectedCarb,
+        // selectedCarb,
         carbVariant,
         selectedVeg,
-        customizationCount,
         comments
     };
     useEffect(() => {
@@ -148,10 +148,14 @@ const Customize = ({
                                 }
                                 key={veg.id}>
                                 {veg.thumbnail && (
-                                    <img
+                                    <div
+                                        onClick={handleVegClick(veg.post_title)}
                                         className="card-img"
-                                        src={veg.thumbnail}
-                                        alt={veg.post_title}
+                                        style={{
+                                            backgroundImage: `url(${
+                                                veg.thumbnail
+                                            })`
+                                        }}
                                     />
                                 )}
                                 <div className="card-divider">
