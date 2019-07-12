@@ -24,8 +24,8 @@ const Review = ({
     shipping,
     handleSelect,
     selectedDelivery,
-    setDeliveryOption,
     deliveryOption,
+    setDeliveryOption,
     deliveryTime,
     setDeliveryTime,
     total,
@@ -62,8 +62,8 @@ const Review = ({
     };
     useEffect(() => {
         setSubmittedCust(customizations);
-        console.log(customizations);
-        console.log(submittedCust);
+        // console.log(customizations);
+        // console.log(submittedCust);
     }, [customizations, submittedCust]);
 
     useEffect(() => {
@@ -195,24 +195,42 @@ const Review = ({
                         </div>
                     </div>
                 </div>
-                <input type="hidden" name="" value={total} />
+
+                <input type="hidden" name="1" value={values.fullName} />
                 <input
                     type="hidden"
-                    name="customizations"
+                    name="2"
+                    value={selectedPackage.title.rendered}
+                />
+                <input
+                    type="hidden"
+                    name="3"
+                    value={selectedGoal.title.rendered}
+                />
+                <input
+                    type="hidden"
+                    name="4"
                     value={JSON.stringify(submittedCust)}
                 />
-                <input type="hidden" name="fullName" value={values.fullName} />
-                <input type="hidden" name="email" value={email} />
-                <input type="hidden" name="phone" value={values.phone} />
-                <input type="hidden" name="address" />
+                <input type="hidden" name="5" value={total} />
+                <input type="hidden" name="6" value={deliveryOption} />
+                <input type="hidden" name="7" value={deliveryTime} />
+                <input type="hidden" name="8" value={paymentOption} />
+                <input type="hidden" name="9" value={email} />
+                <input type="hidden" name="10" value={values.phone} />
+                <input type="hidden" name="11" value={values.address} />
+                <input type="hidden" name="12" value={values.address2} />
                 <input
                     type="hidden"
-                    name="addressLine2"
-                    value={values.address2}
+                    name="13"
+                    value={cityValue ? cityValue.location : ""}
                 />
-                <input type="hidden" name="city" />
-                <input type="hidden" name="postalCode" />
-                <input type="hidden" name="specialInstructions" />
+                <input type="hidden" name="14" value={values.postalCode} />
+                <input
+                    type="hidden"
+                    name="15"
+                    value={values.specialInstructions}
+                />
             </section>
         </Fragment>
     );
