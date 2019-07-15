@@ -25,13 +25,13 @@ const Customize = ({
     const [comments, setComments] = useState("");
     // init object containing all the data for the current customization
     let customization = {
-        currentCustomizationId,
-        customizationCount,
+        customization_number: currentCustomizationId,
+        customization_quantity: customizationCount,
         // selectedMeat,
-        meatVariant,
+        meat: meatVariant,
         // selectedCarb,
-        carbVariant,
-        selectedVeg,
+        carb: carbVariant,
+        vegetables: selectedVeg,
         comments
     };
     useEffect(() => {

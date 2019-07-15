@@ -31,7 +31,7 @@ export const CardList = ({
     return (
         <div className="section__item">
             <h2 className="section__heading">{`Select your ${groupName}`}</h2>
-            <p className="section__subheading">{`Select one ${groupName} option per order`}</p>
+            <p className="section__subheading">{`Select one ${groupName} option per order (required)`}</p>
             <div className="section__grid grid-x grid-margin-x align-center">
                 {foodItemRow}
             </div>

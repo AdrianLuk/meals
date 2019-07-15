@@ -5,9 +5,9 @@ import Form from "../components/Form";
 import "./App.scss";
 
 export class App extends Component {
-    state = {
-        step: 1
-    };
+    // state = {
+    //     step: 1
+    // };
 
     // handleSubmit = e => {
     //     console.log("submitted");

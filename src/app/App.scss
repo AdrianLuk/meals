@@ -7,6 +7,13 @@ body {
 #root {
     width: 100%;
 }
+#form-anchor {
+    display: block;
+    padding-top: 100px;
+    margin-top: -100px;
+    position: relative;
+    z-index: -1;
+}
 .order {
     p {
         text-align: left;
@@ -58,6 +65,12 @@ body {
             }
             &--border-right {
                 border-right: 1px solid $medium-grey;
+            }
+            &--customize {
+                display: none;
+                @include breakpoint($medium) {
+                    display: inline-block;
+                }
             }
         }
         &__price {

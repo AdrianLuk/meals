@@ -123,10 +123,7 @@ const Logistics = ({
                         />
                         <select
                             onChange={e => {
-                                handleSelect(
-                                    shipping.delivery_locations[e.target.value]
-                                );
-                                setCity(e.target.value);
+                                handleSelect(e.target.value);
                             }}
                             value={city}
                             id="city"

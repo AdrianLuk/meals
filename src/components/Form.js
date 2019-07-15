@@ -30,7 +30,7 @@ export class Form extends Component {
             currentCustomization: {},
             customizations: [],
             comments: "",
-            selectedDeliveryLocation: {},
+            selectedDeliveryLocation: "default",
             deliveryOption: "delivery",
             deliveryTime: "",
             isContactValid: false,
@@ -52,13 +52,10 @@ export class Form extends Component {
         ) {
             this.handleProceed();
         }
-        if (this.state.step === 2) {
-            if (
-                prevState.currentCustomization !==
-                this.state.currentCustomization
-            ) {
-                this.handleProceed();
-            }
+        if (
+            prevState.currentCustomization !== this.state.currentCustomization
+        ) {
+            this.handleProceed();
         }
     }
     getData = async () => {
@@ -142,10 +139,12 @@ export class Form extends Component {
             }
         } else if (this.state.step === 2) {
             // this.addCustomizationToOrder();
+            // wtf is this check below for?
+            // save customization if valid
             if (
-                this.state.customizationsRemaining > 0 &&
-                (this.state.currentCustomization.carbVariant.length !== 0 &&
-                    this.state.currentCustomization.meatVariant.length !== 0)
+                // this.state.customizationsRemaining > 0 &&
+                this.state.currentCustomization.carb.length > 0 &&
+                this.state.currentCustomization.meat.length > 0
             ) {
                 this.saveCustomization(this.state.currentCustomization);
             } else if (this.state.customizationsRemaining === 0) {
@@ -153,6 +152,10 @@ export class Form extends Component {
             } else {
                 return false;
             }
+            // else {
+            //     this.setState({ step: this.state.step + 1 });
+            //     this.scrollToTop();
+            // }
             if (
                 this.state.customizationsRemaining -
                     this.state.currentCustomizationCount >
@@ -170,14 +173,13 @@ export class Form extends Component {
                 this.scrollToTop();
             }
         } else {
-            console.log("submit");
             if (this.state.isContactValid) {
                 document.getElementById("order-form").submit();
             }
         }
     };
     addCustomizationToOrder = customization => {
-        console.log(customization);
+        // console.log(customization);
         // const customizations = [...this.state.customizations, customization];
         // console.log(customizations);
         // this.saveCustomization(customizations);
@@ -235,7 +237,7 @@ export class Form extends Component {
     };
     handlePackageSelect = selection => e => {
         e.preventDefault();
-        console.log(selection);
+        // console.log(selection);
         if (selection.acf) {
             this.setState({
                 selectedPackage: selection,
@@ -259,29 +261,37 @@ export class Form extends Component {
                 // return false;
             }
         }
-        if (this.state.step === 2) {
-            if (
-                this.state.currentCustomization.carbVariant &&
-                this.state.currentCustomization.meatVariant
-            ) {
-                if (
-                    this.state.currentCustomization.carbVariant.length !== 0 &&
-                    this.state.currentCustomization.meatVariant.length !== 0
-                ) {
-                    this.setState({ canProceed: true });
-                    // return true;
-                } else {
-                    this.setState({ canProceed: false });
-                    // return false;
-                }
-            }
-        }
-        if (this.state.step === 3) {
-        }
+        // if (this.state.step === 2) {
+        //     if (
+        //         this.state.currentCustomization.carb &&
+        //         this.state.currentCustomization.meat
+        //     ) {
+        //         if (
+        //             this.state.currentCustomization.carb.length > 0 &&
+        //             this.state.currentCustomization.meat.length > 0
+        //         ) {
+        //             this.setState({ canProceed: true });
+        //             // return true;
+        //         } else {
+        //             this.setState({ canProceed: false });
+        //             // return false;
+        //         }
+        //     }
+        //     if (this.state.customizationsRemaining === 0) {
+        //         this.setState({ canProceed: true });
+        //     }
+        // }
+        // if (this.state.step === 3) {
+        //     if (this.state.isContactValid) {
+        //         this.setState({ canProceed: true });
+        //     } else {
+        //         this.setState({ canProceed: false });
+        //     }
+        // }
     };
     handleSelect = (state, selection) => e => {
         e.preventDefault();
-        console.log(selection);
+        // console.log(selection);
         this.setState({ [state]: selection });
     };
     handleDeliverySelect = selected => {
@@ -295,7 +305,7 @@ export class Form extends Component {
         e.preventDefault();
         this.setState({ deliveryTime: option });
     };
-    handleIsContactValid = (isValid) => {
+    handleIsContactValid = isValid => {
         this.setState({ isContactValid: isValid });
     };
     renderSections = () => {
@@ -307,9 +317,11 @@ export class Form extends Component {
                 (this.state.selectedGoal.acf
                     ? +this.state.selectedGoal.acf.portion_price
                     : 0) +
-                (this.state.selectedDeliveryLocation.price &&
+                (this.state.selectedDeliveryLocation !== "default" &&
                 this.state.deliveryOption === "delivery"
-                    ? +this.state.selectedDeliveryLocation.price
+                    ? +this.state.shippingOptions.delivery_locations[
+                          this.state.selectedDeliveryLocation
+                      ].price
                     : 0)
             ).toFixed(2)}`;
         if (!step) {
@@ -375,7 +387,9 @@ export class Form extends Component {
                         deliveryTime={this.state.deliveryTime}
                         setDeliveryTime={this.setDeliveryTime}
                         total={total}
+                        isContactValid={this.state.isContactValid}
                         handleIsContactValid={this.handleIsContactValid}
+                        handleProceed={this.handleProceed}
                     />
                 );
             default:
@@ -389,16 +403,18 @@ export class Form extends Component {
     render() {
         const total =
             this.state.selectedPackage.acf &&
-            (
+            `${(
                 +this.state.selectedPackage.acf.price +
                 (this.state.selectedGoal.acf
                     ? +this.state.selectedGoal.acf.portion_price
                     : 0) +
-                (this.state.selectedDeliveryLocation.price &&
+                (this.state.selectedDeliveryLocation !== "default" &&
                 this.state.deliveryOption === "delivery"
-                    ? +this.state.selectedDeliveryLocation.price
+                    ? +this.state.shippingOptions.delivery_locations[
+                          this.state.selectedDeliveryLocation
+                      ].price
                     : 0)
-            ).toFixed(2);
+            ).toFixed(2)}`;
         if (!this.state.isDataLoaded) {
             return (
                 <div className="spinner-container">

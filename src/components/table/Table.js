@@ -1,16 +1,17 @@
 import React, { Fragment } from "react";
 import "./table.scss";
-const isEmptyObject = object => {
-    if (Object.entries(object).length === 0 && object.constructor === Object) {
-        return true;
-    } else {
-        return false;
-    }
-};
+// const isEmptyObject = object => {
+//     if (Object.entries(object).length === 0 && object.constructor === Object) {
+//         return true;
+//     } else {
+//         return false;
+//     }
+// };
 const Table = ({
     customizations,
     selectedPackage,
     goal,
+    shipping,
     selectedDelivery,
     deliveryOption,
     total
@@ -53,22 +54,22 @@ const Table = ({
                         <tr className="table__row table__row--bold table__row--indent-1">
                             <td>{`Customized Meal ${index + 1}`}</td>
                             <td className="text-center">{`x${
-                                cust.customizationCount
+                                cust.customization_quantity
                             }`}</td>
                             <td />
                         </tr>
                         <tr className="table__row table__row--indent-1-5">
-                            <td>{cust.carbVariant}</td>
+                            <td>{cust.carb}</td>
                             <td />
                             <td />
                         </tr>
                         <tr className="table__row table__row--indent-1-5">
-                            <td>{cust.meatVariant}</td>
+                            <td>{cust.meat}</td>
                             <td />
                             <td />
                         </tr>
-                        {cust.selectedVeg.length > 0 &&
-                            cust.selectedVeg.map((veg, i) => (
+                        {cust.vegetables.length > 0 &&
+                            cust.vegetables.map((veg, i) => (
                                 <tr
                                     className="table__row table__row--indent-1-5"
                                     key={i}>
@@ -79,14 +80,18 @@ const Table = ({
                             ))}
                         {cust.comments.length > 0 && (
                             <tr className="table__row table__row--indent-1-5">
-                                <td>{cust.comments}</td>
+                                <td
+                                    dangerouslySetInnerHTML={{
+                                        __html: cust.comments
+                                    }}
+                                />
                                 <td />
                                 <td />
                             </tr>
                         )}
                     </Fragment>
                 ))}
-                {!isEmptyObject(selectedDelivery) &&
+                {selectedDelivery !== "default" &&
                     deliveryOption === "delivery" && (
                         <Fragment>
                             <tr className="table__row table__row--bold table__row--indent-1">
@@ -95,10 +100,18 @@ const Table = ({
                                 <td />
                             </tr>
                             <tr className="table__row table__row--indent-1-5">
-                                <td>{selectedDelivery.location}</td>
+                                <td>
+                                    {
+                                        shipping.delivery_locations[
+                                            selectedDelivery
+                                        ].location
+                                    }
+                                </td>
                                 <td />
                                 <td>{`$${parseInt(
-                                    selectedDelivery.price
+                                    shipping.delivery_locations[
+                                        selectedDelivery
+                                    ].price
                                 ).toFixed(2)}`}</td>
                             </tr>
                         </Fragment>

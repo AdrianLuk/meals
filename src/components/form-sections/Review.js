@@ -29,7 +29,9 @@ const Review = ({
     deliveryTime,
     setDeliveryTime,
     total,
-    handleIsContactValid
+    isContactValid,
+    handleIsContactValid,
+    handleProceed
 }) => {
     let [submittedCust, setSubmittedCust] = useState(customizations);
     const [paymentOption, setPaymentOption] = useState("cash");
@@ -37,7 +39,7 @@ const Review = ({
         e.preventDefault();
         setPaymentOption(option);
     };
-    const [cityIndex, setCityIndex] = useState("default");
+    // const [cityIndex, setCityIndex] = useState("");
     const [cityValue, setCityValue] = useState("");
     const [email, setEmail] = useState("");
     const [isEmailValid, setIsEmailValid] = useState(true);
@@ -61,29 +63,70 @@ const Review = ({
         checkEmail();
     };
     useEffect(() => {
-        setSubmittedCust(customizations);
+        const replacer = (key, value) =>
+            value === null || value.length === 0 ? "none" : value; // specify how you want to handle null values here
+        const header = Object.keys(customizations[0]);
+        let csv = customizations.map(row => {
+            // console.log(row);
+            return header
+                .map(fieldName =>
+                    JSON.stringify(`${fieldName} : ${row[fieldName]}`, replacer)
+                )
+                .join(", ");
+        });
+        csv = csv.join("\r\n\r\n");
+        // console.log(csv);
+        setSubmittedCust(csv);
         // console.log(customizations);
         // console.log(submittedCust);
     }, [customizations, submittedCust]);
 
     useEffect(() => {
-        setCityValue(shipping.delivery_locations[cityIndex]);
-        console.log(cityValue);
+        setCityValue(shipping.delivery_locations[+selectedDelivery]);
+        // console.log(cityValue);
+        return setCityValue(shipping.delivery_locations[+selectedDelivery]);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cityValue, cityIndex]);
+    }, [cityValue, selectedDelivery]);
+
     useEffect(() => {
-        if (
-            cityIndex !== "default" &&
-            values.fullName !== "" &&
-            values.phone !== "" &&
-            isEmailValid
-        ) {
-            handleIsContactValid(true);
+        if (deliveryOption === "delivery") {
+            if (
+                selectedDelivery !== "default" &&
+                values.fullName.length > 0 &&
+                values.phone.length > 0 &&
+                values.address.length > 0 &&
+                isEmailValid
+            ) {
+                handleIsContactValid(true);
+            } else {
+                handleIsContactValid(false);
+            }
         } else {
-            handleIsContactValid(false);
+            if (
+                selectedDelivery !== "default" &&
+                values.fullName.length > 0 &&
+                values.phone.length > 0 &&
+                isEmailValid
+            ) {
+                handleIsContactValid(true);
+            } else {
+                handleIsContactValid(false);
+            }
         }
+        handleProceed();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cityIndex, isEmailValid, values.fullName, values.phone]);
+    }, [
+        deliveryOption,
+        selectedDelivery,
+        isEmailValid,
+        values.address,
+        values.fullName,
+        values.phone
+    ]);
+    useEffect(() => {
+        handleProceed();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isContactValid]);
     // useEffect(() => {
     //     submittedCust.forEach(c => {
     //         const veg = c.selectedVeg.join();
@@ -106,6 +149,7 @@ const Review = ({
                                 customizations={customizations}
                                 selectedPackage={selectedPackage}
                                 goal={selectedGoal}
+                                shipping={shipping}
                                 selectedDelivery={selectedDelivery}
                                 deliveryOption={deliveryOption}
                                 total={total}
@@ -119,8 +163,11 @@ const Review = ({
                                 deliveryOption={deliveryOption}
                                 values={values}
                                 handleChange={handleChange}
-                                city={cityIndex}
-                                setCity={setCityIndex}
+                                city={
+                                    selectedDelivery === "default"
+                                        ? "default"
+                                        : selectedDelivery
+                                }
                                 email={email}
                                 setEmail={handleEmail}
                                 checkEmail={checkEmail}
@@ -207,11 +254,6 @@ const Review = ({
                     name="3"
                     value={selectedGoal.title.rendered}
                 />
-                <input
-                    type="hidden"
-                    name="4"
-                    value={JSON.stringify(submittedCust)}
-                />
                 <input type="hidden" name="5" value={total} />
                 <input type="hidden" name="6" value={deliveryOption} />
                 <input type="hidden" name="7" value={deliveryTime} />
@@ -231,6 +273,7 @@ const Review = ({
                     name="15"
                     value={values.specialInstructions}
                 />
+                <input type="hidden" name="16" value={submittedCust} />
             </section>
         </Fragment>
     );
