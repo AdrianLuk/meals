@@ -19,7 +19,7 @@ export class App extends Component {
                 <form
                     id="order-form"
                     className="order"
-                    action="http://almojuela.com/fitaxxmeals/wp-content/themes/fitaxxmeals/page-templates/inc/process-order.php"
+                    action="https://almojuela.com/fitaxxmeals/wp-content/themes/fitaxxmeals/page-templates/inc/process-order.php"
                     encType="multipart/form-data"
                     method="post">
                     <div id="form-anchor" />

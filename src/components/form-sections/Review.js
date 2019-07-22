@@ -188,6 +188,7 @@ const Review = ({
                     </p>
                     <div className="grid-x grid-margin-x section__grid align-center">
                         <div
+                            onClick={setPayment("cash")}
                             className={
                                 "card text-center small-12 medium-6 large-4 card__item card__item--title " +
                                 (paymentOption === "cash"
@@ -211,6 +212,7 @@ const Review = ({
                             </div>
                         </div>
                         <div
+                            onClick={setPayment("etransfer")}
                             className={
                                 "card text-center small-12 medium-6 large-4 card__item card__item--title " +
                                 (paymentOption === "etransfer"

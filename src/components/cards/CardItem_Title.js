@@ -23,6 +23,11 @@ const CardItem = ({
     };
     return (
         <div
+            onClick={
+                group === "goals"
+                    ? handleSelect(stateKey, item)
+                    : handlePackageSelect(item)
+            }
             className={
                 "card text-center small-12 medium-6 large-4 card__item card__item--title " +
                 (item.id === selectedItem.id ? "card__item--active" : "")
