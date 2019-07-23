@@ -223,10 +223,11 @@ const Review = ({
                             <div className="card-section">
                                 <p>
                                     {`Paid to `}
-                                    <a href="mailto:cheryl.almojuela@gmail.com">
-                                        xxxx@xxx.com
+                                    <a href="mailto:roundaxxfitness@gmail.com">
+                                        roundaxxfitness@gmail.com
                                     </a>
                                 </p>
+                                <p>Transferred by Sunday 9PM latest</p>
                                 <SplitButton
                                     handleClick={setPayment("etransfer")}
                                     text={

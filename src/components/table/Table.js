@@ -21,7 +21,7 @@ const Table = ({
     // console.log(selectedPackage);
     // console.log(goal);
     return (
-        <table className="table text-uppercase unstriped">
+        <table className="table unstriped">
             <thead className="table__head">
                 <tr>
                     <th>Order Summary</th>
