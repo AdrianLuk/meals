@@ -139,17 +139,18 @@ export class Form extends Component {
             }
         } else if (this.state.step === 2) {
             // this.addCustomizationToOrder();
-            // wtf is this check below for?
-            // save customization if valid
+            // save customization if valid and have customizations left to customize
             if (
-                // this.state.customizationsRemaining > 0 &&
+                this.state.customizationsRemaining > 0 &&
                 this.state.currentCustomization.carb.length > 0 &&
                 this.state.currentCustomization.meat.length > 0
             ) {
                 this.saveCustomization(this.state.currentCustomization);
             } else if (this.state.customizationsRemaining === 0) {
+                // if user has no customizations left to customize, simply go to next step without saving
                 this.setState({ step: this.state.step + 1 });
             } else {
+                // else do nothing
                 return false;
             }
             // else {

@@ -17,4 +17,20 @@
     &__buttons {
         margin-bottom: 1rem;
     }
+    &__text {
+        &--label {
+            display: block;
+            color: $dark-teal;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        &--address {
+            display: block;
+        }
+    }
+    &__link {
+    }
+    &__map {
+        margin-bottom: 1.5rem;
+    }
 }
