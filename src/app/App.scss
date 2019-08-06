@@ -272,3 +272,35 @@ body {
         }
     }
 }
+// gravity form styling
+.contact-page-form {
+    // .gfield {
+    //     &_label {
+    //         font-weight: normal;
+    //     }
+    // }
+    .gfield_label {
+        font-weight: normal !important;
+    }
+    .gform {
+        &_footer {
+            text-align: center;
+            #gform_submit_button_2 {
+                padding: 0.8rem 2.5rem;
+                border-radius: 50px !important;
+                color: $white;
+                background-color: $dark-teal;
+                font-weight: bold;
+                text-transform: uppercase;
+                border: 2px solid $dark-teal;
+                margin: 0 0.5rem;
+                &:hover {
+                    background-color: $white;
+                    color: $orange;
+                    border-color: $dark-teal;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}

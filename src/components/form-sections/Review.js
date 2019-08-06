@@ -4,6 +4,7 @@ import Logistics from "../logistics/Logistics";
 // import CardItem from "../cards/CardItem_Title";
 import SplitButton from "../SplitButton";
 import "./section.scss";
+import _ from "lodash";
 const useForm = initialValues => {
     const [values, setValues] = useState(initialValues);
     return [
@@ -63,16 +64,24 @@ const Review = ({
         checkEmail();
     };
     useEffect(() => {
-        const replacer = (key, value) =>
-            value === null || value.length === 0 ? "none" : value; // specify how you want to handle null values here
+        // const replacer = (key, value) =>
+        //     value === null || value.length === 0 ? "none" : value; // specify how you want to handle null values here
         const header = Object.keys(customizations[0]);
         let csv = customizations.map(row => {
             // console.log(row);
             return header
-                .map(fieldName =>
-                    JSON.stringify(`${fieldName} : ${row[fieldName]}`, replacer)
-                )
-                .join(", ");
+                .map(fieldName => {
+                    const formattedFieldName = fieldName
+                        .split("_")
+                        .map(w => _.capitalize(w))
+                        .join(" ");
+                    return `${formattedFieldName}: ${row[fieldName]}`;
+                    // return JSON.stringify(
+                    //     `${formattedFieldName} : ${row[fieldName]}`,
+                    //     replacer
+                    // );
+                })
+                .join("\r\n");
         });
         csv = csv.join("\r\n\r\n");
         // console.log(csv);
@@ -89,6 +98,7 @@ const Review = ({
     }, [cityValue, selectedDelivery]);
 
     useEffect(() => {
+        // validate for when selected delivery method is delivery
         if (deliveryOption === "delivery") {
             if (
                 selectedDelivery !== "default" &&
@@ -102,8 +112,8 @@ const Review = ({
                 handleIsContactValid(false);
             }
         } else {
+            //validate for when selected delivery method is pickup
             if (
-                selectedDelivery !== "default" &&
                 values.fullName.length > 0 &&
                 values.phone.length > 0 &&
                 isEmailValid
@@ -261,7 +271,7 @@ const Review = ({
                 <input type="hidden" name="6" value={deliveryOption} />
                 <input type="hidden" name="7" value={deliveryTime} />
                 <input type="hidden" name="8" value={paymentOption} />
-                <input type="hidden" name="9" value={email} />
+                <input type="hidden" name="18" value={email} />
                 <input type="hidden" name="10" value={values.phone} />
                 <input type="hidden" name="11" value={values.address} />
                 <input type="hidden" name="12" value={values.address2} />
