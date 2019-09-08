@@ -315,8 +315,9 @@ export class Form extends Component {
             this.state.selectedPackage.acf &&
             `${(
                 +this.state.selectedPackage.acf.price +
-                (this.state.selectedGoal.acf
-                    ? +this.state.selectedGoal.acf.portion_price
+                (this.state.selectedGoal.acf && this.state.selectedPackage.acf
+                    ? +this.state.selectedPackage.acf.meal_count *
+                      +this.state.selectedGoal.acf.portion_price
                     : 0) +
                 (this.state.selectedDeliveryLocation !== "default" &&
                 this.state.deliveryOption === "delivery"
@@ -406,8 +407,9 @@ export class Form extends Component {
             this.state.selectedPackage.acf &&
             `${(
                 +this.state.selectedPackage.acf.price +
-                (this.state.selectedGoal.acf
-                    ? +this.state.selectedGoal.acf.portion_price
+                (this.state.selectedGoal.acf && this.state.selectedPackage.acf
+                    ? +this.state.selectedPackage.acf.meal_count *
+                      +this.state.selectedGoal.acf.portion_price
                     : 0) +
                 (this.state.selectedDeliveryLocation !== "default" &&
                 this.state.deliveryOption === "delivery"
