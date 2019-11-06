@@ -21,7 +21,7 @@ const Customize = ({
     const [meatVariant, setMeatVariant] = useState("");
     const [selectedCarb, setSelectedCarb] = useState({});
     const [carbVariant, setCarbVariant] = useState("");
-    const [selectedVeg, setSelectedVeg] = useState([]);
+    const [selectedVeg, setSelectedVeg] = useState({});
     const [comments, setComments] = useState("");
     // init object containing all the data for the current customization
     let customization = {
@@ -31,7 +31,7 @@ const Customize = ({
         meat: meatVariant,
         // selectedCarb,
         carb: carbVariant,
-        vegetables: selectedVeg,
+        vegetable: selectedVeg.post_title,
         comments
     };
     useEffect(() => {
@@ -50,27 +50,25 @@ const Customize = ({
         comments
     ]);
     useEffect(() => {
-        return () => {
-            setSelectedMeat({});
-            setMeatVariant("");
-            setSelectedCarb({});
-            setCarbVariant("");
-            setSelectedVeg([]);
-            setComments("");
-        };
+        setSelectedMeat({});
+        setMeatVariant("");
+        setSelectedCarb({});
+        setCarbVariant("");
+        setSelectedVeg({});
+        setComments("");
     }, [currentCustomizationId]);
-    const handleVegClick = selectedVeggie => e => {
-        e.preventDefault();
-        // console.log(selectedVeggie);
-        const alreadySelected = selectedVeg.includes(selectedVeggie);
-        if (alreadySelected) {
-            const vegList = selectedVeg.filter(veg => veg !== selectedVeggie);
-            setSelectedVeg(vegList);
-        } else {
-            const vegList = [...selectedVeg, selectedVeggie];
-            setSelectedVeg(vegList);
-        }
-    };
+    // const handleVegClick = selectedVeggie => e => {
+    //     e.preventDefault();
+    //     // console.log(selectedVeggie);
+    //     const alreadySelected = selectedVeg.includes(selectedVeggie);
+    //     if (alreadySelected) {
+    //         const vegList = selectedVeg.filter(veg => veg !== selectedVeggie);
+    //         setSelectedVeg(vegList);
+    //     } else {
+    //         const vegList = [...selectedVeg, selectedVeggie];
+    //         setSelectedVeg(vegList);
+    //     }
+    // };
     return (
         <section className="section section--customize">
             <div className="customize__counter">
@@ -123,7 +121,7 @@ const Customize = ({
                 groupName="meat"
                 stateKey="selectedMeat"
                 selected={selectedMeat}
-                selectedVariant={meatVariant}
+                // selectedVariant={meatVariant}
                 variantKey="meatVariant"
                 handleSelect={setSelectedMeat}
                 setVariant={setMeatVariant}
@@ -131,7 +129,18 @@ const Customize = ({
                 hasNone={false}
             />
             <hr />
-            <div className="section__item">
+            <CardList
+                groupName="vegetable"
+                stateKey="selectedVeg"
+                selected={selectedVeg}
+                selectedVariant={meatVariant}
+                // variantKey="meatVariant"
+                handleSelect={setSelectedVeg}
+                // setVariant={setMeatVariant}
+                groups={vegetables}
+                hasNone={false}
+            />
+            {/*<div className="section__item">
                 <h2 className="section__heading">Select Your Vegetables</h2>
                 <p className="section__subheading">
                     Select as many vegetable options as you'd like
@@ -152,9 +161,7 @@ const Customize = ({
                                         onClick={handleVegClick(veg.post_title)}
                                         className="card-img"
                                         style={{
-                                            backgroundImage: `url(${
-                                                veg.thumbnail
-                                            })`
+                                            backgroundImage: `url(${veg.thumbnail})`
                                         }}
                                     />
                                 )}
@@ -189,7 +196,7 @@ const Customize = ({
                             </div>
                         ))}
                 </div>
-            </div>
+                </div>*/}
             <hr />
             <div className="section__item">
                 <h3 className="section__heading">Comments</h3>

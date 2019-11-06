@@ -38,7 +38,7 @@ const CardItemWithPic = ({
                         onClick={e => {
                             e.preventDefault();
                             handleSelect(group);
-                            setVariant(dropdownValue);
+                            variantKey && setVariant(dropdownValue);
                         }}
                         className="card-img"
                         style={{ backgroundImage: `url(${group.thumbnail})` }}
@@ -63,7 +63,7 @@ const CardItemWithPic = ({
                         onClick={e => {
                             e.preventDefault();
                             handleSelect(group);
-                            setVariant(dropdownValue);
+                            variantKey && setVariant(dropdownValue);
                         }}
                         className={"input-group select-button "}>
                         <span className="input-group-field select-button__text">

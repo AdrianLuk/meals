@@ -4,7 +4,7 @@ import Logistics from "../logistics/Logistics";
 // import CardItem from "../cards/CardItem_Title";
 import SplitButton from "../SplitButton";
 import "./section.scss";
-import _ from "lodash";
+import { capitalize } from "lodash";
 const useForm = initialValues => {
     const [values, setValues] = useState(initialValues);
     return [
@@ -73,7 +73,7 @@ const Review = ({
                 .map(fieldName => {
                     const formattedFieldName = fieldName
                         .split("_")
-                        .map(w => _.capitalize(w))
+                        .map(w => capitalize(w))
                         .join(" ");
                     return `${formattedFieldName}: ${row[fieldName]}`;
                     // return JSON.stringify(

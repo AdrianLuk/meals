@@ -53,9 +53,7 @@ const Table = ({
                     <Fragment key={index}>
                         <tr className="table__row table__row--bold table__row--indent-1">
                             <td>{`Customized Meal ${index + 1}`}</td>
-                            <td className="text-center">{`x${
-                                cust.customization_quantity
-                            }`}</td>
+                            <td className="text-center">{`x${cust.customization_quantity}`}</td>
                             <td />
                         </tr>
                         <tr className="table__row table__row--indent-1-5">
@@ -68,16 +66,11 @@ const Table = ({
                             <td />
                             <td />
                         </tr>
-                        {cust.vegetables.length > 0 &&
-                            cust.vegetables.map((veg, i) => (
-                                <tr
-                                    className="table__row table__row--indent-1-5"
-                                    key={i}>
-                                    <td>{veg}</td>
-                                    <td />
-                                    <td />
-                                </tr>
-                            ))}
+                        <tr className="table__row table__row--indent-1-5">
+                            <td>{cust.vegetable}</td>
+                            <td />
+                            <td />
+                        </tr>
                         {cust.comments.length > 0 && (
                             <tr className="table__row table__row--indent-1-5">
                                 <td
