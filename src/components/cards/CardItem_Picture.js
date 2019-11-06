@@ -45,6 +45,10 @@ const CardItemWithPic = ({
                     />
                 )}
                 <div className="card-divider">{group.post_title}</div>
+                <div className="text-center">
+                    {group.acf.extra_charge &&
+                        `+ $${parseFloat(group.acf.extra_charge).toFixed(2)}`}
+                </div>
                 <div className="card-section">
                     {group.acf.variations && (
                         <SelectDropdown

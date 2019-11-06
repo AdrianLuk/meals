@@ -36,7 +36,7 @@ export class Form extends Component {
             isContactValid: false,
             canProceed: false
         };
-        this.baseURL = "";
+        this.baseURL = "https://fitaxxmeals.com";
     }
     componentDidMount() {
         this.getData();
