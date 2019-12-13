@@ -9,6 +9,7 @@ const SelectDropdown = ({
   getDropdown
 }) => {
   const [value, setValue] = useState(options[0]);
+  const [dropdownVal, setDropdownVal] = useState(0);
   useEffect(() => {
     getDropdown(value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -16,7 +17,7 @@ const SelectDropdown = ({
   return (
     <select
       style={{ borderRadius: 20, paddingLeft: "1rem" }}
-      value={value}
+      value={dropdownVal}
       onChange={e => {
         e.preventDefault();
         if (selected.id === group.id) {
@@ -24,6 +25,7 @@ const SelectDropdown = ({
           setVariant(options[e.target.value]);
         }
         setValue(options[e.target.value]);
+        setDropdownVal(e.target.value);
       }}
     >
       {options.map((option, index) => (
