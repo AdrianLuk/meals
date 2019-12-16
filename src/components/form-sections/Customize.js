@@ -18,7 +18,7 @@ const Customize = ({
   // eslint-disable-next-line no-unused-vars
   const [customizationId, setCustomizationId] = useState(1);
   const [selectedMeat, setSelectedMeat] = useState({});
-  const [meatVariant, setMeatVariant] = useState("");
+  const [meatVariant, setMeatVariant] = useState({});
   const [selectedCarb, setSelectedCarb] = useState({});
   const [carbVariant, setCarbVariant] = useState({});
   const [selectedVeg, setSelectedVeg] = useState({});
@@ -31,7 +31,7 @@ const Customize = ({
     meat: meatVariant,
     // selectedCarb,
     carb: carbVariant,
-    vegetable: selectedVeg.post_title,
+    vegetable: selectedVeg,
     comments
   };
   useEffect(() => {
@@ -51,7 +51,7 @@ const Customize = ({
   ]);
   useEffect(() => {
     setSelectedMeat({});
-    setMeatVariant("");
+    setMeatVariant({});
     setSelectedCarb({});
     setCarbVariant({});
     setSelectedVeg({});

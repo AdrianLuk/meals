@@ -7,6 +7,7 @@ import Review from "./form-sections/Review";
 import Total from "./Total";
 import axios from "axios";
 
+const NO_CARB = "No carb";
 export class Form extends Component {
   constructor(props) {
     super(props);
@@ -35,7 +36,7 @@ export class Form extends Component {
       deliveryTime: "",
       isContactValid: false,
       canProceed: false,
-      total: 0
+      total: null
     };
     this.baseURL = "https://fitaxxmeals.com";
   }
@@ -59,12 +60,12 @@ export class Form extends Component {
     if (
       prevState.selectedPackage !== this.state.selectedPackage ||
       prevState.selectedGoal !== this.state.selectedGoal ||
-      prevState.currentCustomization !== this.state.currentCustomization
+      prevState.currentCustomization !== this.state.currentCustomization ||
+      prevState.step !== this.state.step
     ) {
       const total =
         this.state.selectedPackage.acf &&
-        `${(
-          +this.state.selectedPackage.acf.price +
+        +this.state.selectedPackage.acf.price +
           (this.state.selectedGoal.acf && this.state.selectedPackage.acf
             ? +this.state.selectedPackage.acf.meal_count *
               +this.state.selectedGoal.acf.portion_price
@@ -74,9 +75,14 @@ export class Form extends Component {
             ? +this.state.shippingOptions.delivery_locations[
                 this.state.selectedDeliveryLocation
               ].price
-            : 0)
-        ).toFixed(2)}`;
+            : 0) +
+          (this.state.currentCustomization.carb !== NO_CARB &&
+          this.state.currentCustomization.carb
+            ? +this.state.currentCustomization.carb.extra_charge *
+              this.state.currentCustomization.customization_quantity
+            : 0);
       console.log("change");
+      console.log(total, "total");
       this.setState({ total: total });
     }
   }
@@ -161,8 +167,8 @@ export class Form extends Component {
       // save customization if valid and have customizations left to customize
       if (
         this.state.customizationsRemaining > 0 &&
-        this.state.currentCustomization.carb.length > 0 &&
-        this.state.currentCustomization.meat.length > 0
+        !this.isEmptyObject(this.state.currentCustomization.carb) &&
+        !this.isEmptyObject(this.state.currentCustomization.meat)
       ) {
         this.saveCustomization(this.state.currentCustomization);
       } else if (this.state.customizationsRemaining === 0) {
@@ -398,7 +404,7 @@ export class Form extends Component {
             setDeliveryOption={this.setDeliveryOption}
             deliveryTime={this.state.deliveryTime}
             setDeliveryTime={this.setDeliveryTime}
-            total={total}
+            total={this.state.total}
             isContactValid={this.state.isContactValid}
             handleIsContactValid={this.handleIsContactValid}
             handleProceed={this.handleProceed}
@@ -448,7 +454,7 @@ export class Form extends Component {
             deliveryOption={this.state.deliveryOption}
             totalCustomizations={this.state.totalCustomizations}
             customizationsRemaining={this.state.customizationsRemaining}
-            total={total}
+            total={this.state.total}
           />
         </div>
         <div className="grid-container">{this.renderSections()}</div>
