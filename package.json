@@ -7,7 +7,7 @@
         "cleave.js": "^1.5.2",
         "react": "^16.8.6",
         "react-dom": "^16.8.6",
-        "react-scripts": "3.0.0"
+        "react-scripts": "^3.3.0"
     },
     "scripts": {
         "start": "react-scripts start",
@@ -31,7 +31,7 @@
         ]
     },
     "devDependencies": {
-        "node-sass": "^4.12.0"
+        "node-sass": "^4.13.0"
     },
     "proxy": "http://almojuela.com/fitaxxmeals",
     "homepage": "http://almojuela.com/fitaxxmeals/wp-content/themes/fitaxxmeals/page-templates"
