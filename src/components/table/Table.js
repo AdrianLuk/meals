@@ -62,7 +62,9 @@ const Table = ({
               <td />
               <td>
                 {+cust.carb.extra_charge > 0
-                  ? `$${parseFloat(cust.carb.extra_charge).toFixed(2)}`
+                  ? `$${parseFloat(
+                      cust.carb.extra_charge * cust.customization_quantity
+                    ).toFixed(2)}`
                   : ""}
               </td>
             </tr>
@@ -71,7 +73,9 @@ const Table = ({
               <td />
               <td>
                 {+cust.meat.extra_charge > 0
-                  ? `$${parseFloat(cust.meat.extra_charge).toFixed(2)}`
+                  ? `$${parseFloat(
+                      cust.meat.extra_charge * cust.customization_quantity
+                    ).toFixed(2)}`
                   : ""}
               </td>
             </tr>
@@ -80,7 +84,10 @@ const Table = ({
               <td />
               <td>
                 {cust.vegetable.acf && cust.vegetable.acf.extra_charge
-                  ? `$${parseFloat(cust.vegetable.acf.extra_charge).toFixed(2)}`
+                  ? `$${parseFloat(
+                      cust.vegetable.acf.extra_charge *
+                        cust.customization_quantity
+                    ).toFixed(2)}`
                   : ""}
               </td>
             </tr>
@@ -118,7 +125,7 @@ const Table = ({
         <tr>
           <th>Order Total</th>
           <th />
-          <th className="text-center">{`$${total}`}</th>
+          <th className="text-center">{`$${total.toFixed(2)}`}</th>
         </tr>
       </tfoot>
     </table>

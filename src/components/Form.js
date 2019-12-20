@@ -77,12 +77,27 @@ export class Form extends Component {
               ].price
             : 0) +
           (this.state.currentCustomization.carb !== NO_CARB &&
-          this.state.currentCustomization.carb
+          this.state.currentCustomization.carb &&
+          this.state.currentCustomization.carb.extra_charge
             ? +this.state.currentCustomization.carb.extra_charge *
-              this.state.currentCustomization.customization_quantity
-            : 0);
+              +this.state.currentCustomization.customization_quantity
+            : 0) +
+          (this.state.currentCustomization.meat &&
+          this.state.currentCustomization.meat.extra_charge
+            ? +this.state.currentCustomization.meat.extra_charge *
+              +this.state.currentCustomization.customization_quantity
+            : 0) +
+          (this.state.currentCustomization.vegetable &&
+          this.state.currentCustomization.vegetable.acf &&
+          this.state.currentCustomization.vegetable.acf.extra_charge
+            ? +this.state.currentCustomization.vegetable.acf.extra_charge *
+              +this.state.currentCustomization.customization_quantity
+            : 0) +
+          this.state.customizations.reduce(
+            (total, current) => total + current.customizationTotal,
+            0
+          );
       console.log("change");
-      console.log(total, "total");
       this.setState({ total: total });
     }
   }

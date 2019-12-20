@@ -17,12 +17,13 @@ const Customize = ({
 }) => {
   // eslint-disable-next-line no-unused-vars
   const [customizationId, setCustomizationId] = useState(1);
-  const [selectedMeat, setSelectedMeat] = useState({});
-  const [meatVariant, setMeatVariant] = useState({});
   const [selectedCarb, setSelectedCarb] = useState({});
   const [carbVariant, setCarbVariant] = useState({});
+  const [selectedMeat, setSelectedMeat] = useState({});
+  const [meatVariant, setMeatVariant] = useState({});
   const [selectedVeg, setSelectedVeg] = useState({});
   const [comments, setComments] = useState("");
+  const [custTotal, setCustTotal] = useState(0);
   // init object containing all the data for the current customization
   let customization = {
     customization_number: currentCustomizationId,
@@ -32,8 +33,30 @@ const Customize = ({
     // selectedCarb,
     carb: carbVariant,
     vegetable: selectedVeg,
+    customizationTotal: custTotal,
     comments
   };
+  useEffect(() => {
+    setCustTotal(
+      (carbVariant && carbVariant.extra_charge
+        ? +carbVariant.extra_charge * customizationCount
+        : 0) +
+        (meatVariant && meatVariant.extra_charge
+          ? +meatVariant.extra_charge * customizationCount
+          : 0) +
+        (selectedVeg && selectedVeg.acf && selectedVeg.acf.extra_charge
+          ? +selectedVeg.acf.extra_charge * customizationCount
+          : 0)
+    );
+  }, [
+    selectedCarb,
+    carbVariant,
+    selectedMeat,
+    meatVariant,
+    selectedVeg,
+    customizationCount
+  ]);
+
   useEffect(() => {
     console.log(customization);
     addToOrder(customization);
@@ -47,6 +70,7 @@ const Customize = ({
     carbVariant,
     selectedVeg,
     customizationCount,
+    custTotal,
     comments
   ]);
   useEffect(() => {
@@ -56,6 +80,7 @@ const Customize = ({
     setCarbVariant({});
     setSelectedVeg({});
     setComments("");
+    setCustTotal(0);
   }, [currentCustomizationId]);
   // const handleVegClick = selectedVeggie => e => {
   //     e.preventDefault();
