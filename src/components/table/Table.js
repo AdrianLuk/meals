@@ -46,7 +46,9 @@ const Table = ({
           <td />
           <td>
             {parseInt(goal.acf.portion_price) > 0
-              ? `$${parseInt(goal.acf.portion_price).toFixed(2)}`
+              ? `$${parseFloat(
+                  +goal.acf.portion_price * +selectedPackage.acf.meal_count
+                ).toFixed(2)}`
               : `Included`}
           </td>
         </tr>

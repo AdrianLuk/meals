@@ -348,21 +348,6 @@ export class Form extends Component {
   };
   renderSections = () => {
     const { step } = this.state;
-    const total =
-      this.state.selectedPackage.acf &&
-      `${(
-        +this.state.selectedPackage.acf.price +
-        (this.state.selectedGoal.acf && this.state.selectedPackage.acf
-          ? +this.state.selectedPackage.acf.meal_count *
-            +this.state.selectedGoal.acf.portion_price
-          : 0) +
-        (this.state.selectedDeliveryLocation !== "default" &&
-        this.state.deliveryOption === "delivery"
-          ? +this.state.shippingOptions.delivery_locations[
-              this.state.selectedDeliveryLocation
-            ].price
-          : 0)
-      ).toFixed(2)}`;
     if (!step) {
       return (
         <div className="spinner-container">
@@ -434,21 +419,6 @@ export class Form extends Component {
     }
   };
   render() {
-    const total =
-      this.state.selectedPackage.acf &&
-      `${(
-        +this.state.selectedPackage.acf.price +
-        (this.state.selectedGoal.acf && this.state.selectedPackage.acf
-          ? +this.state.selectedPackage.acf.meal_count *
-            +this.state.selectedGoal.acf.portion_price
-          : 0) +
-        (this.state.selectedDeliveryLocation !== "default" &&
-        this.state.deliveryOption === "delivery"
-          ? +this.state.shippingOptions.delivery_locations[
-              this.state.selectedDeliveryLocation
-            ].price
-          : 0)
-      ).toFixed(2)}`;
     if (!this.state.isDataLoaded) {
       return (
         <div className="spinner-container">
