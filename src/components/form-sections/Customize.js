@@ -33,8 +33,8 @@ const Customize = ({
     // selectedCarb,
     carb: carbVariant,
     vegetable: selectedVeg,
-    customizationTotal: custTotal,
-    comments
+    comments,
+    customization_price: custTotal
   };
   useEffect(() => {
     setCustTotal(
@@ -58,7 +58,7 @@ const Customize = ({
   ]);
 
   useEffect(() => {
-    console.log(customization);
+    // console.log(customization);
     addToOrder(customization);
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -94,10 +94,9 @@ export class Form extends Component {
               +this.state.currentCustomization.customization_quantity
             : 0) +
           this.state.customizations.reduce(
-            (total, current) => total + current.customizationTotal,
+            (total, current) => total + current.customization_price,
             0
           );
-      console.log("change");
       this.setState({ total: total });
     }
   }

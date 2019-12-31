@@ -68,14 +68,22 @@ const Review = ({
     //     value === null || value.length === 0 ? "none" : value; // specify how you want to handle null values here
     const header = Object.keys(customizations[0]);
     let csv = customizations.map(row => {
-      // console.log(row);
+      //   console.log(row);
       return header
         .map(fieldName => {
           const formattedFieldName = fieldName
             .split("_")
             .map(w => capitalize(w))
             .join(" ");
-          return `${formattedFieldName}: ${row[fieldName]}`;
+          return fieldName === `customization_price`
+            ? null
+            : `${formattedFieldName}: ${
+                row[fieldName].constructor === Object
+                  ? row[fieldName] && row[fieldName].variation
+                    ? row[fieldName].variation
+                    : row[fieldName].post_title || `None`
+                  : row[fieldName]
+              }`;
           // return JSON.stringify(
           //     `${formattedFieldName} : ${row[fieldName]}`,
           //     replacer
@@ -83,7 +91,7 @@ const Review = ({
         })
         .join("\r\n");
     });
-    csv = csv.join("\r\n\r\n");
+    csv = csv.join("\r\n");
     // console.log(csv);
     setSubmittedCust(csv);
     // console.log(customizations);
