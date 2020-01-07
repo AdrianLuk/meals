@@ -62,16 +62,10 @@ export class Form extends Component {
       prevState.selectedGoal !== this.state.selectedGoal ||
       prevState.currentCustomization !== this.state.currentCustomization ||
       prevState.step !== this.state.step ||
-      prevState.selectedDeliveryLocation !== this.state.selectedDeliveryLocation
+      prevState.selectedDeliveryLocation !==
+        this.state.selectedDeliveryLocation ||
+      prevState.deliveryOption !== this.state.deliveryOption
     ) {
-      console.log(
-        this.state.selectedDeliveryLocation !== "default" &&
-          this.state.deliveryOption === "delivery"
-          ? +this.state.shippingOptions.delivery_locations[
-              this.state.selectedDeliveryLocation
-            ].price
-          : 0
-      );
       const total =
         this.state.selectedPackage.acf &&
         +this.state.selectedPackage.acf.price +
