@@ -29,19 +29,14 @@ const Table = ({
                 </tr>
             </thead>
             <tbody>
-                <tr className="table__row table__row--bold table__row--indent-1">
+                <tr className="table__row table__row--bold">
                     <td>{selectedPackage.title.rendered}</td>
                     <td />
                     <td>{`$${selectedPackage.acf.price}`}</td>
                 </tr>
-                <tr className="table__row table__row--indent-1-5">
-                    <td>{`${selectedPackage.acf.size}-snack pack`}</td>
-                    <td />
-                    <td />
-                </tr>
                 {snacks?.map((snack, index) => (
                     <Fragment key={index}>
-                        <tr className="table__row table__row--bold table__row--indent-1">
+                        <tr className="table__row table__row--bold">
                             <td>{`${snack.snack.post_title}`}</td>
                             <td className="text-center">{`x${snack.count}`}</td>
                             <td />

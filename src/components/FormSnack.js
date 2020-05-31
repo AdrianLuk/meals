@@ -103,9 +103,6 @@ export class FormSnack extends Component {
         const getSnackSizes = await axios.get(
             `${this.baseURL}/wp-json/wp/v2/snack_sizes?order=asc`
         );
-        const getSnacks = await axios.get(
-            `${this.baseURL}/wp-json/wp/v2/snacks?order=asc`
-        );
         Promise.all([
             getTypes,
             getPackages,
@@ -116,7 +113,6 @@ export class FormSnack extends Component {
             getShippingOptions,
             getSalads,
             getSnackSizes,
-            getSnacks,
         ]).then(res => {
             this.setState({
                 types: res[0].data,
@@ -129,7 +125,6 @@ export class FormSnack extends Component {
                 deliveryTime: res[6].data.acf.delivery_times[0].timeframe,
                 salads: res[7].data,
                 snackSizes: res[8].data,
-                snacks: res[9].data,
                 isDataLoaded: true,
             });
         });
