@@ -3,8 +3,17 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./app/App";
 import * as serviceWorker from "./serviceWorker";
+// const SALAD = "salad";
+const MEAL = "meal";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(
+    <App
+        formType={
+            new URLSearchParams(window.location.search).get("form") || MEAL
+        }
+    />,
+    document.getElementById("root")
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

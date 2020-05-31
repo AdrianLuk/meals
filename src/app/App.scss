@@ -164,13 +164,26 @@ body {
         border-top-left-radius: 50px !important;
         border-bottom-left-radius: 50px !important;
         color: $dark-grey;
+        &--square {
+            border-radius: 0 !important;
+        }
     }
     &__icon {
         padding: 1rem;
-        border-top-right-radius: 50px !important;
-        border-bottom-right-radius: 50px !important;
         background-color: $medium-grey;
         color: $white;
+        border-top-right-radius: 50px !important;
+        border-bottom-right-radius: 50px !important;
+        &--before {
+            border-top-left-radius: 50px !important;
+            border-bottom-left-radius: 50px !important;
+            border-top-right-radius: 0px !important;
+            border-bottom-right-radius: 0px !important;
+        }
+        &--after {
+            border-top-right-radius: 50px !important;
+            border-bottom-right-radius: 50px !important;
+        }
     }
     &--is-active {
         .select-button__text {
@@ -181,6 +194,20 @@ body {
         .select-button__icon {
             background-color: $medium-teal;
             border-color: $medium-teal;
+        }
+    }
+    &--is-snack {
+        .select-button__text {
+            background-color: $white;
+            color: $dark-teal;
+            border-top: 1px solid $dark-teal;
+            border-bottom: 1px solid $dark-teal;
+            padding: 0.8rem 1rem;
+        }
+        .select-button__icon {
+            background-color: $dark-teal;
+            border-color: $dark-teal;
+            padding: 0.8rem 1rem;
         }
     }
 }
@@ -209,6 +236,11 @@ body {
                 background-size: cover;
             }
             &-section {
+                display: flex;
+                flex-direction: column;
+                &--snack {
+                    justify-content: flex-end;
+                }
                 .blue-arrow {
                     background-color: #eee;
                 }
@@ -235,11 +267,15 @@ body {
         &--picture {
             .card {
                 &-divider {
-                    padding: 1rem 0 0;
+                    padding: 1rem 1rem 0;
                     background-color: transparent !important;
+                    text-align: center;
                 }
                 &-img {
                     filter: grayscale(1);
+                    &--no-filter {
+                        filter: none;
+                    }
                 }
             }
         }
