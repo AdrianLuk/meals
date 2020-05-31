@@ -1,15 +1,15 @@
 import React, { useState, Fragment, useEffect } from "react";
-import Table from "../table/Table";
+import Table from "../table/TableSnack";
 import Logistics from "../logistics/Logistics";
 // import CardItem from "../cards/CardItem_Title";
 import SplitButton from "../SplitButton";
 import "./section.scss";
 import { capitalize } from "lodash";
-const useForm = (initialValues) => {
+const useForm = initialValues => {
     const [values, setValues] = useState(initialValues);
     return [
         values,
-        (e) => {
+        e => {
             setValues({
                 ...values,
                 [e.target.id]: e.target.value,
@@ -19,6 +19,7 @@ const useForm = (initialValues) => {
 };
 const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 const Review = ({
+    snacks,
     customizations,
     selectedPackage,
     selectedGoal,
@@ -36,7 +37,7 @@ const Review = ({
 }) => {
     let [submittedCust, setSubmittedCust] = useState(customizations);
     const [paymentOption, setPaymentOption] = useState("cash");
-    const setPayment = (option) => (e) => {
+    const setPayment = option => e => {
         e.preventDefault();
         setPaymentOption(option);
     };
@@ -59,21 +60,21 @@ const Review = ({
         setIsEmailValid(emailRegex.test(email));
         // setEmail(e);
     };
-    const handleEmail = (e) => {
+    const handleEmail = e => {
         setEmail(e.target.value);
         checkEmail();
     };
     useEffect(() => {
         // const replacer = (key, value) =>
         //     value === null || value.length === 0 ? "none" : value; // specify how you want to handle null values here
-        const header = Object.keys(customizations[0]);
-        let csv = customizations.map((row) => {
+        const header = Object.keys(snacks[0]);
+        let csv = snacks.map(row => {
             //   console.log(row);
             return header
-                .map((fieldName) => {
+                .map(fieldName => {
                     const formattedFieldName = fieldName
                         .split("_")
-                        .map((w) => capitalize(w))
+                        .map(w => capitalize(w))
                         .join(" ");
                     return fieldName === `customization_price`
                         ? null
@@ -96,7 +97,7 @@ const Review = ({
         setSubmittedCust(csv);
         // console.log(customizations);
         // console.log(submittedCust);
-    }, [customizations, submittedCust]);
+    }, [customizations, snacks, submittedCust]);
 
     useEffect(() => {
         setCityValue(shipping.delivery_locations[+selectedDelivery]);
@@ -164,9 +165,8 @@ const Review = ({
                     <div className="grid-x grid-margin-x section__grid">
                         <div className="cell small-12 large-6">
                             <Table
-                                customizations={customizations}
+                                snacks={snacks}
                                 selectedPackage={selectedPackage}
-                                goal={selectedGoal}
                                 shipping={shipping}
                                 selectedDelivery={selectedDelivery}
                                 deliveryOption={deliveryOption}
@@ -269,11 +269,6 @@ const Review = ({
                     type="hidden"
                     name="2"
                     value={selectedPackage.title.rendered}
-                />
-                <input
-                    type="hidden"
-                    name="3"
-                    value={selectedGoal.title.rendered}
                 />
                 <input type="hidden" name="5" value={total.toFixed(2)} />
                 <input type="hidden" name="6" value={deliveryOption} />

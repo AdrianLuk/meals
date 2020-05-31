@@ -1,25 +1,13 @@
 import React, { Fragment, useState, useContext } from "react";
-import SelectDropdown from "../SelectDropdown";
 import FormContext from "../../contexts/Form";
 // import SplitButton from "./SplitButton";
 
-const CardItemNumber = ({
-    handleSelect,
-    group,
-    stateKey,
-    variantKey,
-    setVariant,
-    selected,
-}) => {
+const CardItemNumber = ({ group }) => {
     // console.log(selected.id);
     // console.log(group.id);
     // const maxSnackCount = useContext(SelectedPackageContext);
     const form = useContext(FormContext);
     const [count, setCount] = useState(0);
-    const [dropdownValue, setDropdownValue] = useState({});
-    const getDropdownValue = e => {
-        setDropdownValue(e);
-    };
     const increment = () => {
         +form.snacksRemaining > 0 && setCount(count + 1);
         +form.snacksRemaining > 0 && form.handleSnackChange(group, count + 1);
@@ -35,13 +23,8 @@ const CardItemNumber = ({
                     "card small-12 medium-6 large-4 card__item card__item--picture "
                 }
                 key={group.id}>
-                {group.thumbnail && (
+                {group?.thumbnail && (
                     <div
-                        onClick={e => {
-                            e.preventDefault();
-                            handleSelect(group);
-                            variantKey && setVariant(dropdownValue);
-                        }}
                         className="card-img card-img--no-filter"
                         style={{ backgroundImage: `url(${group.thumbnail})` }}
                     />
@@ -52,24 +35,9 @@ const CardItemNumber = ({
                         `+ $${parseFloat(group.acf.extra_charge).toFixed(2)}`}
                 </div>
                 <div className="card-section card-section--snack">
-                    {group.acf.variations && (
-                        <SelectDropdown
-                            group={group}
-                            stateKey={stateKey}
-                            variantKey={variantKey}
-                            options={group.acf.variations}
-                            handleSelect={handleSelect}
-                            setVariant={setVariant}
-                            selected={selected}
-                            dropdownValue={dropdownValue}
-                            getDropdown={getDropdownValue}
-                        />
-                    )}
                     <button
                         onClick={e => {
                             e.preventDefault();
-                            handleSelect(group);
-                            variantKey && setVariant(dropdownValue);
                         }}
                         className={
                             "input-group select-button select-button--is-snack"

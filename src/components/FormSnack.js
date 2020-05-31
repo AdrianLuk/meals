@@ -206,6 +206,11 @@ export class FormSnack extends Component {
                 .sort((a, b) => a.snack.id - b.snack.id),
         });
     };
+    handleComments = comments => {
+        this.setState({
+            comments,
+        });
+    };
     handleProceed = () => {
         if (this.state.step === 1) {
             if (!this.isEmptyObject(this.state.selectedPackage)) {
@@ -268,6 +273,7 @@ export class FormSnack extends Component {
             case 3:
                 return (
                     <Review
+                        snacks={this.state.selectedSnacks}
                         selectedPackage={this.state.selectedPackage}
                         selectedDelivery={this.state.selectedDeliveryLocation}
                         shipping={this.state.shippingOptions}
@@ -303,6 +309,8 @@ export class FormSnack extends Component {
                 value={{
                     handleSnackChange: this.handleSnackChange,
                     snacksRemaining: this.state.snacksRemaining,
+                    handleComments: this.handleComments,
+                    comments: this.state.comments,
                 }}>
                 <SelectedPackageProvider value={this.state?.selectedPackage}>
                     <div className="form__header grid-container grid-x align-justify align-middle">

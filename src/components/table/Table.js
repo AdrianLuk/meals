@@ -41,19 +41,21 @@ const Table = ({
                     <td />
                     <td />
                 </tr>
-                <tr className="table__row table__row--indent-1-5">
-                    <td>{`${goal.acf.portion_description}`}</td>
-                    <td />
-                    <td>
-                        {parseInt(goal.acf.portion_price) > 0
-                            ? `$${parseFloat(
-                                  +goal.acf.portion_price *
-                                      +selectedPackage.acf.meal_count
-                              ).toFixed(2)}`
-                            : `Included`}
-                    </td>
-                </tr>
-                {customizations.map((cust, index) => (
+                {goal && (
+                    <tr className="table__row table__row--indent-1-5">
+                        <td>{`${goal.acf.portion_description}`}</td>
+                        <td />
+                        <td>
+                            {parseInt(goal.acf.portion_price) > 0
+                                ? `$${parseFloat(
+                                      +goal.acf.portion_price *
+                                          +selectedPackage.acf.meal_count
+                                  ).toFixed(2)}`
+                                : `Included`}
+                        </td>
+                    </tr>
+                )}
+                {customizations?.map((cust, index) => (
                     <Fragment key={index}>
                         <tr className="table__row table__row--bold table__row--indent-1">
                             <td>{`Customized Meal ${index + 1}`}</td>

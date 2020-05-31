@@ -5,11 +5,11 @@ import Logistics from "../logistics/Logistics";
 import SplitButton from "../SplitButton";
 import "./section.scss";
 import { capitalize } from "lodash";
-const useForm = (initialValues) => {
+const useForm = initialValues => {
     const [values, setValues] = useState(initialValues);
     return [
         values,
-        (e) => {
+        e => {
             setValues({
                 ...values,
                 [e.target.id]: e.target.value,
@@ -36,7 +36,7 @@ const Review = ({
 }) => {
     let [submittedCust, setSubmittedCust] = useState(customizations);
     const [paymentOption, setPaymentOption] = useState("cash");
-    const setPayment = (option) => (e) => {
+    const setPayment = option => e => {
         e.preventDefault();
         setPaymentOption(option);
     };
@@ -59,7 +59,7 @@ const Review = ({
         setIsEmailValid(emailRegex.test(email));
         // setEmail(e);
     };
-    const handleEmail = (e) => {
+    const handleEmail = e => {
         setEmail(e.target.value);
         checkEmail();
     };
@@ -67,13 +67,13 @@ const Review = ({
         // const replacer = (key, value) =>
         //     value === null || value.length === 0 ? "none" : value; // specify how you want to handle null values here
         const header = Object.keys(customizations[0]);
-        let csv = customizations.map((row) => {
+        let csv = customizations.map(row => {
             //   console.log(row);
             return header
-                .map((fieldName) => {
+                .map(fieldName => {
                     const formattedFieldName = fieldName
                         .split("_")
-                        .map((w) => capitalize(w))
+                        .map(w => capitalize(w))
                         .join(" ");
                     return fieldName === `customization_price`
                         ? null
