@@ -270,11 +270,14 @@ body {
                     padding: 1rem 1rem 0;
                     background-color: transparent !important;
                     text-align: center;
+                    color: $dark-teal;
                 }
                 &-img {
                     filter: grayscale(1);
                     &--no-filter {
                         filter: none;
+                        height: 250px;
+                        background-position: center center;
                     }
                 }
             }

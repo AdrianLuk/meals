@@ -44,7 +44,7 @@ export class FormSnack extends Component {
             canProceed: false,
             total: null,
         };
-        this.baseURL = "https://fitaxxmeals.com";
+        this.baseURL = this.props?.homeUrl || "https://fitaxxmeals.com";
     }
     componentDidMount() {
         this.getData();

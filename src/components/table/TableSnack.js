@@ -57,12 +57,12 @@ const Table = ({
                 {selectedDelivery !== "default" &&
                     deliveryOption === "delivery" && (
                         <Fragment>
-                            <tr className="table__row table__row--bold table__row--indent-1">
+                            <tr className="table__row table__row--bold">
                                 <td>Delivery Location</td>
                                 <td />
                                 <td />
                             </tr>
-                            <tr className="table__row table__row--indent-1-5">
+                            <tr className="table__row ">
                                 <td>
                                     {
                                         shipping.delivery_locations[

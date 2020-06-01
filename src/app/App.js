@@ -53,9 +53,9 @@ const App = ({ homeUrl }) => {
                     </section>
                 )}
                 {formType === SNACK ? (
-                    <FormSnack />
+                    <FormSnack homeUrl={homeUrl} />
                 ) : formType === MEAL ? (
-                    <Form />
+                    <Form homeUrl={homeUrl} />
                 ) : null}
             </form>
         </Fragment>
