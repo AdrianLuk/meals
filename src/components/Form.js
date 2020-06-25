@@ -7,7 +7,9 @@ import Review from "./form-sections/Review";
 import Total from "./Total";
 import axios from "axios";
 import { isEmptyObject } from "./utils";
-import { NO_CARB } from "./constants";
+import { NO_CARB, ALLOWED_ADDONS, ADDON_PRICE } from "./constants";
+import { FormProvider } from "../contexts/Form";
+import Popup from "./Popup";
 
 export class Form extends Component {
     constructor(props) {
@@ -22,6 +24,8 @@ export class Form extends Component {
             meats: [],
             vegetables: [],
             salads: [],
+            addOns: [],
+            addOnsRemaining: ALLOWED_ADDONS,
             shippingOptions: null,
             selectedPackage: {},
             packageAmount: 1,
@@ -39,6 +43,7 @@ export class Form extends Component {
             isContactValid: false,
             canProceed: false,
             total: null,
+            modalActive: true,
         };
         this.baseURL = "https://fitaxxmeals.com";
     }
@@ -61,6 +66,16 @@ export class Form extends Component {
         ) {
             this.handleProceed();
         }
+        if (prevState.addOns !== this.state.addOns) {
+            this.setState({
+                addOnsRemaining:
+                    ALLOWED_ADDONS -
+                    +this.state.addOns.reduce(
+                        (acc, curr) => acc + curr.count,
+                        0
+                    ),
+            });
+        }
         if (
             prevState.selectedPackage !== this.state.selectedPackage ||
             prevState.selectedGoal !== this.state.selectedGoal ||
@@ -69,7 +84,8 @@ export class Form extends Component {
             prevState.step !== this.state.step ||
             prevState.selectedDeliveryLocation !==
                 this.state.selectedDeliveryLocation ||
-            prevState.deliveryOption !== this.state.deliveryOption
+            prevState.deliveryOption !== this.state.deliveryOption ||
+            prevState.addOns !== this.state.addOns
         ) {
             const total =
                 +this.state.selectedPackage?.acf?.price +
@@ -104,7 +120,13 @@ export class Form extends Component {
                 this.state.customizations.reduce(
                     (total, current) => total + current.customization_price,
                     0
-                );
+                ) +
+                (this.state.addOns.length > 0
+                    ? this.state.addOns.reduce(
+                          (acc, curr) => acc + curr.count,
+                          0
+                      ) * ADDON_PRICE
+                    : 0);
             this.setState({ total: total });
         }
     }
@@ -354,6 +376,30 @@ export class Form extends Component {
     handleIsContactValid = isValid => {
         this.setState({ isContactValid: isValid });
     };
+    handleSnackChange = (snack, count) => {
+        this.setState({
+            addOns: [
+                ...this.state.addOns.filter(
+                    selectedSnack => selectedSnack.snack.id !== snack.id
+                ),
+                { snack, count },
+            ]
+                .filter(s => s.count > 0)
+                .sort((a, b) => a.snack.id - b.snack.id),
+        });
+    };
+    toggleModal = e => {
+        e.preventDefault();
+        this.setState({ modalActive: !this.state.modalActive });
+    };
+    handleNoThanks = e => {
+        e.preventDefault();
+        this.setState({
+            modalActive: !this.state.modalActive,
+            addOnsRemaining: 14,
+            addOns: [],
+        });
+    };
     renderSections = () => {
         const { step } = this.state;
         if (!step) {
@@ -408,22 +454,33 @@ export class Form extends Component {
                 );
             case 3:
                 return (
-                    <Review
-                        customizations={this.state.customizations}
-                        selectedPackage={this.state.selectedPackage}
-                        selectedGoal={this.state.selectedGoal}
-                        selectedDelivery={this.state.selectedDeliveryLocation}
-                        shipping={this.state.shippingOptions}
-                        handleSelect={this.handleDeliverySelect}
-                        deliveryOption={this.state.deliveryOption}
-                        setDeliveryOption={this.setDeliveryOption}
-                        deliveryTime={this.state.deliveryTime}
-                        setDeliveryTime={this.setDeliveryTime}
-                        total={this.state.total}
-                        isContactValid={this.state.isContactValid}
-                        handleIsContactValid={this.handleIsContactValid}
-                        handleProceed={this.handleProceed}
-                    />
+                    <>
+                        <Review
+                            customizations={this.state.customizations}
+                            selectedPackage={this.state.selectedPackage}
+                            selectedGoal={this.state.selectedGoal}
+                            selectedDelivery={
+                                this.state.selectedDeliveryLocation
+                            }
+                            shipping={this.state.shippingOptions}
+                            handleSelect={this.handleDeliverySelect}
+                            deliveryOption={this.state.deliveryOption}
+                            setDeliveryOption={this.setDeliveryOption}
+                            deliveryTime={this.state.deliveryTime}
+                            setDeliveryTime={this.setDeliveryTime}
+                            total={this.state.total}
+                            isContactValid={this.state.isContactValid}
+                            handleIsContactValid={this.handleIsContactValid}
+                            handleProceed={this.handleProceed}
+                            addOns={this.state.addOns}
+                        />
+                        <Popup
+                            salads={this.state.salads}
+                            active={this.state.modalActive}
+                            toggleModal={this.toggleModal}
+                            handleNoThanks={this.handleNoThanks}
+                        />
+                    </>
                 );
             default:
                 return (
@@ -443,29 +500,40 @@ export class Form extends Component {
         }
         return (
             <Fragment>
-                <div className="form__header grid-container grid-x align-justify align-middle">
-                    <StepList step={this.state.step} />
-                    <Total
+                <FormProvider
+                    value={{
+                        handleSnackChange: this.handleSnackChange,
+                        snacksRemaining: this.state.addOnsRemaining,
+                        allowedAddons: ALLOWED_ADDONS,
+                    }}>
+                    <div className="form__header grid-container grid-x align-justify align-middle">
+                        <StepList step={this.state.step} />
+                        <Total
+                            step={this.state.step}
+                            itemCount={+this.state.totalCustomizations}
+                            packagePrice={this.state.selectedPackage}
+                            selectedGoal={this.state.selectedGoal}
+                            selectedDelivery={
+                                this.state.selectedDeliveryLocation
+                            }
+                            deliveryOption={this.state.deliveryOption}
+                            totalCustomizations={this.state.totalCustomizations}
+                            customizationsRemaining={
+                                this.state.customizationsRemaining
+                            }
+                            total={this.state.total}
+                        />
+                    </div>
+                    <div className="grid-container">
+                        {this.renderSections()}
+                    </div>
+                    <Pagination
+                        canProceed={this.state.canProceed}
+                        handleNextStepChange={this.handleNextStepChange}
+                        handlePrevStepChange={this.handlePrevStepChange}
                         step={this.state.step}
-                        itemCount={+this.state.totalCustomizations}
-                        packagePrice={this.state.selectedPackage}
-                        selectedGoal={this.state.selectedGoal}
-                        selectedDelivery={this.state.selectedDeliveryLocation}
-                        deliveryOption={this.state.deliveryOption}
-                        totalCustomizations={this.state.totalCustomizations}
-                        customizationsRemaining={
-                            this.state.customizationsRemaining
-                        }
-                        total={this.state.total}
                     />
-                </div>
-                <div className="grid-container">{this.renderSections()}</div>
-                <Pagination
-                    canProceed={this.state.canProceed}
-                    handleNextStepChange={this.handleNextStepChange}
-                    handlePrevStepChange={this.handlePrevStepChange}
-                    step={this.state.step}
-                />
+                </FormProvider>
             </Fragment>
         );
     }

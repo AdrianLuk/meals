@@ -19,6 +19,7 @@ const useForm = initialValues => {
 };
 const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 const Review = ({
+    addOns,
     customizations,
     selectedPackage,
     selectedGoal,
@@ -67,7 +68,7 @@ const Review = ({
         // const replacer = (key, value) =>
         //     value === null || value.length === 0 ? "none" : value; // specify how you want to handle null values here
         const header = Object.keys(customizations[0]);
-        let csv = customizations.map(row => {
+        const custCsv = customizations.map(row => {
             //   console.log(row);
             return header
                 .map(fieldName => {
@@ -91,12 +92,22 @@ const Review = ({
                 })
                 .join("\r\n");
         });
-        csv = csv.join("\r\n");
+        const addOnCsv =
+            addOns.length > 0
+                ? addOns
+                      .map(row => {
+                          return `Snack: ${row.snack.post_title}
+                          Quantity: ${row.count}
+                          `;
+                      })
+                      .join("\r\n")
+                : "";
+        const csv = [...custCsv, addOnCsv].join("\r\n");
         // console.log(csv);
         setSubmittedCust(csv);
         // console.log(customizations);
         // console.log(submittedCust);
-    }, [customizations, submittedCust]);
+    }, [addOns, customizations, submittedCust]);
 
     useEffect(() => {
         setCityValue(shipping.delivery_locations[+selectedDelivery]);
@@ -165,6 +176,7 @@ const Review = ({
                         <div className="cell small-12 large-6">
                             <Table
                                 customizations={customizations}
+                                addOns={addOns}
                                 selectedPackage={selectedPackage}
                                 goal={selectedGoal}
                                 shipping={shipping}

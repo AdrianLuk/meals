@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import "./table.scss";
-import { NO_CARB } from "../constants";
+import { NO_CARB, ADDON_PRICE } from "../constants";
 // const isEmptyObject = object => {
 //     if (Object.entries(object).length === 0 && object.constructor === Object) {
 //         return true;
@@ -10,6 +10,7 @@ import { NO_CARB } from "../constants";
 // };
 const Table = ({
     customizations,
+    addOns,
     selectedPackage,
     goal,
     shipping,
@@ -116,6 +117,30 @@ const Table = ({
                         )}
                     </Fragment>
                 ))}
+                {addOns.length > 0 && (
+                    <>
+                        <tr className="table__row table__row--bold">
+                            <td>Snacks</td>
+                            <td />
+                            <td>{`x${parseFloat(
+                                addOns.reduce(
+                                    (acc, curr) => acc + curr.count,
+                                    0
+                                ) * ADDON_PRICE
+                            ).toFixed(2)}`}</td>
+                        </tr>
+                        {addOns.map(addOn => (
+                            <tr
+                                key={addOn.snack.id}
+                                className="table__row table__row--indent-1">
+                                <td>{addOn.snack.post_title}</td>
+                                <td
+                                    className={`text-bold text-center`}>{`x${addOn.count}`}</td>
+                                <td />
+                            </tr>
+                        ))}
+                    </>
+                )}
                 {selectedDelivery !== "default" &&
                     deliveryOption === "delivery" && (
                         <Fragment>

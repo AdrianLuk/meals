@@ -309,6 +309,23 @@ body {
         }
     }
 }
+// snack modal
+.upsell.reveal {
+    top: 0;
+    padding-top: 3rem;
+    @include breakpoint($medium) {
+        margin: 50px auto;
+    }
+    .close-btn {
+        position: absolute;
+        color: $dark-teal;
+        cursor: pointer;
+        right: 1rem;
+        top: 0.5rem;
+        line-height: 1;
+        font-size: 3rem;
+    }
+}
 // gravity form styling
 .contact-page-form {
     // .gfield {
