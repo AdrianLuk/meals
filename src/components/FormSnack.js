@@ -107,6 +107,9 @@ export class FormSnack extends Component {
         const getSalads = await axios.get(
             `${this.baseURL}/wp-json/wp/v2/salads?order=asc`
         );
+        const getSnacks = await axios.get(
+            `${this.baseURL}/wp-json/wp/v2/snacks?order=asc`
+        );
         const getSnackSizes = await axios.get(
             `${this.baseURL}/wp-json/wp/v2/snack_sizes?order=asc`
         );
@@ -119,6 +122,7 @@ export class FormSnack extends Component {
             getVegetables,
             getShippingOptions,
             getSalads,
+            getSnacks,
             getSnackSizes,
         ]).then(res => {
             this.setState({
@@ -131,7 +135,8 @@ export class FormSnack extends Component {
                 shippingOptions: res[6].data.acf,
                 deliveryTime: res[6].data.acf.delivery_times[0].timeframe,
                 salads: res[7].data,
-                snackSizes: res[8].data,
+                snacks: res[8].data,
+                snackSizes: res[9].data,
                 isDataLoaded: true,
             });
         });
@@ -268,8 +273,8 @@ export class FormSnack extends Component {
             case 2:
                 return (
                     <Customize
-                        snacks={this.state.snacks}
-                        salads={this.state.salads}
+                        // snacks={this.state.snacks}
+                        salads={[...this.state.salads, ...this.state.snacks]}
                     />
                 );
             case 3:

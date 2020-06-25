@@ -29,6 +29,16 @@ const Customize = ({
                 <p className="section__subheading">
                     Please add any comments for this customization
                 </p>
+                <p className="section__subheading">
+                    <em>
+                        Please Note: Items in salad can be removed but not
+                        substituted. For more information,{" "}
+                        <a
+                            href={`${window.location.href}frequently-asked-questions`}>
+                            click here
+                        </a>
+                    </em>
+                </p>
                 <div className="customize__textarea-container">
                     <textarea
                         className="customize__textarea"
