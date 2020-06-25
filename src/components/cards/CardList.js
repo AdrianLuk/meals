@@ -11,11 +11,11 @@ export const CardList = ({
     selectedVariant,
     setVariant,
     groupName,
-    variantKey
+    variantKey,
 }) => {
     const foodItemRow =
         groups &&
-        groups.map(group => (
+        groups?.map(group => (
             <CardItemWithPic
                 key={group.id}
                 group={group}

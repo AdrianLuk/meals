@@ -27,7 +27,7 @@
             td {
                 &:first-child {
                     @include breakpoint($large) {
-                        text-indent: 1rem;
+                        padding-left: 1rem;
                     }
                 }
             }
@@ -36,7 +36,7 @@
             td {
                 &:first-child {
                     @include breakpoint($large) {
-                        text-indent: 1.5rem;
+                        padding-left: 1.5rem;
                     }
                 }
             }

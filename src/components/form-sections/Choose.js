@@ -5,7 +5,7 @@ import "./section.scss";
 
 export class Choose extends Component {
     state = {
-        packages: []
+        packages: [],
         // selectedPackage: null
     };
 
@@ -17,7 +17,7 @@ export class Choose extends Component {
             handleSelect,
             selectedPackage,
             selectedGoal,
-            handlePackageSelect
+            handlePackageSelect,
             // packageAmount
         } = this.props;
         const packageList = packages.map(packageItem => (
@@ -29,9 +29,7 @@ export class Choose extends Component {
                 handleSelect={handlePackageSelect}
                 handlePackageSelect={handlePackageSelect}
                 buttonText={`$${packageItem.acf.price}`}
-                description={`${
-                    packageItem.acf.meal_count
-                } Personal Sized Meals`}
+                description={`${packageItem.acf.meal_count} Personal Sized Meals`}
                 group="packages"
                 cardTitle={packageItem.title.rendered}
             />

@@ -214,7 +214,7 @@ const Review = ({
                                     : "")
                             }>
                             <div className="card-divider">{`Cash`}</div>
-                            <div className="card-section">
+                            <div className="card-section align-justify">
                                 <p>{`Paid on Day-Of`}</p>
                                 <SplitButton
                                     handleClick={setPayment("cash")}

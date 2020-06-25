@@ -35,7 +35,7 @@ const Review = ({
     handleIsContactValid,
     handleProceed,
 }) => {
-    let [submittedCust, setSubmittedCust] = useState(customizations);
+    const [submittedCust, setSubmittedCust] = useState("");
     const [paymentOption, setPaymentOption] = useState("cash");
     const setPayment = option => e => {
         e.preventDefault();
@@ -97,7 +97,7 @@ const Review = ({
         setSubmittedCust(csv);
         // console.log(customizations);
         // console.log(submittedCust);
-    }, [customizations, snacks, submittedCust]);
+    }, [snacks, submittedCust]);
 
     useEffect(() => {
         setCityValue(shipping.delivery_locations[+selectedDelivery]);
@@ -214,7 +214,7 @@ const Review = ({
                                     : "")
                             }>
                             <div className="card-divider">{`Cash`}</div>
-                            <div className="card-section">
+                            <div className="card-section align-justify">
                                 <p>{`Paid on Day-Of`}</p>
                                 <SplitButton
                                     handleClick={setPayment("cash")}

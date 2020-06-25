@@ -6,6 +6,7 @@ import Customize from "./form-sections/Customize";
 import Review from "./form-sections/Review";
 import Total from "./Total";
 import axios from "axios";
+import { isEmptyObject } from "./utils";
 import { NO_CARB } from "./constants";
 
 export class Form extends Component {
@@ -20,6 +21,7 @@ export class Form extends Component {
             carbs: [],
             meats: [],
             vegetables: [],
+            salads: [],
             shippingOptions: null,
             selectedPackage: {},
             packageAmount: 1,
@@ -70,44 +72,39 @@ export class Form extends Component {
             prevState.deliveryOption !== this.state.deliveryOption
         ) {
             const total =
-                this.state.selectedPackage.acf &&
-                +this.state.selectedPackage.acf.price +
-                    (this.state.selectedGoal.acf &&
-                    this.state.selectedPackage.acf
-                        ? +this.state.selectedPackage.acf.meal_count *
-                          +this.state.selectedGoal.acf.portion_price
-                        : 0) +
-                    (this.state.selectedDeliveryLocation !== "default" &&
-                    this.state.deliveryOption === "delivery"
-                        ? +this.state.shippingOptions.delivery_locations[
-                              this.state.selectedDeliveryLocation
-                          ].price
-                        : 0) +
-                    (this.state.currentCustomization.carb !== NO_CARB &&
-                    this.state.currentCustomization.carb &&
-                    this.state.currentCustomization.carb.extra_charge
-                        ? +this.state.currentCustomization.carb.extra_charge *
-                          +this.state.currentCustomization
-                              .customization_quantity
-                        : 0) +
-                    (this.state.currentCustomization.meat &&
-                    this.state.currentCustomization.meat.extra_charge
-                        ? +this.state.currentCustomization.meat.extra_charge *
-                          +this.state.currentCustomization
-                              .customization_quantity
-                        : 0) +
-                    (this.state.currentCustomization.vegetable &&
-                    this.state.currentCustomization.vegetable.acf &&
-                    this.state.currentCustomization.vegetable.acf.extra_charge
-                        ? +this.state.currentCustomization.vegetable.acf
-                              .extra_charge *
-                          +this.state.currentCustomization
-                              .customization_quantity
-                        : 0) +
-                    this.state.customizations.reduce(
-                        (total, current) => total + current.customization_price,
-                        0
-                    );
+                +this.state.selectedPackage?.acf?.price +
+                (this.state.selectedGoal.acf && this.state.selectedPackage.acf
+                    ? +this.state.selectedPackage.acf.meal_count *
+                      +this.state.selectedGoal.acf.portion_price
+                    : 0) +
+                (this.state.selectedDeliveryLocation !== "default" &&
+                this.state.deliveryOption === "delivery"
+                    ? +this.state.shippingOptions.delivery_locations[
+                          this.state.selectedDeliveryLocation
+                      ].price
+                    : 0) +
+                (this.state.currentCustomization.carb !== NO_CARB &&
+                this.state.currentCustomization.carb &&
+                this.state.currentCustomization.carb.extra_charge
+                    ? +this.state.currentCustomization.carb.extra_charge *
+                      +this.state.currentCustomization.customization_quantity
+                    : 0) +
+                (this.state.currentCustomization.meat &&
+                this.state.currentCustomization.meat.extra_charge
+                    ? +this.state.currentCustomization.meat.extra_charge *
+                      +this.state.currentCustomization.customization_quantity
+                    : 0) +
+                (this.state.currentCustomization.vegetable &&
+                this.state.currentCustomization.vegetable.acf &&
+                this.state.currentCustomization.vegetable.acf.extra_charge
+                    ? +this.state.currentCustomization.vegetable.acf
+                          .extra_charge *
+                      +this.state.currentCustomization.customization_quantity
+                    : 0) +
+                this.state.customizations.reduce(
+                    (total, current) => total + current.customization_price,
+                    0
+                );
             this.setState({ total: total });
         }
     }
@@ -131,6 +128,9 @@ export class Form extends Component {
         const getShippingOptions = await axios.get(
             `${this.baseURL}/wp-json/acf/v3/options/options`
         );
+        const getSalads = await axios.get(
+            `${this.baseURL}/wp-json/wp/v2/salads?order=asc`
+        );
         Promise.all([
             getTypes,
             getPackages,
@@ -139,7 +139,8 @@ export class Form extends Component {
             getMeats,
             getVegetables,
             getShippingOptions,
-        ]).then((res) => {
+            getSalads,
+        ]).then(res => {
             this.setState({
                 types: res[0].data,
                 packages: res[1].data,
@@ -149,6 +150,7 @@ export class Form extends Component {
                 vegetables: res[5].data,
                 shippingOptions: res[6].data.acf,
                 deliveryTime: res[6].data.acf.delivery_times[0].timeframe,
+                salads: res[7].data,
                 isDataLoaded: true,
             });
         });
@@ -165,26 +167,16 @@ export class Form extends Component {
             .getElementById("form-anchor")
             .scrollIntoView({ behavior: "smooth", block: "start" });
     };
-    isEmptyObject = (object) => {
-        if (
-            Object.entries(object).length === 0 &&
-            object.constructor === Object
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    };
-    handlePrevStepChange = (event) => {
+    handlePrevStepChange = event => {
         event.preventDefault();
         this.setState({ step: this.state.step - 1 });
     };
-    handleNextStepChange = (event) => {
+    handleNextStepChange = event => {
         event.preventDefault();
         if (this.state.step === 1) {
             if (
-                this.isEmptyObject(this.state.selectedPackage) ||
-                this.isEmptyObject(this.state.selectedGoal)
+                isEmptyObject(this.state.selectedPackage) ||
+                isEmptyObject(this.state.selectedGoal)
             ) {
             } else {
                 this.setState({ step: this.state.step + 1 });
@@ -195,8 +187,8 @@ export class Form extends Component {
             // save customization if valid and have customizations left to customize
             if (
                 this.state.customizationsRemaining > 0 &&
-                !this.isEmptyObject(this.state.currentCustomization.carb) &&
-                !this.isEmptyObject(this.state.currentCustomization.meat)
+                !isEmptyObject(this.state.currentCustomization.carb) &&
+                !isEmptyObject(this.state.currentCustomization.meat)
             ) {
                 this.saveCustomization(this.state.currentCustomization);
             } else if (this.state.customizationsRemaining === 0) {
@@ -232,14 +224,14 @@ export class Form extends Component {
             }
         }
     };
-    addCustomizationToOrder = (customization) => {
+    addCustomizationToOrder = customization => {
         // console.log(customization);
         // const customizations = [...this.state.customizations, customization];
         // console.log(customizations);
         // this.saveCustomization(customizations);
         this.setState({ currentCustomization: customization });
     };
-    saveCustomization = (customization) => {
+    saveCustomization = customization => {
         const customizations = [...this.state.customizations, customization];
         this.setState({
             customizations: customizations,
@@ -253,7 +245,7 @@ export class Form extends Component {
                 this.state.currentCustomizationCount,
         });
     };
-    handleCustomizationAmountDecrement = (event) => {
+    handleCustomizationAmountDecrement = event => {
         event.preventDefault();
         if (this.state.currentCustomizationCount <= 1) {
             return false;
@@ -264,7 +256,7 @@ export class Form extends Component {
             });
         }
     };
-    handleCustomizationAmountChange = (e) => {
+    handleCustomizationAmountChange = e => {
         if (e.target.value > +this.state.customizationsRemaining) {
             this.setState({
                 currentCustomizationCount: +this.state.customizationsRemaining,
@@ -273,7 +265,7 @@ export class Form extends Component {
             this.setState({ currentCustomizationCount: +e.target.value });
         }
     };
-    handleCustomizationAmountIncrement = (event) => {
+    handleCustomizationAmountIncrement = event => {
         event.preventDefault();
         if (
             +this.state.currentCustomizationCount >=
@@ -289,7 +281,7 @@ export class Form extends Component {
             });
         }
     };
-    handlePackageSelect = (selection) => (e) => {
+    handlePackageSelect = selection => e => {
         e.preventDefault();
         // console.log(selection);
         if (selection.acf) {
@@ -305,8 +297,8 @@ export class Form extends Component {
     handleProceed = () => {
         if (this.state.step === 1) {
             if (
-                !this.isEmptyObject(this.state.selectedPackage) &&
-                !this.isEmptyObject(this.state.selectedGoal)
+                !isEmptyObject(this.state.selectedPackage) &&
+                !isEmptyObject(this.state.selectedGoal)
             ) {
                 this.setState({ canProceed: true });
                 // return true;
@@ -343,23 +335,23 @@ export class Form extends Component {
         //     }
         // }
     };
-    handleSelect = (state, selection) => (e) => {
+    handleSelect = (state, selection) => e => {
         e.preventDefault();
         // console.log(selection);
         this.setState({ [state]: selection });
     };
-    handleDeliverySelect = (selected) => {
+    handleDeliverySelect = selected => {
         this.setState({ selectedDeliveryLocation: selected });
     };
-    setDeliveryOption = (option) => (e) => {
+    setDeliveryOption = option => e => {
         e.preventDefault();
         this.setState({ deliveryOption: option });
     };
-    setDeliveryTime = (option) => (e) => {
+    setDeliveryTime = option => e => {
         e.preventDefault();
         this.setState({ deliveryTime: option });
     };
-    handleIsContactValid = (isValid) => {
+    handleIsContactValid = isValid => {
         this.setState({ isContactValid: isValid });
     };
     renderSections = () => {
@@ -392,6 +384,7 @@ export class Form extends Component {
                         meats={this.state.meats}
                         customizations={this.state.customizations}
                         vegetables={this.state.vegetables}
+                        salads={this.state.salads}
                         currentCustomizationId={
                             this.state.currentCustomizationId
                         }

@@ -31,18 +31,18 @@ const Table = ({
                 </tr>
             </thead>
             <tbody>
-                <tr className="table__row table__row--bold table__row--indent-1">
+                <tr className="table__row table__row--bold">
                     <td>{selectedPackage.title.rendered}</td>
                     <td />
                     <td>{`$${selectedPackage.acf.price}`}</td>
                 </tr>
-                <tr className="table__row table__row--indent-1-5">
+                <tr className="table__row table__row--indent-1">
                     <td>{`${selectedPackage.acf.meal_count}-meal pack`}</td>
                     <td />
                     <td />
                 </tr>
                 {goal && (
-                    <tr className="table__row table__row--indent-1-5">
+                    <tr className="table__row table__row--indent-1">
                         <td>{`${goal.acf.portion_description}`}</td>
                         <td />
                         <td>
@@ -63,7 +63,11 @@ const Table = ({
                             <td />
                         </tr>
                         <tr className="table__row table__row--indent-1-5">
-                            <td>{cust.carb.variation || NO_CARB}</td>
+                            <td>
+                                {cust.carb.variation ||
+                                    cust.carb.post_title ||
+                                    NO_CARB}
+                            </td>
                             <td />
                             <td>
                                 {+cust.carb.extra_charge > 0
@@ -115,12 +119,12 @@ const Table = ({
                 {selectedDelivery !== "default" &&
                     deliveryOption === "delivery" && (
                         <Fragment>
-                            <tr className="table__row table__row--bold table__row--indent-1">
+                            <tr className="table__row table__row--bold">
                                 <td>Delivery Location</td>
                                 <td />
                                 <td />
                             </tr>
-                            <tr className="table__row table__row--indent-1-5">
+                            <tr className="table__row table__row--indent-1">
                                 <td>
                                     {
                                         shipping.delivery_locations[

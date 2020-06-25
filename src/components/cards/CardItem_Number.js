@@ -16,6 +16,13 @@ const CardItemNumber = ({ group }) => {
         count > 0 && setCount(count - 1);
         count > 0 && form.handleSnackChange(group, count - 1);
     };
+    // useEffect(() => {
+    //     setCount(
+    //         form?.selectedSnacks.find(snack => +snack.snack.id === +group.id)
+    //             ?.snack.count || 0
+    //     );
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
     return (
         <Fragment>
             <div
@@ -34,7 +41,7 @@ const CardItemNumber = ({ group }) => {
                     {group.acf.extra_charge &&
                         `+ $${parseFloat(group.acf.extra_charge).toFixed(2)}`}
                 </div>
-                <div className="card-section card-section--snack">
+                <div className="card-section card-section--snack align-right">
                     <button
                         onClick={e => {
                             e.preventDefault();

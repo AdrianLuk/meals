@@ -32,11 +32,13 @@ const Table = ({
                 <tr className="table__row table__row--bold">
                     <td>{selectedPackage.title.rendered}</td>
                     <td />
-                    <td>{`$${selectedPackage.acf.price}`}</td>
+                    <td>{`$${parseFloat(selectedPackage.acf.price).toFixed(
+                        2
+                    )}`}</td>
                 </tr>
                 {snacks?.map((snack, index) => (
                     <Fragment key={index}>
-                        <tr className="table__row table__row--bold">
+                        <tr className="table__row table__row--bold table__row--indent-1">
                             <td>{`${snack.snack.post_title}`}</td>
                             <td className="text-center">{`x${snack.count}`}</td>
                             <td />
@@ -62,7 +64,7 @@ const Table = ({
                                 <td />
                                 <td />
                             </tr>
-                            <tr className="table__row ">
+                            <tr className="table__row table__row--indent-1">
                                 <td>
                                     {
                                         shipping.delivery_locations[

@@ -63,7 +63,14 @@ export class FormSnack extends Component {
                 this.state.selectedDeliveryLocation ||
             prevState.deliveryOption !== this.state.deliveryOption
         ) {
-            const total = +this.state.selectedPackage?.acf?.price;
+            const total =
+                +this.state.selectedPackage?.acf?.price +
+                (this.state.selectedDeliveryLocation !== "default" &&
+                this.state.deliveryOption === "delivery"
+                    ? +this.state.shippingOptions.delivery_locations[
+                          this.state.selectedDeliveryLocation
+                      ].price
+                    : 0);
             this.setState({ total });
         }
         if (prevState.selectedSnacks !== this.state.selectedSnacks) {
@@ -306,6 +313,7 @@ export class FormSnack extends Component {
                     snacksRemaining: this.state.snacksRemaining,
                     handleComments: this.handleComments,
                     comments: this.state.comments,
+                    selectedSnacks: this.state.selectedSnacks,
                 }}>
                 <SelectedPackageProvider value={this.state?.selectedPackage}>
                     <div className="form__header grid-container grid-x align-justify align-middle">

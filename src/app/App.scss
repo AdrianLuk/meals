@@ -234,13 +234,11 @@ body {
                 height: 200px;
                 position: relative;
                 background-size: cover;
+                background-position: center center;
             }
             &-section {
                 display: flex;
                 flex-direction: column;
-                &--snack {
-                    justify-content: flex-end;
-                }
                 .blue-arrow {
                     background-color: #eee;
                 }

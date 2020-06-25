@@ -19,7 +19,7 @@ export class Choose extends Component {
             handlePackageSelect,
             // packageAmount
         } = this.props;
-        const packageList = packages.map((packageItem) => (
+        const packageList = packages.map(packageItem => (
             <CardItem
                 key={packageItem.id}
                 item={packageItem}
@@ -27,7 +27,7 @@ export class Choose extends Component {
                 selectedItem={selectedPackage}
                 handleSelect={handlePackageSelect}
                 handlePackageSelect={handlePackageSelect}
-                buttonText={`$${packageItem.acf.price}`}
+                buttonText={`$${parseFloat(packageItem.acf.price).toFixed(2)}`}
                 description={`${packageItem.acf.size} Snacks`}
                 group="packages"
                 cardTitle={packageItem.title.rendered}
