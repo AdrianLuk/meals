@@ -9,7 +9,7 @@ import { SelectedPackageProvider } from "../contexts/SelectedPackage";
 import axios from "axios";
 import { FormProvider } from "../contexts/Form";
 
-export class FormSnack extends Component {
+export class FormVegan extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -92,6 +92,15 @@ export class FormSnack extends Component {
         const getGoals = await axios.get(
             `${this.baseURL}/wp-json/wp/v2/goals?order=asc`
         );
+        const getCarbs = await axios.get(
+            `${this.baseURL}/wp-json/wp/v2/carbs?order=asc`
+        );
+        const getMeats = await axios.get(
+            `${this.baseURL}/wp-json/wp/v2/meats?order=asc`
+        );
+        const getVegetables = await axios.get(
+            `${this.baseURL}/wp-json/wp/v2/vegetables?order=asc`
+        );
         const getShippingOptions = await axios.get(
             `${this.baseURL}/wp-json/acf/v3/options/options`
         );
@@ -108,6 +117,9 @@ export class FormSnack extends Component {
             getTypes,
             getPackages,
             getGoals,
+            getCarbs,
+            getMeats,
+            getVegetables,
             getShippingOptions,
             getSalads,
             getSnacks,
@@ -117,6 +129,9 @@ export class FormSnack extends Component {
                 types,
                 packages,
                 goals,
+                carbs,
+                meats,
+                vegetables,
                 shippingOptions,
                 salads,
                 snacks,
@@ -126,6 +141,9 @@ export class FormSnack extends Component {
                     types: types.data,
                     packages: packages.data,
                     goals: goals.data,
+                    carbs: carbs.data,
+                    meats: meats.data,
+                    vegetables: vegetables.data,
                     shippingOptions: shippingOptions.data.acf,
                     deliveryTime:
                         shippingOptions.data.acf.delivery_times[0].timeframe,
@@ -350,4 +368,4 @@ export class FormSnack extends Component {
     }
 }
 
-export default FormSnack;
+export default FormVegan;

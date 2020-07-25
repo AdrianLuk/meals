@@ -167,21 +167,34 @@ export class Form extends Component {
             getShippingOptions,
             getSalads,
             getSnacks,
-        ]).then(res => {
-            this.setState({
-                types: res[0].data,
-                packages: res[1].data,
-                goals: res[2].data,
-                carbs: res[3].data,
-                meats: res[4].data,
-                vegetables: res[5].data,
-                shippingOptions: res[6].data.acf,
-                deliveryTime: res[6].data.acf.delivery_times[0].timeframe,
-                salads: res[7].data,
-                snacks: res[8].data,
-                isDataLoaded: true,
-            });
-        });
+        ]).then(
+            ([
+                types,
+                packages,
+                goals,
+                carbs,
+                meats,
+                vegetables,
+                shippingOptions,
+                salads,
+                snacks,
+            ]) => {
+                this.setState({
+                    types: types.data,
+                    packages: packages.data,
+                    goals: goals.data,
+                    carbs: carbs.data,
+                    meats: meats.data,
+                    vegetables: vegetables.data,
+                    shippingOptions: shippingOptions.data.acf,
+                    deliveryTime:
+                        shippingOptions.data.acf.delivery_times[0].timeframe,
+                    salads: salads.data,
+                    snacks: snacks.data,
+                    isDataLoaded: true,
+                });
+            }
+        );
         // console.log(this.state.packages);
         // console.log(this.state.goals);
         // console.log(this.state.carbs);
