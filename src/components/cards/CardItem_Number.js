@@ -1,20 +1,18 @@
-import React, { Fragment, useState, useContext } from "react";
-import FormContext from "../../contexts/Form";
+import React, { Fragment, useState } from "react";
 // import SplitButton from "./SplitButton";
 
-const CardItemNumber = ({ group }) => {
+const CardItemNumber = ({ group, itemsRemaining, handleItemsChange }) => {
     // console.log(selected.id);
     // console.log(group.id);
     // const maxSnackCount = useContext(SelectedPackageContext);
-    const form = useContext(FormContext);
     const [count, setCount] = useState(0);
     const increment = () => {
-        +form.snacksRemaining > 0 && setCount(count + 1);
-        +form.snacksRemaining > 0 && form.handleSnackChange(group, count + 1);
+        +itemsRemaining > 0 && setCount(count + 1);
+        +itemsRemaining > 0 && handleItemsChange(group, count + 1);
     };
     const decrement = () => {
         count > 0 && setCount(count - 1);
-        count > 0 && form.handleSnackChange(group, count - 1);
+        count > 0 && handleItemsChange(group, count - 1);
     };
     // useEffect(() => {
     //     setCount(

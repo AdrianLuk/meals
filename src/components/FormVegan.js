@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import StepList from "./steps/StepList";
-import Choose from "./snack-steps/Choose";
-import Customize from "./snack-steps/Customize";
-import Review from "./snack-steps/Review";
+import Choose from "./vegan-steps/Choose";
+import Customize from "./vegan-steps/Customize";
+import Review from "./vegan-steps/Review";
 import Pagination from "./pagination/Pagination";
 import Total from "./TotalSnack";
 import { SelectedPackageProvider } from "../contexts/SelectedPackage";
 import axios from "axios";
+import { isEmptyObject } from "./utils";
 import { FormProvider } from "../contexts/Form";
+import { ALLOWED_ADDONS, ADDON_PRICE } from "./constants";
+import Popup from "./Popup";
 
 export class FormVegan extends Component {
     constructor(props) {
@@ -18,20 +21,19 @@ export class FormVegan extends Component {
             types: {},
             packages: [],
             goals: [],
-            carbs: [],
-            meats: [],
-            vegetables: [],
+            vegans: [],
+            selectedVegans: [],
+            vegansRemaining: null,
             salads: [],
             snackSizes: [],
             snacks: [],
             selectedSnacks: [],
+            addOns: [],
+            addOnsRemaining: ALLOWED_ADDONS,
             shippingOptions: null,
             selectedPackage: {},
             packageAmount: 1,
             selectedGoal: {},
-            currentCustomizationCount: 1,
-            currentCustomizationId: 1,
-            customizationsRemaining: null,
             snacksRemaining: null,
             totalCustomizations: 0,
             currentCustomization: {},
@@ -43,6 +45,7 @@ export class FormVegan extends Component {
             isContactValid: false,
             canProceed: false,
             total: null,
+            modalActive: true,
         };
         this.baseURL = this.props?.homeUrl || "https://fitaxxmeals.com";
     }
@@ -56,28 +59,50 @@ export class FormVegan extends Component {
         ) {
             this.handleProceed();
         }
+        if (prevState.addOns !== this.state.addOns) {
+            this.setState({
+                addOnsRemaining:
+                    ALLOWED_ADDONS -
+                    +this.state.addOns.reduce(
+                        (acc, curr) => acc + curr.count,
+                        0
+                    ),
+            });
+        }
         if (
             prevState.selectedPackage !== this.state.selectedPackage ||
+            prevState.selectedGoal !== this.state.selectedGoal ||
             prevState.step !== this.state.step ||
             prevState.selectedDeliveryLocation !==
                 this.state.selectedDeliveryLocation ||
-            prevState.deliveryOption !== this.state.deliveryOption
+            prevState.deliveryOption !== this.state.deliveryOption ||
+            prevState.addOns !== this.state.addOns
         ) {
             const total =
                 +this.state.selectedPackage?.acf?.price +
+                (this.state.selectedGoal.acf && this.state.selectedPackage.acf
+                    ? +this.state.selectedPackage.acf.meal_count *
+                      +this.state.selectedGoal.acf.portion_price
+                    : 0) +
                 (this.state.selectedDeliveryLocation !== "default" &&
                 this.state.deliveryOption === "delivery"
                     ? +this.state.shippingOptions.delivery_locations[
                           this.state.selectedDeliveryLocation
                       ].price
+                    : 0) +
+                (this.state.addOns.length > 0
+                    ? this.state.addOns.reduce(
+                          (acc, curr) => acc + curr.count,
+                          0
+                      ) * ADDON_PRICE
                     : 0);
             this.setState({ total });
         }
-        if (prevState.selectedSnacks !== this.state.selectedSnacks) {
+        if (prevState.selectedVegans !== this.state.selectedVegans) {
             this.setState({
-                snacksRemaining:
-                    +this.state.selectedPackage?.acf?.size -
-                    +this.state.selectedSnacks.reduce(
+                vegansRemaining:
+                    +this.state.selectedPackage?.acf?.meal_count -
+                    +this.state.selectedVegans.reduce(
                         (acc, curr) => acc + curr.count,
                         0
                     ),
@@ -92,15 +117,6 @@ export class FormVegan extends Component {
         const getGoals = await axios.get(
             `${this.baseURL}/wp-json/wp/v2/goals?order=asc`
         );
-        const getCarbs = await axios.get(
-            `${this.baseURL}/wp-json/wp/v2/carbs?order=asc`
-        );
-        const getMeats = await axios.get(
-            `${this.baseURL}/wp-json/wp/v2/meats?order=asc`
-        );
-        const getVegetables = await axios.get(
-            `${this.baseURL}/wp-json/wp/v2/vegetables?order=asc`
-        );
         const getShippingOptions = await axios.get(
             `${this.baseURL}/wp-json/acf/v3/options/options`
         );
@@ -113,43 +129,40 @@ export class FormVegan extends Component {
         const getSnackSizes = await axios.get(
             `${this.baseURL}/wp-json/wp/v2/snack_sizes?order=asc`
         );
+        const getVegans = await axios.get(
+            `${this.baseURL}/wp-json/wp/v2/vegan?order=asc`
+        );
         Promise.all([
             getTypes,
             getPackages,
             getGoals,
-            getCarbs,
-            getMeats,
-            getVegetables,
             getShippingOptions,
             getSalads,
             getSnacks,
             getSnackSizes,
+            getVegans,
         ]).then(
             ([
                 types,
                 packages,
                 goals,
-                carbs,
-                meats,
-                vegetables,
                 shippingOptions,
                 salads,
                 snacks,
                 snackSizes,
+                vegans,
             ]) => {
                 this.setState({
                     types: types.data,
                     packages: packages.data,
                     goals: goals.data,
-                    carbs: carbs.data,
-                    meats: meats.data,
-                    vegetables: vegetables.data,
                     shippingOptions: shippingOptions.data.acf,
                     deliveryTime:
                         shippingOptions.data.acf.delivery_times[0].timeframe,
                     salads: salads.data,
                     snacks: snacks.data,
                     snackSizes: snackSizes.data,
+                    vegans: vegans.data,
                     isDataLoaded: true,
                 });
             }
@@ -168,16 +181,7 @@ export class FormVegan extends Component {
             .getElementById("form-anchor")
             .scrollIntoView({ behavior: "smooth", block: "start" });
     };
-    isEmptyObject = object => {
-        if (
-            Object.entries(object).length === 0 &&
-            object.constructor === Object
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    };
+
     handlePrevStepChange = event => {
         event.preventDefault();
         this.setState({ step: this.state.step - 1 });
@@ -185,14 +189,17 @@ export class FormVegan extends Component {
     handleNextStepChange = event => {
         event.preventDefault();
         if (this.state.step === 1) {
-            if (this.isEmptyObject(this.state.selectedPackage)) {
+            if (
+                isEmptyObject(this.state.selectedPackage) ||
+                isEmptyObject(this.state.selectedGoal)
+            ) {
             } else {
                 this.setState({ step: this.state.step + 1 });
                 this.scrollToTop();
             }
         } else if (this.state.step === 2) {
             // this.addCustomizationToOrder();
-            if (this.state.snacksRemaining === 0) {
+            if (this.state.vegansRemaining === 0) {
                 // if user has no customizations left to customize, simply go to next step without saving
                 this.setState({ step: this.state.step + 1 });
             } else {
@@ -211,14 +218,26 @@ export class FormVegan extends Component {
         if (selection.acf) {
             this.setState({
                 selectedPackage: selection,
-                snacksRemaining: +selection.acf.size,
+                vegansRemaining: +selection.acf.meal_count,
             });
         }
     };
+    handleVeganChange = (vegan, count) => {
+        this.setState({
+            selectedVegans: [
+                ...this.state.selectedVegans.filter(
+                    selectedVegan => selectedVegan.vegan.id !== vegan.id
+                ),
+                { vegan, count },
+            ]
+                .filter(s => s.count > 0)
+                .sort((a, b) => a.vegan.id - b.vegan.id),
+        });
+    };
     handleSnackChange = (snack, count) => {
         this.setState({
-            selectedSnacks: [
-                ...this.state.selectedSnacks.filter(
+            addOns: [
+                ...this.state.addOns.filter(
                     selectedSnack => selectedSnack.snack.id !== snack.id
                 ),
                 { snack, count },
@@ -234,7 +253,7 @@ export class FormVegan extends Component {
     };
     handleProceed = () => {
         if (this.state.step === 1) {
-            if (!this.isEmptyObject(this.state.selectedPackage)) {
+            if (!isEmptyObject(this.state.selectedPackage)) {
                 this.setState({ canProceed: true });
                 // return true;
             } else {
@@ -262,6 +281,18 @@ export class FormVegan extends Component {
     handleIsContactValid = isValid => {
         this.setState({ isContactValid: isValid });
     };
+    toggleModal = e => {
+        e.preventDefault();
+        this.setState({ modalActive: !this.state.modalActive });
+    };
+    handleNoThanks = e => {
+        e.preventDefault();
+        this.setState({
+            modalActive: !this.state.modalActive,
+            addOnsRemaining: 14,
+            addOns: [],
+        });
+    };
     renderSections = () => {
         const { step } = this.state;
         if (!step) {
@@ -276,38 +307,54 @@ export class FormVegan extends Component {
                 return (
                     <Choose
                         meta={this.state.types}
-                        packages={this.state.snackSizes}
-                        // goals={this.state.goals}
-                        // handleSelect={this.handleSelect}
+                        packages={this.state.packages}
+                        goals={this.state.goals}
+                        handleSelect={this.handleSelect}
                         handlePackageSelect={this.handlePackageSelect}
                         selectedPackage={this.state.selectedPackage}
-                        // selectedGoal={this.state.selectedGoal}
+                        selectedGoal={this.state.selectedGoal}
                     />
                 );
             case 2:
                 return (
                     <Customize
                         // snacks={this.state.snacks}
-                        salads={[...this.state.salads, ...this.state.snacks]}
+                        // salads={[...this.state.salads, ...this.state.snacks]}
+                        vegans={this.state.vegans}
                     />
                 );
             case 3:
                 return (
-                    <Review
-                        snacks={this.state.selectedSnacks}
-                        selectedPackage={this.state.selectedPackage}
-                        selectedDelivery={this.state.selectedDeliveryLocation}
-                        shipping={this.state.shippingOptions}
-                        handleSelect={this.handleDeliverySelect}
-                        deliveryOption={this.state.deliveryOption}
-                        setDeliveryOption={this.setDeliveryOption}
-                        deliveryTime={this.state.deliveryTime}
-                        setDeliveryTime={this.setDeliveryTime}
-                        total={this.state.total}
-                        isContactValid={this.state.isContactValid}
-                        handleIsContactValid={this.handleIsContactValid}
-                        handleProceed={this.handleProceed}
-                    />
+                    <>
+                        <Review
+                            vegans={this.state.selectedVegans}
+                            selectedPackage={this.state.selectedPackage}
+                            selectedGoal={this.state.selectedGoal}
+                            selectedDelivery={
+                                this.state.selectedDeliveryLocation
+                            }
+                            shipping={this.state.shippingOptions}
+                            handleSelect={this.handleDeliverySelect}
+                            deliveryOption={this.state.deliveryOption}
+                            setDeliveryOption={this.setDeliveryOption}
+                            deliveryTime={this.state.deliveryTime}
+                            setDeliveryTime={this.setDeliveryTime}
+                            total={this.state.total}
+                            isContactValid={this.state.isContactValid}
+                            handleIsContactValid={this.handleIsContactValid}
+                            handleProceed={this.handleProceed}
+                            addOns={this.state.addOns}
+                        />
+                        <Popup
+                            salads={[
+                                ...this.state.salads,
+                                ...this.state.snacks,
+                            ]}
+                            active={this.state.modalActive}
+                            toggleModal={this.toggleModal}
+                            handleNoThanks={this.handleNoThanks}
+                        />
+                    </>
                 );
             default:
                 return (
@@ -329,26 +376,19 @@ export class FormVegan extends Component {
             <FormProvider
                 value={{
                     handleSnackChange: this.handleSnackChange,
-                    snacksRemaining: this.state.snacksRemaining,
+                    snacksRemaining: this.state.addOnsRemaining,
                     handleComments: this.handleComments,
                     comments: this.state.comments,
-                    selectedSnacks: this.state.selectedSnacks,
+                    vegansRemaining: this.state.vegansRemaining,
+                    handleVeganChange: this.handleVeganChange,
+                    allowedAddons: ALLOWED_ADDONS,
                 }}>
                 <SelectedPackageProvider value={this.state?.selectedPackage}>
                     <div className="form__header grid-container grid-x align-justify align-middle">
                         <StepList step={this.state.step} />
                         <Total
-                            step={this.state.step}
-                            itemCount={+this.state?.selectedPackage?.acf?.size}
-                            packagePrice={this.state.selectedPackage}
-                            selectedGoal={this.state.selectedGoal}
-                            selectedDelivery={
-                                this.state.selectedDeliveryLocation
-                            }
-                            deliveryOption={this.state.deliveryOption}
-                            totalCustomizations={this.state.totalCustomizations}
-                            customizationsRemaining={
-                                this.state.customizationsRemaining
+                            itemCount={
+                                +this.state?.selectedPackage?.acf?.meal_count
                             }
                             total={this.state.total}
                         />

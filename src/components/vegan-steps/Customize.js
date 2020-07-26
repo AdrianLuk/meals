@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import CardList from "../cards/CardListSnack";
+import CardList from "../cards/CardListVegan";
 import "./section.scss";
 import FormContext from "../../contexts/Form";
 
@@ -9,6 +9,7 @@ const Customize = ({
     vegetables,
     snacks,
     salads,
+    vegans,
     customizationCount,
     addToOrder,
     currentCustomizationId,
@@ -22,22 +23,12 @@ const Customize = ({
     const form = useContext(FormContext);
     return (
         <section className="section section--customize">
-            <CardList groupName="snack" groups={salads} />
+            <CardList groupName="vegan menu item" groups={vegans} />
             <hr />
             <div className="section__item">
                 <h3 className="section__heading">Comments</h3>
                 <p className="section__subheading">
                     Please add any comments for your order
-                </p>
-                <p className="section__subheading">
-                    <em>
-                        Please Note: Items in salad can be removed but not
-                        substituted. For more information,{" "}
-                        <a
-                            href={`${window.location.href}frequently-asked-questions`}>
-                            click here
-                        </a>
-                    </em>
                 </p>
                 <div className="customize__textarea-container">
                     <textarea

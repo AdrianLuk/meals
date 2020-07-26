@@ -46,7 +46,12 @@ const Popup = ({ salads, active, toggleModal, handleNoThanks }) => {
                 </div>
                 <div className="grid-x grid-margin-x grid-container align-justify">
                     {salads?.map(group => (
-                        <CardItemNumber key={group.id} group={group} />
+                        <CardItemNumber
+                            itemsRemaining={form.snacksRemaining}
+                            handleItemsChange={form.handleSnackChange}
+                            key={group.id}
+                            group={group}
+                        />
                     ))}
                 </div>
                 <div className="grid-x align-center">

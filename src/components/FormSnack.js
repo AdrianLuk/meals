@@ -18,9 +18,6 @@ export class FormSnack extends Component {
             types: {},
             packages: [],
             goals: [],
-            carbs: [],
-            meats: [],
-            vegetables: [],
             salads: [],
             snackSizes: [],
             snacks: [],
@@ -320,18 +317,7 @@ export class FormSnack extends Component {
                     <div className="form__header grid-container grid-x align-justify align-middle">
                         <StepList step={this.state.step} />
                         <Total
-                            step={this.state.step}
                             itemCount={+this.state?.selectedPackage?.acf?.size}
-                            packagePrice={this.state.selectedPackage}
-                            selectedGoal={this.state.selectedGoal}
-                            selectedDelivery={
-                                this.state.selectedDeliveryLocation
-                            }
-                            deliveryOption={this.state.deliveryOption}
-                            totalCustomizations={this.state.totalCustomizations}
-                            customizationsRemaining={
-                                this.state.customizationsRemaining
-                            }
                             total={this.state.total}
                         />
                     </div>

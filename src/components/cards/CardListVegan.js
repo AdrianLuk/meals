@@ -4,7 +4,7 @@ import CardItemNumber from "./CardItem_Number";
 import SelectedPackageContext from "../../contexts/SelectedPackage";
 import FormContext from "../../contexts/Form";
 
-export const CardListSnack = ({
+export const CardListVegan = ({
     groups,
     handleSelect,
     hasNone,
@@ -15,22 +15,22 @@ export const CardListSnack = ({
     groupName,
     variantKey,
 }) => {
-    const maxSnackCount = useContext(SelectedPackageContext);
+    const selectedPackage = useContext(SelectedPackageContext);
     const form = useContext(FormContext);
     const foodItemRow =
         groups &&
         groups.map(group => (
             <CardItemNumber
-                itemsRemaining={form.snacksRemaining}
-                handleItemsChange={form.handleSnackChange}
                 key={group.id}
                 group={group}
+                itemsRemaining={form.vegansRemaining}
+                handleItemsChange={form.handleVeganChange}
             />
         ));
     return (
         <div className="section__item">
             <h2 className="section__heading">{`Select your ${groupName}s`}</h2>
-            <p className="section__subheading">{`Select up to ${maxSnackCount?.acf?.size} snacks (required)`}</p>
+            <p className="section__subheading">{`Select your ${selectedPackage?.acf?.meal_count} items from our vegan menu (required)`}</p>
             <div className="section__grid grid-x grid-margin-x align-center">
                 {foodItemRow}
             </div>
@@ -38,4 +38,4 @@ export const CardListSnack = ({
     );
 };
 
-export default CardListSnack;
+export default CardListVegan;
