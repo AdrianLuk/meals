@@ -234,7 +234,8 @@ const Customize = ({
             <div className="section__item">
                 <h3 className="section__heading">Comments</h3>
                 <p className="section__subheading">
-                    Please add any comments for this customization
+                    <strong>We also serve halal meat!</strong> Please add any
+                    comments for this customization
                 </p>
                 <p className="section__subheading">
                     <em>
