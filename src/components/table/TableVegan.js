@@ -76,7 +76,7 @@ const Table = ({
                         <tr className="table__row table__row--bold">
                             <td>Snacks</td>
                             <td />
-                            <td>{`x${parseFloat(
+                            <td>{`$${parseFloat(
                                 addOns.reduce(
                                     (acc, curr) => acc + curr.count,
                                     0
