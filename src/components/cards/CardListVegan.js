@@ -30,6 +30,10 @@ export const CardListVegan = ({
     return (
         <div className="section__item">
             <h2 className="section__heading">{`Select your ${groupName}s`}</h2>
+            <p className="section__subheading">
+                Please note: All vegan salads do <strong>NOT</strong> include
+                cheese
+            </p>
             <p className="section__subheading">{`Select your ${selectedPackage?.acf?.meal_count} items from our vegan menu (required)`}</p>
             <div className="section__grid grid-x grid-margin-x align-center">
                 {foodItemRow}

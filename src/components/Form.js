@@ -134,28 +134,28 @@ export class Form extends Component {
     getData = async () => {
         const getTypes = await axios.get(`${this.baseURL}/wp-json/wp/v2/types`);
         const getPackages = await axios.get(
-            `${this.baseURL}/wp-json/wp/v2/packages?order=asc`
+            `${this.baseURL}/wp-json/wp/v2/packages?order=asc&per_page=100`
         );
         const getGoals = await axios.get(
-            `${this.baseURL}/wp-json/wp/v2/goals?order=asc`
+            `${this.baseURL}/wp-json/wp/v2/goals?order=asc&per_page=100`
         );
         const getCarbs = await axios.get(
-            `${this.baseURL}/wp-json/wp/v2/carbs?order=asc`
+            `${this.baseURL}/wp-json/wp/v2/carbs?order=asc&per_page=100`
         );
         const getMeats = await axios.get(
-            `${this.baseURL}/wp-json/wp/v2/meats?order=asc`
+            `${this.baseURL}/wp-json/wp/v2/meats?order=asc&per_page=100`
         );
         const getVegetables = await axios.get(
-            `${this.baseURL}/wp-json/wp/v2/vegetables?order=asc`
+            `${this.baseURL}/wp-json/wp/v2/vegetables?order=asc&per_page=100`
         );
         const getShippingOptions = await axios.get(
             `${this.baseURL}/wp-json/acf/v3/options/options`
         );
         const getSalads = await axios.get(
-            `${this.baseURL}/wp-json/wp/v2/salads?order=asc`
+            `${this.baseURL}/wp-json/wp/v2/salads?order=asc&per_page=100`
         );
         const getSnacks = await axios.get(
-            `${this.baseURL}/wp-json/wp/v2/snacks?order=asc`
+            `${this.baseURL}/wp-json/wp/v2/snacks?order=asc&per_page=100`
         );
         Promise.all([
             getTypes,
