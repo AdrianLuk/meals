@@ -3,11 +3,12 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
-        "axios": "^0.18.0",
+        "axios": "^0.21.0",
         "cleave.js": "^1.6.0",
-        "react": "^16.13.1",
-        "react-dom": "^16.13.1",
-        "react-scripts": "3.4.1"
+        "node-sass": "^4.14.1",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
+        "react-scripts": "4.0.0"
     },
     "scripts": {
         "start": "react-scripts start",
@@ -30,9 +31,7 @@
             "last 1 safari version"
         ]
     },
-    "devDependencies": {
-        "node-sass": "^4.14.1"
-    },
+    "devDependencies": {},
     "proxy": "https://fitaxxmeals.com",
     "homepage": "https://fitaxxmeals.com/wp-content/themes/fitaxxmeals/page-templates"
 }
