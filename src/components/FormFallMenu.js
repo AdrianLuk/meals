@@ -21,9 +21,6 @@ export class FormFallMenu extends Component {
       types: {},
       packages: [],
       goals: [],
-      vegans: [],
-      selectedVegans: [],
-      vegansRemaining: null,
       fallMenu: [],
       selectedFallMenus: [],
       fallMenusRemaining: null,
@@ -136,9 +133,6 @@ export class FormFallMenu extends Component {
     const getSnackSizes = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/snack_sizes?order=asc&per_page=100`
     );
-    const getVegans = await axios.get(
-      `${this.baseURL}/wp-json/wp/v2/vegan?order=asc&per_page=100`
-    );
     const getFallMenu = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/fall_menu?order=asc&per_page=100`
     );
@@ -150,7 +144,6 @@ export class FormFallMenu extends Component {
       getSalads,
       getSnacks,
       getSnackSizes,
-      getVegans,
       getFallMenu,
     ]).then(
       ([
@@ -161,7 +154,6 @@ export class FormFallMenu extends Component {
         salads,
         snacks,
         snackSizes,
-        vegans,
         fallMenu,
       ]) => {
         this.setState({
@@ -173,7 +165,6 @@ export class FormFallMenu extends Component {
           salads: salads.data,
           snacks: snacks.data,
           snackSizes: snackSizes.data,
-          vegans: vegans.data,
           fallMenu: fallMenu.data,
           isDataLoaded: true,
         });
