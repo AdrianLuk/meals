@@ -35,7 +35,7 @@ const Customize = ({
           <em>
             Please Note: Items in meals can be removed but not substituted. For
             more information,{' '}
-            <a href={`${window.location.href}frequently-asked-questions`}>
+            <a href={`${form.baseURL}/frequently-asked-questions`}>
               click here
             </a>
           </em>

@@ -373,6 +373,7 @@ export class FormFallMenu extends Component {
     return (
       <FormProvider
         value={{
+          baseURL: this.baseURL,
           handleSnackChange: this.handleSnackChange,
           snacksRemaining: this.state.addOnsRemaining,
           handleComments: this.handleComments,
