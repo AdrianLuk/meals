@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import CardList from '../cards/CardList';
 import './section.scss';
 import { isEmptyObject } from '../utils';
 import FormContext from '../../contexts/Form';
 const CARBS = 'carbs';
 const SALADS = 'salads';
+const FALL_MENU = 'fall_menu';
 
 const Customize = ({
   carbs,
@@ -21,8 +22,6 @@ const Customize = ({
   handleCustomizationAmountChange,
   handleCustomizationAmountDecrement,
 }) => {
-  // eslint-disable-next-line no-unused-vars
-  const [customizationId, setCustomizationId] = useState(1);
   const [selectedCarb, setSelectedCarb] = useState({});
   const [carbVariant, setCarbVariant] = useState({});
   const [selectedMeat, setSelectedMeat] = useState({});
@@ -33,35 +32,60 @@ const Customize = ({
   const [selectedFallMenu, setSelectedFallMenu] = useState({});
   const formContext = useContext(FormContext);
   // init object containing all the data for the current customization
-  let customization = {
-    customization_number: currentCustomizationId,
-    customization_quantity: customizationCount,
-    // selectedMeat,
-    meat: meatVariant,
-    // selectedCarb,
-    carb: selectedCarb.type === CARBS ? carbVariant : selectedCarb,
-    vegetable: selectedCarb.type === CARBS ? selectedVeg : {},
+  const customization = useMemo(() => {
+    return {
+      customization_number: currentCustomizationId,
+      customization_quantity: customizationCount,
+      fall_menu: selectedFallMenu,
+      // selectedMeat,
+      meat:
+        isEmptyObject(selectedFallMenu) && !isEmptyObject(selectedMeat)
+          ? meatVariant
+          : {},
+      // selectedCarb,
+      carb: selectedCarb.type === CARBS ? carbVariant : selectedCarb,
+      vegetable: selectedCarb.type === CARBS ? selectedVeg : {},
+      comments,
+      customization_price: custTotal,
+    };
+  }, [
+    carbVariant,
     comments,
-    customization_price: custTotal,
-  };
+    currentCustomizationId,
+    custTotal,
+    customizationCount,
+    meatVariant,
+    selectedCarb,
+    selectedFallMenu,
+    selectedMeat,
+    selectedVeg,
+  ]);
   useEffect(() => {
-    setCustTotal(
-      (carbVariant?.extra_charge
-        ? +carbVariant.extra_charge * customizationCount
-        : 0) +
+    let total = 0;
+    if (isEmptyObject(selectedFallMenu)) {
+      total =
+        (carbVariant?.extra_charge
+          ? +carbVariant.extra_charge * customizationCount
+          : 0) +
         (meatVariant?.extra_charge
           ? +meatVariant.extra_charge * customizationCount
           : 0) +
-        (selectedVeg && selectedVeg.acf && selectedVeg.acf.extra_charge
+        (selectedCarb?.type !== SALADS && selectedVeg?.acf?.extra_charge
           ? +selectedVeg.acf.extra_charge * customizationCount
-          : 0)
-    );
+          : 0);
+    } else {
+      total = selectedFallMenu?.acf?.extra_charge
+        ? +selectedFallMenu.acf.extra_charge * customizationCount
+        : 0;
+    }
+    setCustTotal(total);
   }, [
     selectedCarb,
     carbVariant,
     selectedMeat,
     meatVariant,
     selectedVeg,
+    selectedFallMenu,
     customizationCount,
   ]);
 
@@ -69,17 +93,19 @@ const Customize = ({
     // console.log(customization);
     addToOrder(customization);
     return () => {};
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    customizationId,
+    currentCustomizationId,
     selectedMeat,
     meatVariant,
     selectedCarb,
     carbVariant,
     selectedVeg,
+    selectedFallMenu,
     customizationCount,
     custTotal,
     comments,
+    addToOrder,
+    customization,
   ]);
   useEffect(() => {
     setSelectedMeat({});
@@ -87,6 +113,7 @@ const Customize = ({
     setSelectedCarb({});
     setCarbVariant({});
     setSelectedVeg({});
+    setSelectedFallMenu({});
     setComments('');
     setCustTotal(0);
   }, [currentCustomizationId]);
@@ -140,105 +167,63 @@ const Customize = ({
           </div>
         </div>
       </div>
-      {/* <CardList groupName="fall menu" groups={fallMenu} />
-      <hr /> */}
-      <CardList
-        groupName="carb"
-        stateKey="selectedCarb"
-        selected={selectedCarb}
-        selectedVariant={carbVariant}
-        variantKey="carbVariant"
-        handleSelect={setSelectedCarb}
-        setVariant={setCarbVariant}
-        groups={[...carbs, ...salads]}
-        hasNone={true}
-      />
-      <hr />
-      <CardList
-        groupName="meat"
-        stateKey="selectedMeat"
-        selected={selectedMeat}
-        // selectedVariant={meatVariant}
-        variantKey="meatVariant"
-        handleSelect={setSelectedMeat}
-        setVariant={setMeatVariant}
-        groups={meats}
-        hasNone={false}
-      />
-      {(isEmptyObject(selectedCarb) || selectedCarb.type !== SALADS) && (
+      {isEmptyObject(selectedMeat) &&
+        isEmptyObject(selectedCarb) &&
+        isEmptyObject(selectedVeg) && (
+          <CardList
+            groupName="fall menu"
+            stateKey="selectedFallMenu"
+            selected={selectedFallMenu}
+            handleSelect={setSelectedFallMenu}
+            groups={fallMenu}
+            hasNone={false}
+          />
+        )}
+      {isEmptyObject(selectedFallMenu) && (
         <>
           <hr />
           <CardList
-            groupName="vegetable"
-            stateKey="selectedVeg"
-            selected={selectedVeg}
-            selectedVariant={meatVariant}
-            // variantKey="meatVariant"
-            handleSelect={setSelectedVeg}
-            // setVariant={setMeatVariant}
-            groups={vegetables}
+            groupName="carb"
+            stateKey="selectedCarb"
+            selected={selectedCarb}
+            selectedVariant={carbVariant}
+            variantKey="carbVariant"
+            handleSelect={setSelectedCarb}
+            setVariant={setCarbVariant}
+            groups={[...carbs, ...salads]}
+            hasNone={true}
+          />
+          <hr />
+          <CardList
+            groupName="meat"
+            stateKey="selectedMeat"
+            selected={selectedMeat}
+            // selectedVariant={meatVariant}
+            variantKey="meatVariant"
+            handleSelect={setSelectedMeat}
+            setVariant={setMeatVariant}
+            groups={meats}
             hasNone={false}
           />
+          {(isEmptyObject(selectedCarb) || selectedCarb.type !== SALADS) && (
+            <>
+              <hr />
+              <CardList
+                groupName="vegetable"
+                stateKey="selectedVeg"
+                selected={selectedVeg}
+                // selectedVariant={meatVariant}
+                // variantKey="meatVariant"
+                handleSelect={setSelectedVeg}
+                // setVariant={setMeatVariant}
+                groups={vegetables}
+                hasNone={false}
+              />
+            </>
+          )}
+          <hr />
         </>
       )}
-      {/*<div className="section__item">
-                <h2 className="section__heading">Select Your Vegetables</h2>
-                <p className="section__subheading">
-                    Select as many vegetable options as you'd like
-                </p>
-                <div className="section__grid grid-x grid-margin-x align-center">
-                    {vegetables &&
-                        vegetables.map(veg => (
-                            <div
-                                className={
-                                    "card small-12 medium-6 large-4 card__item card__item--picture " +
-                                    (selectedVeg.includes(veg.post_title)
-                                        ? "card__item--active"
-                                        : "")
-                                }
-                                key={veg.id}>
-                                {veg.thumbnail && (
-                                    <div
-                                        onClick={handleVegClick(veg.post_title)}
-                                        className="card-img"
-                                        style={{
-                                            backgroundImage: `url(${veg.thumbnail})`
-                                        }}
-                                    />
-                                )}
-                                <div className="card-divider">
-                                    {veg.post_title}
-                                </div>
-                                <div className="card-section">
-                                    <button
-                                        onClick={handleVegClick(veg.post_title)}
-                                        className={
-                                            "input-group select-button "
-                                        }>
-                                        <span className="input-group-field select-button__text">
-                                            {selectedVeg.includes(
-                                                veg.post_title
-                                            )
-                                                ? "Selected"
-                                                : "Select"}
-                                        </span>
-                                        <span
-                                            className={
-                                                "input-group-label select-button__icon fa " +
-                                                (selectedVeg.includes(
-                                                    veg.post_title
-                                                )
-                                                    ? "fa-check"
-                                                    : "fa-arrow-right")
-                                            }
-                                        />
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                </div>
-                </div>*/}
-      <hr />
       <div className="section__item">
         <h3 className="section__heading">Comments</h3>
         <p className="section__subheading">

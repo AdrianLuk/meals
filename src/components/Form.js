@@ -96,20 +96,20 @@ export class Form extends Component {
             ].price
           : 0) +
         (this.state.currentCustomization.carb !== NO_CARB &&
-        this.state.currentCustomization.carb &&
-        this.state.currentCustomization.carb.extra_charge
+        this.state.currentCustomization?.carb?.extra_charge
           ? +this.state.currentCustomization.carb.extra_charge *
             +this.state.currentCustomization.customization_quantity
           : 0) +
-        (this.state.currentCustomization.meat &&
-        this.state.currentCustomization.meat.extra_charge
+        (this.state.currentCustomization?.meat?.extra_charge
           ? +this.state.currentCustomization.meat.extra_charge *
             +this.state.currentCustomization.customization_quantity
           : 0) +
-        (this.state.currentCustomization.vegetable &&
-        this.state.currentCustomization.vegetable.acf &&
-        this.state.currentCustomization.vegetable.acf.extra_charge
+        (this.state.currentCustomization?.vegetable?.acf?.extra_charge
           ? +this.state.currentCustomization.vegetable.acf.extra_charge *
+            +this.state.currentCustomization.customization_quantity
+          : 0) +
+        (this.state.currentCustomization?.fall_menu?.acf?.extra_charge
+          ? +this.state.currentCustomization.fall_menu.acf.extra_charge *
             +this.state.currentCustomization.customization_quantity
           : 0) +
         this.state.customizations.reduce(
@@ -225,8 +225,16 @@ export class Form extends Component {
       // save customization if valid and have customizations left to customize
       if (
         this.state.customizationsRemaining > 0 &&
+        isEmptyObject(this.state.currentCustomization.carb) &&
+        isEmptyObject(this.state.currentCustomization.meat) &&
+        !isEmptyObject(this.state.currentCustomization.fall_menu)
+      ) {
+        this.saveCustomization(this.state.currentCustomization);
+      } else if (
+        this.state.customizationsRemaining > 0 &&
         !isEmptyObject(this.state.currentCustomization.carb) &&
-        !isEmptyObject(this.state.currentCustomization.meat)
+        !isEmptyObject(this.state.currentCustomization.meat) &&
+        isEmptyObject(this.state.currentCustomization.fall_menu)
       ) {
         this.saveCustomization(this.state.currentCustomization);
       } else if (this.state.customizationsRemaining === 0) {

@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import './table.scss';
 import { NO_CARB, ADDON_PRICE } from '../constants';
+import { isEmptyObject } from '../utils';
 // const isEmptyObject = object => {
 //     if (Object.entries(object).length === 0 && object.constructor === Object) {
 //         return true;
@@ -62,40 +63,59 @@ const Table = ({
               <td className="text-center">{`x${cust.customization_quantity}`}</td>
               <td />
             </tr>
-            <tr className="table__row table__row--indent-1-5">
-              <td>{cust.carb.variation || cust.carb.post_title || NO_CARB}</td>
-              <td />
-              <td>
-                {+cust.carb.extra_charge > 0
-                  ? `$${parseFloat(
-                      cust.carb.extra_charge * cust.customization_quantity
-                    ).toFixed(2)}`
-                  : ''}
-              </td>
-            </tr>
-            <tr className="table__row table__row--indent-1-5">
-              <td>{cust.meat.variation}</td>
-              <td />
-              <td>
-                {+cust.meat.extra_charge > 0
-                  ? `$${parseFloat(
-                      cust.meat.extra_charge * cust.customization_quantity
-                    ).toFixed(2)}`
-                  : ''}
-              </td>
-            </tr>
-            <tr className="table__row table__row--indent-1-5">
-              <td>{cust.vegetable.post_title}</td>
-              <td />
-              <td>
-                {cust.vegetable.acf && cust.vegetable.acf.extra_charge
-                  ? `$${parseFloat(
-                      cust.vegetable.acf.extra_charge *
-                        cust.customization_quantity
-                    ).toFixed(2)}`
-                  : ''}
-              </td>
-            </tr>
+            {isEmptyObject(cust.fall_menu) ? (
+              <>
+                <tr className="table__row table__row--indent-1-5">
+                  <td>
+                    {cust.carb.variation || cust.carb.post_title || NO_CARB}
+                  </td>
+                  <td />
+                  <td>
+                    {+cust.carb.extra_charge > 0
+                      ? `$${parseFloat(
+                          cust.carb.extra_charge * cust.customization_quantity
+                        ).toFixed(2)}`
+                      : ''}
+                  </td>
+                </tr>
+                <tr className="table__row table__row--indent-1-5">
+                  <td>{cust.meat.variation}</td>
+                  <td />
+                  <td>
+                    {+cust.meat.extra_charge > 0
+                      ? `$${parseFloat(
+                          cust.meat.extra_charge * cust.customization_quantity
+                        ).toFixed(2)}`
+                      : ''}
+                  </td>
+                </tr>
+                <tr className="table__row table__row--indent-1-5">
+                  <td>{cust.vegetable.post_title}</td>
+                  <td />
+                  <td>
+                    {cust.vegetable.acf && cust.vegetable.acf.extra_charge
+                      ? `$${parseFloat(
+                          cust.vegetable.acf.extra_charge *
+                            cust.customization_quantity
+                        ).toFixed(2)}`
+                      : ''}
+                  </td>
+                </tr>
+              </>
+            ) : (
+              <tr className="table__row table__row--indent-1-5">
+                <td>{cust.fall_menu?.post_title}</td>
+                <td />
+                <td>
+                  {+cust.fall_menu?.acf?.extra_charge > 0
+                    ? `$${parseFloat(
+                        cust.fall_menu?.acf?.extra_charge *
+                          cust.customization_quantity
+                      ).toFixed(2)}`
+                    : ''}
+                </td>
+              </tr>
+            )}
             {cust.comments.length > 0 && (
               <tr className="table__row table__row--indent-1-5">
                 <td
