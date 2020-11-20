@@ -5,7 +5,7 @@ import { isEmptyObject } from '../utils';
 import FormContext from '../../contexts/Form';
 const CARBS = 'carbs';
 const SALADS = 'salads';
-const FALL_MENU = 'fall_menu';
+// const FALL_MENU = 'fall_menu';
 
 const Customize = ({
   carbs,
