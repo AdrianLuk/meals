@@ -5,13 +5,11 @@ import FormSnack from '../components/FormSnack';
 // import "./foundation.min.css";
 import './App.scss';
 import FormVegan from '../components/FormVegan';
-import FormFallMenu from '../components/FormFallMenu';
 // import Button from "../components/pagination/PaginationButton";
 // import CardItem from "../components/cards/CardItem_Title";
 const SNACK = 'snack';
 const MEAL = 'meal';
 const VEGAN = 'vegan';
-const FALL_MENU = 'fall_menu';
 const App = ({ homeUrl }) => {
   const [formType, setFormType] = useState(null);
   const renderForm = (type) => {
@@ -22,8 +20,6 @@ const App = ({ homeUrl }) => {
         return <Form homeUrl={homeUrl} />;
       case VEGAN:
         return <FormVegan homeUrl={homeUrl} />;
-      case FALL_MENU:
-        return <FormFallMenu homeUrl={homeUrl} />;
       default:
         return null;
     }
@@ -115,30 +111,6 @@ const App = ({ homeUrl }) => {
                     <p>{`Vegan Menu`}</p>
                     <button
                       onClick={() => setFormType(VEGAN)}
-                      className={'input-group select-button '}
-                    >
-                      <span className="input-group-field select-button__text">
-                        {`Select`}
-                      </span>
-                      <span
-                        className={
-                          'input-group-label select-button__icon fa fa-arrow-right'
-                        }
-                      />
-                    </button>
-                  </div>
-                </div>
-                <div
-                  onClick={() => setFormType(FALL_MENU)}
-                  className={
-                    'card text-center small-12 medium-6 card__item card__item--title card__item--active'
-                  }
-                >
-                  <div className="card-divider">{`Fall Menu`}</div>
-                  <div className="card-section">
-                    <p>{`Special Fall Menu`}</p>
-                    <button
-                      onClick={() => setFormType(FALL_MENU)}
                       className={'input-group select-button '}
                     >
                       <span className="input-group-field select-button__text">

@@ -1,23 +1,26 @@
-@import "../../shared";
+@import '../../shared';
 
 //Section styling
 .section {
-    margin-bottom: 1rem;
-    &__heading {
-        color: $dark-teal;
-        text-transform: uppercase;
-        font-weight: bold;
-        text-align: center;
-        @include breakpoint($large) {
-            padding: 0 0.8rem;
-            text-align: left;
-        }
+  margin-bottom: 1rem;
+  &__heading {
+    color: $dark-teal;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+    @include breakpoint($large) {
+      padding: 0 0.8rem;
+      text-align: left;
     }
-    &__subheading {
-        text-align: center;
-        @include breakpoint($large) {
-            padding: 0 0.9rem;
-            text-align: left;
-        }
+    &--orange {
+      color: $orange !important;
     }
+  }
+  &__subheading {
+    text-align: center;
+    @include breakpoint($large) {
+      padding: 0 0.9rem;
+      text-align: left;
+    }
+  }
 }

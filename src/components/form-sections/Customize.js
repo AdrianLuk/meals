@@ -173,6 +173,9 @@ const Customize = ({
           <CardList
             groupName="fall menu"
             stateKey="selectedFallMenu"
+            heading={`Our fall menu`}
+            headingColor={`orange`}
+            subheading={`Try our limited edition fall menu! No substitutions allowed.`}
             selected={selectedFallMenu}
             handleSelect={setSelectedFallMenu}
             groups={fallMenu}
