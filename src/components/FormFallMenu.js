@@ -25,6 +25,7 @@ export class FormFallMenu extends Component {
       selectedFallMenus: [],
       fallMenusRemaining: null,
       salads: [],
+      juices: [],
       snackSizes: [],
       snacks: [],
       selectedSnacks: [],
@@ -136,6 +137,9 @@ export class FormFallMenu extends Component {
     const getFallMenu = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/fall_menu?order=asc&per_page=100`
     );
+    const getJuices = await axios.get(
+      `${this.baseURL}/wp-json/wp/v2/juice?order=asc&per_page=100`
+    );
     Promise.all([
       getTypes,
       getPackages,
@@ -145,6 +149,7 @@ export class FormFallMenu extends Component {
       getSnacks,
       getSnackSizes,
       getFallMenu,
+      getJuices,
     ]).then(
       ([
         types,
@@ -155,6 +160,7 @@ export class FormFallMenu extends Component {
         snacks,
         snackSizes,
         fallMenu,
+        juices,
       ]) => {
         this.setState({
           types: types.data,
@@ -166,6 +172,7 @@ export class FormFallMenu extends Component {
           snacks: snacks.data,
           snackSizes: snackSizes.data,
           fallMenu: fallMenu.data,
+          juices: juices.data,
           isDataLoaded: true,
         });
       }
@@ -347,7 +354,11 @@ export class FormFallMenu extends Component {
               addOns={this.state.addOns}
             />
             <Popup
-              salads={[...this.state.salads, ...this.state.snacks]}
+              items={[
+                ...this.state.salads,
+                ...this.state.snacks,
+                ...this.state.juices,
+              ]}
               active={this.state.modalActive}
               toggleModal={this.toggleModal}
               handleNoThanks={this.handleNoThanks}
