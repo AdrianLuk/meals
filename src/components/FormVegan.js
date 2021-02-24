@@ -25,6 +25,7 @@ export class FormVegan extends Component {
       selectedVegans: [],
       vegansRemaining: null,
       salads: [],
+      juices: [],
       snackSizes: [],
       snacks: [],
       selectedSnacks: [],
@@ -124,6 +125,9 @@ export class FormVegan extends Component {
     const getVegans = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/vegan?order=asc&per_page=100`
     );
+    const getJuices = await axios.get(
+      `${this.baseURL}/wp-json/wp/v2/juice?order=asc&per_page=100`
+    );
     Promise.all([
       getTypes,
       getPackages,
@@ -133,6 +137,7 @@ export class FormVegan extends Component {
       getSnacks,
       getSnackSizes,
       getVegans,
+      getJuices,
     ]).then(
       ([
         types,
@@ -143,6 +148,7 @@ export class FormVegan extends Component {
         snacks,
         snackSizes,
         vegans,
+        juices,
       ]) => {
         this.setState({
           types: types.data,
@@ -154,6 +160,7 @@ export class FormVegan extends Component {
           snacks: snacks.data,
           snackSizes: snackSizes.data,
           vegans: vegans.data,
+          juices: juices.data,
           isDataLoaded: true,
         });
       }
@@ -335,7 +342,11 @@ export class FormVegan extends Component {
               addOns={this.state.addOns}
             />
             <Popup
-              salads={[...this.state.salads, ...this.state.snacks]}
+              items={[
+                ...this.state.salads,
+                ...this.state.snacks,
+                ...this.state.juices,
+              ]}
               active={this.state.modalActive}
               toggleModal={this.toggleModal}
               handleNoThanks={this.handleNoThanks}

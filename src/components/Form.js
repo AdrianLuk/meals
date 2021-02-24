@@ -24,6 +24,7 @@ export class Form extends Component {
       meats: [],
       vegetables: [],
       salads: [],
+      juices: [],
       snacks: [],
       fallMenu: [],
       addOns: [],
@@ -152,6 +153,9 @@ export class Form extends Component {
     const getFallMenu = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/fall_menu?order=asc&per_page=100`
     );
+    const getJuices = await axios.get(
+      `${this.baseURL}/wp-json/wp/v2/juice?order=asc&per_page=100`
+    );
     Promise.all([
       getTypes,
       getPackages,
@@ -163,6 +167,7 @@ export class Form extends Component {
       getSalads,
       getSnacks,
       getFallMenu,
+      getJuices,
     ]).then(
       ([
         types,
@@ -175,6 +180,7 @@ export class Form extends Component {
         salads,
         snacks,
         fallMenu,
+        juices,
       ]) => {
         this.setState({
           types: types.data,
@@ -188,6 +194,7 @@ export class Form extends Component {
           salads: salads.data,
           snacks: snacks.data,
           fallMenu: fallMenu.data,
+          juices: juices.data,
           isDataLoaded: true,
         });
       }
@@ -489,7 +496,11 @@ export class Form extends Component {
               addOns={this.state.addOns}
             />
             <Popup
-              salads={[...this.state.salads, ...this.state.snacks]}
+              items={[
+                ...this.state.salads,
+                ...this.state.snacks,
+                ...this.state.juices,
+              ]}
               active={this.state.modalActive}
               toggleModal={this.toggleModal}
               handleNoThanks={this.handleNoThanks}
