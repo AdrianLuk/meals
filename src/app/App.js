@@ -5,11 +5,13 @@ import FormSnack from '../components/FormSnack';
 // import "./foundation.min.css";
 import './App.scss';
 import FormVegan from '../components/FormVegan';
+import FormJuice from '../components/FormJuice';
 // import Button from "../components/pagination/PaginationButton";
 // import CardItem from "../components/cards/CardItem_Title";
 const SNACK = 'snack';
 const MEAL = 'meal';
 const VEGAN = 'vegan';
+const JUICE = 'juice';
 const App = ({ homeUrl }) => {
   const [formType, setFormType] = useState(null);
   const renderForm = (type) => {
@@ -20,6 +22,8 @@ const App = ({ homeUrl }) => {
         return <Form homeUrl={homeUrl} />;
       case VEGAN:
         return <FormVegan homeUrl={homeUrl} />;
+      case JUICE:
+        return <FormJuice homeUrl={homeUrl} />;
       default:
         return null;
     }
@@ -111,6 +115,30 @@ const App = ({ homeUrl }) => {
                     <p>{`Vegan Menu`}</p>
                     <button
                       onClick={() => setFormType(VEGAN)}
+                      className={'input-group select-button '}
+                    >
+                      <span className="input-group-field select-button__text">
+                        {`Select`}
+                      </span>
+                      <span
+                        className={
+                          'input-group-label select-button__icon fa fa-arrow-right'
+                        }
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
+                  onClick={() => setFormType(JUICE)}
+                  className={
+                    'card text-center small-12 medium-6 card__item card__item--title card__item--active'
+                  }
+                >
+                  <div className="card-divider">{`Juices`}</div>
+                  <div className="card-section">
+                    <p>{`Juice Menu`}</p>
+                    <button
+                      onClick={() => setFormType(JUICE)}
                       className={'input-group select-button '}
                     >
                       <span className="input-group-field select-button__text">
