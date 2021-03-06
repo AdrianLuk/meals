@@ -96,7 +96,7 @@ export class FormJuice extends Component {
       `${this.baseURL}/wp-json/wp/v2/juice?order=asc&per_page=100`
     );
     const getJuiceSizes = await axios.get(
-      `${this.baseURL}/wp-json/wp/v2/juice_size?order=asc&per_page=100`
+      `${this.baseURL}/wp-json/wp/v2/juice_size?order=desc&per_page=100`
     );
     Promise.all([
       getTypes,
