@@ -163,7 +163,7 @@ const Logistics = ({
             />
           </div>
         ))} */}
-        <div className="logistics__message cell small-12 font-normal">{`Due to COVID-19, ${deliveryOption} will be between 10am - 7pm. A text message will be sent ${
+        <div className="logistics__message cell small-12 font-normal">{`Please note: Due to COVID-19, ${deliveryOption} will be between 10am - 7pm. A text message will be sent ${
           deliveryOption === 'delivery'
             ? `prior to delivery with the ETA.`
             : `when food is ready for pick-up.`
