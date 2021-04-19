@@ -154,7 +154,7 @@ const Logistics = ({
           type="text"
           className="small-12 cell logistics__input"
         />
-        {shipping.delivery_times.map((time, index) => (
+        {/* {shipping.delivery_times.map((time, index) => (
           <div key={index} className="cell small-12 large-6">
             <SplitButton
               text={time.timeframe}
@@ -162,7 +162,12 @@ const Logistics = ({
               handleClick={setDeliveryTime(time.timeframe)}
             />
           </div>
-        ))}
+        ))} */}
+        <div className="logistics__message cell small-12 font-normal">{`Due to COVID-19, ${deliveryOption} will be between 10am - 7pm. A text message will be sent ${
+          deliveryOption === 'delivery'
+            ? `prior to delivery with the ETA.`
+            : `when food is ready for pick-up.`
+        }`}</div>
       </div>
     </div>
   );
