@@ -24,7 +24,7 @@ const Customize = ({
   const form = useContext(FormContext);
   return (
     <section className="section section--customize">
-      <CardList groupName="fall menu item" groups={fallMenus} />
+      <CardList groupName="premade item" groups={fallMenus} />
       <hr />
       <div className="section__item">
         <h3 className="section__heading">Comments</h3>
