@@ -48,7 +48,7 @@ export class Form extends Component {
       total: null,
       modalActive: true,
     };
-    this.baseURL = 'https://fitaxxmeals.com';
+    this.baseURL = this.props?.homeUrl || 'https://fitaxxmeals.com';
   }
   componentDidMount() {
     this.getData();
@@ -433,8 +433,8 @@ export class Form extends Component {
     const { step } = this.state;
     if (!step) {
       return (
-        <div className="spinner-container">
-          <span className="spinner fa fa-spin fa-spinner fa-3x fa-fw" />
+        <div className='spinner-container'>
+          <span className='spinner fa fa-spin fa-spinner fa-3x fa-fw' />
         </div>
       );
     }
@@ -510,8 +510,8 @@ export class Form extends Component {
         );
       default:
         return (
-          <div className="spinner-container">
-            <span className="spinner fa fa-spin fa-spinner fa-3x fa-fw" />
+          <div className='spinner-container'>
+            <span className='spinner fa fa-spin fa-spinner fa-3x fa-fw' />
           </div>
         );
     }
@@ -519,8 +519,8 @@ export class Form extends Component {
   render() {
     if (!this.state.isDataLoaded) {
       return (
-        <div className="spinner-container">
-          <span className="spinner fa fa-spin fa-spinner fa-3x fa-fw" />
+        <div className='spinner-container'>
+          <span className='spinner fa fa-spin fa-spinner fa-3x fa-fw' />
         </div>
       );
     }
@@ -534,7 +534,7 @@ export class Form extends Component {
             allowedAddons: ALLOWED_ADDONS,
           }}
         >
-          <div className="form__header grid-container grid-x align-justify align-middle">
+          <div className='form__header grid-container grid-x align-justify align-middle'>
             <StepList step={this.state.step} />
             <Total
               step={this.state.step}
@@ -548,7 +548,7 @@ export class Form extends Component {
               total={this.state.total}
             />
           </div>
-          <div className="grid-container">{this.renderSections()}</div>
+          <div className='grid-container'>{this.renderSections()}</div>
           <Pagination
             canProceed={this.state.canProceed}
             handleNextStepChange={this.handleNextStepChange}
