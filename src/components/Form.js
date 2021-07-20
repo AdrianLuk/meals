@@ -82,7 +82,8 @@ export class Form extends Component {
       prevState.selectedDeliveryLocation !==
         this.state.selectedDeliveryLocation ||
       prevState.deliveryOption !== this.state.deliveryOption ||
-      prevState.addOns !== this.state.addOns
+      prevState.addOns !== this.state.addOns ||
+      prevProps.discount !== this.props.discount
     ) {
       const total =
         +this.state.selectedPackage?.acf?.price +
@@ -120,7 +121,8 @@ export class Form extends Component {
         (this.state.addOns.length > 0
           ? this.state.addOns.reduce((acc, curr) => acc + curr.count, 0) *
             ADDON_PRICE
-          : 0);
+          : 0) -
+        (!!this.props.discount ? +this.props?.discount?.discount_amount : 0);
       this.setState({ total: total });
     }
   }
@@ -215,7 +217,11 @@ export class Form extends Component {
   };
   handlePrevStepChange = (event) => {
     event.preventDefault();
-    this.setState({ step: this.state.step - 1 });
+    this.setState({
+      step: this.state.step - 1,
+      // only works because modal is shown right before the last step...needs refactor if any steps added after review
+      modalActive: true,
+    });
   };
   handleNextStepChange = (event) => {
     event.preventDefault();
@@ -532,6 +538,10 @@ export class Form extends Component {
             handleSnackChange: this.handleSnackChange,
             snacksRemaining: this.state.addOnsRemaining,
             allowedAddons: ALLOWED_ADDONS,
+            total: this.state.total,
+            shippingOptions: this.state.shippingOptions,
+            deliveryOption: this.state.deliveryOption,
+            selectedDeliveryLocation: this.state.selectedDeliveryLocation,
           }}
         >
           <div className='form__header grid-container grid-x align-justify align-middle'>

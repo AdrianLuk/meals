@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 
 import Form from '../components/Form';
 import FormSnack from '../components/FormSnack';
@@ -7,6 +7,7 @@ import './App.scss';
 import FormVegan from '../components/FormVegan';
 import FormJuice from '../components/FormJuice';
 import FormFallMenu from '../components/FormFallMenu';
+import { AppProvider } from '../contexts/AppContext';
 // import Button from "../components/pagination/PaginationButton";
 // import CardItem from "../components/cards/CardItem_Title";
 const SNACK = 'snack';
@@ -16,64 +17,69 @@ const JUICE = 'juice';
 const PREMADE = 'fall_menu';
 const App = ({ homeUrl }) => {
   const [formType, setFormType] = useState(null);
+  const [codeInput, setCodeInput] = useState('');
+  const [discount, setDiscount] = useState(0);
   const renderForm = (type) => {
     switch (type) {
       case SNACK:
-        return <FormSnack homeUrl={homeUrl} />;
+        return <FormSnack homeUrl={homeUrl} discount={discount} />;
       case MEAL:
-        return <Form homeUrl={homeUrl} />;
+        return <Form homeUrl={homeUrl} discount={discount} />;
       case VEGAN:
-        return <FormVegan homeUrl={homeUrl} />;
+        return <FormVegan homeUrl={homeUrl} discount={discount} />;
       case JUICE:
-        return <FormJuice homeUrl={homeUrl} />;
+        return <FormJuice homeUrl={homeUrl} discount={discount} />;
       case PREMADE:
-        return <FormFallMenu homeUrl={homeUrl} />;
+        return <FormFallMenu homeUrl={homeUrl} discount={discount} />;
       default:
         return null;
     }
   };
+
   return (
-    <Fragment>
+    <AppProvider
+      value={{ homeUrl, discount, setDiscount, codeInput, setCodeInput }}
+    >
       <form
-        id="order-form"
-        className="order"
+        id='order-form'
+        className='order'
         action={`${
           homeUrl ?? ''
         }/wp-content/themes/fitaxxmeals/page-templates/inc/process-order.php`}
-        encType="multipart/form-data"
-        method="post"
+        encType='multipart/form-data'
+        method='post'
       >
-        <div id="form-anchor" />
+        <div id='form-anchor' />
         {!formType && (
           <section
             style={{ minHeight: 200 }}
-            className="section grid-container"
+            className='section grid-container'
           >
-            <div className="section__item">
-              <h2 style={{ textAlign: 'center' }} className="section__heading">
+            <div className='section__item'>
+              <h2 style={{ textAlign: 'center' }} className='section__heading'>
                 Select Menu
               </h2>
               <p
-                className="section__subheading"
+                className='section__subheading'
                 style={{ textAlign: 'center' }}
               >
                 Choose which menu you'd like to order from.
               </p>
-              <div className="section__grid grid-x grid-margin-x align-large-justify align-spaced">
+              <div className='section__grid grid-x grid-margin-x align-large-justify align-spaced'>
                 <div
                   onClick={() => setFormType(MEAL)}
                   className={
                     'card text-center small-12 medium-6 card__item card__item--title card__item--active'
                   }
                 >
-                  <div className="card-divider">{`Meals`}</div>
-                  <div className="card-section">
+                  <div className='card-divider'>{`Meals`}</div>
+                  <div className='card-section'>
                     <p>{`Customize your own meals`}</p>
                     <button
                       onClick={() => setFormType(MEAL)}
                       className={'input-group select-button '}
                     >
-                      <span className="input-group-field select-button__text">
+                      <span className='input-group-field select-button__text'>
                         {`Select`}
                       </span>
                       <span
@@ -90,14 +96,14 @@ const App = ({ homeUrl }) => {
                     'card text-center small-12 medium-6 card__item card__item--title card__item--active'
                   }
                 >
-                  <div className="card-divider">{`Pre-made Meals`}</div>
-                  <div className="card-section">
+                  <div className='card-divider'>{`Pre-made Meals`}</div>
+                  <div className='card-section'>
                     <p>{`Choose from premade meals.`}</p>
                     <button
                       onClick={() => setFormType(PREMADE)}
                       className={'input-group select-button '}
                     >
-                      <span className="input-group-field select-button__text">
+                      <span className='input-group-field select-button__text'>
                         {`Select`}
                       </span>
                       <span
@@ -114,14 +120,14 @@ const App = ({ homeUrl }) => {
                     'card text-center small-12 medium-6 card__item card__item--title card__item--active'
                   }
                 >
-                  <div className="card-divider">{`Snacks`}</div>
-                  <div className="card-section">
+                  <div className='card-divider'>{`Snacks`}</div>
+                  <div className='card-section'>
                     <p>{`Healthy snacks for the munchies`}</p>
                     <button
                       onClick={() => setFormType(SNACK)}
                       className={'input-group select-button '}
                     >
-                      <span className="input-group-field select-button__text">
+                      <span className='input-group-field select-button__text'>
                         {`Select`}
                       </span>
                       <span
@@ -138,14 +144,14 @@ const App = ({ homeUrl }) => {
                     'card text-center small-12 medium-6 card__item card__item--title card__item--active'
                   }
                 >
-                  <div className="card-divider">{`Vegan`}</div>
-                  <div className="card-section">
+                  <div className='card-divider'>{`Vegan`}</div>
+                  <div className='card-section'>
                     <p>{`Vegan Menu`}</p>
                     <button
                       onClick={() => setFormType(VEGAN)}
                       className={'input-group select-button '}
                     >
-                      <span className="input-group-field select-button__text">
+                      <span className='input-group-field select-button__text'>
                         {`Select`}
                       </span>
                       <span
@@ -162,14 +168,14 @@ const App = ({ homeUrl }) => {
                     'card text-center small-12 medium-6 card__item card__item--title card__item--active'
                   }
                 >
-                  <div className="card-divider">{`Juices`}</div>
-                  <div className="card-section">
+                  <div className='card-divider'>{`Juices`}</div>
+                  <div className='card-section'>
                     <p>{`Juice Menu`}</p>
                     <button
                       onClick={() => setFormType(JUICE)}
                       className={'input-group select-button '}
                     >
-                      <span className="input-group-field select-button__text">
+                      <span className='input-group-field select-button__text'>
                         {`Select`}
                       </span>
                       <span
@@ -186,7 +192,7 @@ const App = ({ homeUrl }) => {
         )}
         {renderForm(formType)}
       </form>
-    </Fragment>
+    </AppProvider>
   );
 };
 

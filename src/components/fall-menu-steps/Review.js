@@ -1,10 +1,11 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment, useEffect, useContext } from 'react';
 import Table from '../table/TableFallMenu';
 import Logistics from '../logistics/Logistics';
 // import CardItem from "../cards/CardItem_Title";
 import SplitButton from '../SplitButton';
 import './section.scss';
 import { capitalize } from 'lodash';
+import AppContext from '../../contexts/AppContext';
 const useForm = (initialValues) => {
   const [values, setValues] = useState(initialValues);
   return [
@@ -17,7 +18,8 @@ const useForm = (initialValues) => {
     },
   ];
 };
-const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+const emailRegex =
+  /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 const Review = ({
   snacks,
   vegans,
@@ -38,6 +40,7 @@ const Review = ({
   handleIsContactValid,
   handleProceed,
 }) => {
+  const appContext = useContext(AppContext);
   const [submittedCust, setSubmittedCust] = useState('');
   const [paymentOption, setPaymentOption] = useState('cash');
   const setPayment = (option) => (e) => {
@@ -168,15 +171,15 @@ const Review = ({
   // }, [submittedCust]);
   return (
     <Fragment>
-      <section className="section section--review">
-        <div className="section__item">
-          <h2 className="section__heading">Review Your Order</h2>
-          <p className="section__subheading">
+      <section className='section section--review'>
+        <div className='section__item'>
+          <h2 className='section__heading'>Review Your Order</h2>
+          <p className='section__subheading'>
             Take a look at your orders and make sure that we have everything you
             want and need!
           </p>
-          <div className="grid-x grid-margin-x section__grid">
-            <div className="cell small-12 large-6">
+          <div className='grid-x grid-margin-x section__grid'>
+            <div className='cell small-12 large-6'>
               <Table
                 fallMenus={fallMenus}
                 addOns={addOns}
@@ -188,7 +191,7 @@ const Review = ({
                 total={total}
               />
             </div>
-            <div className="cell small-12 large-6">
+            <div className='cell small-12 large-6'>
               <Logistics
                 handleSelect={handleSelect}
                 shipping={shipping}
@@ -210,14 +213,14 @@ const Review = ({
           </div>
         </div>
       </section>
-      <section className="section section--payment">
-        <div className="section__item">
-          <h2 className="section__heading">Payment Option</h2>
-          <p className="section__subheading">
+      <section className='section section--payment'>
+        <div className='section__item'>
+          <h2 className='section__heading'>Payment Option</h2>
+          <p className='section__subheading'>
             Unfortunately, we currently do not accept pre-payment via credit
             card or debit card. Cash or e-Transfer only.
           </p>
-          <div className="grid-x grid-margin-x section__grid align-center">
+          <div className='grid-x grid-margin-x section__grid align-center'>
             <div
               onClick={setPayment('cash')}
               className={
@@ -225,8 +228,8 @@ const Review = ({
                 (paymentOption === 'cash' ? 'card__item--active' : '')
               }
             >
-              <div className="card-divider">{`Cash`}</div>
-              <div className="card-section align-justify">
+              <div className='card-divider'>{`Cash`}</div>
+              <div className='card-section align-justify'>
                 <p>{`Deposit Required. Paid on Day-Of.`}</p>
                 <SplitButton
                   handleClick={setPayment('cash')}
@@ -242,11 +245,11 @@ const Review = ({
                 (paymentOption === 'etransfer' ? 'card__item--active' : '')
               }
             >
-              <div className="card-divider">{`E-Transfer`}</div>
-              <div className="card-section">
+              <div className='card-divider'>{`E-Transfer`}</div>
+              <div className='card-section'>
                 <p>
                   {`Paid to `}
-                  <a href="mailto:roundaxxfitness@gmail.com">
+                  <a href='mailto:roundaxxfitness@gmail.com'>
                     roundaxxfitness@gmail.com
                   </a>
                 </p>
@@ -261,22 +264,23 @@ const Review = ({
           </div>
         </div>
 
-        <input type="hidden" name="1" value={values.fullName} />
-        <input type="hidden" name="2" value={selectedPackage.title.rendered} />
-        <input type="hidden" name="3" value={selectedGoal.title.rendered} />
-        <input type="hidden" name="5" value={total.toFixed(2)} />
-        <input type="hidden" name="6" value={deliveryOption} />
-        <input type="hidden" name="7" value={deliveryTime} />
-        <input type="hidden" name="8" value={paymentOption} />
-        <input type="hidden" name="18" value={email} />
-        <input type="hidden" name="10" value={values.phone} />
-        <input type="hidden" name="11" value={values.address} />
-        <input type="hidden" name="12" value={values.address2} />
-        <input type="hidden" name="13" value={cityValue?.location ?? ''} />
-        <input type="hidden" name="14" value={values.postalCode} />
-        <input type="hidden" name="15" value={values.specialInstructions} />
-        <input type="hidden" name="16" value={submittedCust} />
-        <input type="hidden" name="17" value={`No`} />
+        <input type='hidden' name='1' value={values.fullName} />
+        <input type='hidden' name='2' value={selectedPackage.title.rendered} />
+        <input type='hidden' name='3' value={selectedGoal.title.rendered} />
+        <input type='hidden' name='5' value={total.toFixed(2)} />
+        <input type='hidden' name='6' value={deliveryOption} />
+        <input type='hidden' name='7' value={deliveryTime} />
+        <input type='hidden' name='8' value={paymentOption} />
+        <input type='hidden' name='18' value={email} />
+        <input type='hidden' name='10' value={values.phone} />
+        <input type='hidden' name='11' value={values.address} />
+        <input type='hidden' name='12' value={values.address2} />
+        <input type='hidden' name='13' value={cityValue?.location ?? ''} />
+        <input type='hidden' name='14' value={values.postalCode} />
+        <input type='hidden' name='15' value={values.specialInstructions} />
+        <input type='hidden' name='16' value={submittedCust} />
+        <input type='hidden' name='17' value={`No`} />
+        <input type='hidden' name='19' value={appContext.codeInput} />
       </section>
     </Fragment>
   );

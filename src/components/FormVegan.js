@@ -74,7 +74,8 @@ export class FormVegan extends Component {
       prevState.selectedDeliveryLocation !==
         this.state.selectedDeliveryLocation ||
       prevState.deliveryOption !== this.state.deliveryOption ||
-      prevState.addOns !== this.state.addOns
+      prevState.addOns !== this.state.addOns ||
+      prevProps.discount !== this.props.discount
     ) {
       const total =
         +this.state.selectedPackage?.acf?.price +
@@ -91,7 +92,8 @@ export class FormVegan extends Component {
         (this.state.addOns.length > 0
           ? this.state.addOns.reduce((acc, curr) => acc + curr.count, 0) *
             ADDON_PRICE
-          : 0);
+          : 0) -
+        (!!this.props.discount ? +this.props?.discount?.discount_amount : 0);
       this.setState({ total });
     }
     if (prevState.selectedVegans !== this.state.selectedVegans) {
@@ -183,7 +185,11 @@ export class FormVegan extends Component {
 
   handlePrevStepChange = (event) => {
     event.preventDefault();
-    this.setState({ step: this.state.step - 1 });
+    this.setState({
+      step: this.state.step - 1,
+      // only works because modal is shown right before the last step...needs refactor if any steps added after review
+      modalActive: true,
+    });
   };
   handleNextStepChange = (event) => {
     event.preventDefault();
@@ -296,8 +302,8 @@ export class FormVegan extends Component {
     const { step } = this.state;
     if (!step) {
       return (
-        <div className="spinner-container">
-          <span className="spinner fa fa-spin fa-spinner fa-3x fa-fw" />
+        <div className='spinner-container'>
+          <span className='spinner fa fa-spin fa-spinner fa-3x fa-fw' />
         </div>
       );
     }
@@ -356,8 +362,8 @@ export class FormVegan extends Component {
         );
       default:
         return (
-          <div className="spinner-container">
-            <span className="spinner fa fa-spin fa-spinner fa-3x fa-fw" />
+          <div className='spinner-container'>
+            <span className='spinner fa fa-spin fa-spinner fa-3x fa-fw' />
           </div>
         );
     }
@@ -365,8 +371,8 @@ export class FormVegan extends Component {
   render() {
     if (!this.state.isDataLoaded) {
       return (
-        <div className="spinner-container">
-          <span className="spinner fa fa-spin fa-spinner fa-3x fa-fw" />
+        <div className='spinner-container'>
+          <span className='spinner fa fa-spin fa-spinner fa-3x fa-fw' />
         </div>
       );
     }
@@ -381,17 +387,21 @@ export class FormVegan extends Component {
           vegansRemaining: this.state.vegansRemaining,
           handleVeganChange: this.handleVeganChange,
           allowedAddons: ALLOWED_ADDONS,
+          total: this.state.total,
+          shippingOptions: this.state.shippingOptions,
+          deliveryOption: this.state.deliveryOption,
+          selectedDeliveryLocation: this.state.selectedDeliveryLocation,
         }}
       >
         <SelectedPackageProvider value={this.state?.selectedPackage}>
-          <div className="form__header grid-container grid-x align-justify align-middle">
+          <div className='form__header grid-container grid-x align-justify align-middle'>
             <StepList step={this.state.step} />
             <Total
               itemCount={+this.state?.selectedPackage?.acf?.meal_count}
               total={this.state.total}
             />
           </div>
-          <div className="grid-container">{this.renderSections()}</div>
+          <div className='grid-container'>{this.renderSections()}</div>
           <Pagination
             canProceed={this.state.canProceed}
             handleNextStepChange={this.handleNextStepChange}
