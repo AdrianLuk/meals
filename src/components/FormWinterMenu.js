@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import StepList from './steps/StepList';
-import Choose from './fall-menu-steps/Choose';
-import Customize from './fall-menu-steps/Customize';
-import Review from './fall-menu-steps/Review';
+import Choose from './winter-menu-steps/Choose';
+import Customize from './winter-menu-steps/Customize';
+import Review from './winter-menu-steps/Review';
 import Pagination from './pagination/Pagination';
 import Total from './TotalPremade';
 import { SelectedPackageProvider } from '../contexts/SelectedPackage';
@@ -12,7 +12,7 @@ import { FormProvider } from '../contexts/Form';
 import { ALLOWED_ADDONS, ADDON_PRICE } from './constants';
 import Popup from './Popup';
 
-export class FormFallMenu extends Component {
+export class FormWinterMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,9 +21,9 @@ export class FormFallMenu extends Component {
       types: {},
       packages: [],
       goals: [],
-      fallMenu: [],
-      selectedFallMenus: [],
-      fallMenusRemaining: null,
+      winterMenu: [],
+      selectedWinterMenus: [],
+      winterMenusRemaining: null,
       salads: [],
       juices: [],
       snackSizes: [],
@@ -74,7 +74,7 @@ export class FormFallMenu extends Component {
       prevState.selectedDeliveryLocation !== this.state.selectedDeliveryLocation ||
       prevState.deliveryOption !== this.state.deliveryOption ||
       prevState.addOns !== this.state.addOns ||
-      prevState.selectedFallMenus !== this.state.selectedFallMenus ||
+      prevState.selectedWinterMenus !== this.state.selectedWinterMenus ||
       prevProps.discount !== this.props.discount
     ) {
       const total =
@@ -87,8 +87,8 @@ export class FormFallMenu extends Component {
           ? +this.state.shippingOptions.delivery_locations[this.state.selectedDeliveryLocation]
               .price
           : 0) +
-        (this.state.selectedFallMenus.length > 0
-          ? this.state.selectedFallMenus.reduce(
+        (this.state.selectedWinterMenus.length > 0
+          ? this.state.selectedWinterMenus.reduce(
               (acc, curr) => +curr.count * parseFloat(+curr.item?.acf?.extra_charge || 0) + +acc,
               0
             )
@@ -99,11 +99,11 @@ export class FormFallMenu extends Component {
         (!!this.props.discount ? +this.props?.discount?.discount_amount : 0);
       this.setState({ total });
     }
-    if (prevState.selectedFallMenus !== this.state.selectedFallMenus) {
+    if (prevState.selectedWinterMenus !== this.state.selectedWinterMenus) {
       this.setState({
-        fallMenusRemaining:
+        winterMenusRemaining:
           +this.state.selectedPackage?.acf?.meal_count -
-          +this.state.selectedFallMenus.reduce((acc, curr) => acc + curr.count, 0),
+          +this.state.selectedWinterMenus.reduce((acc, curr) => acc + curr.count, 0),
       });
     }
   }
@@ -123,8 +123,8 @@ export class FormFallMenu extends Component {
     const getSnackSizes = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/snack_sizes?order=asc&per_page=100`
     );
-    const getFallMenu = await axios.get(
-      `${this.baseURL}/wp-json/wp/v2/fall_menu?order=asc&per_page=100`
+    const getWinterMenu = await axios.get(
+      `${this.baseURL}/wp-json/wp/v2/winter_menu?order=asc&per_page=100`
     );
     const getJuices = await axios.get(`${this.baseURL}/wp-json/wp/v2/juice?order=asc&per_page=100`);
     Promise.all([
@@ -135,10 +135,20 @@ export class FormFallMenu extends Component {
       getSalads,
       getSnacks,
       getSnackSizes,
-      getFallMenu,
+      getWinterMenu,
       getJuices,
     ]).then(
-      ([types, packages, goals, shippingOptions, salads, snacks, snackSizes, fallMenu, juices]) => {
+      ([
+        types,
+        packages,
+        goals,
+        shippingOptions,
+        salads,
+        snacks,
+        snackSizes,
+        winterMenu,
+        juices,
+      ]) => {
         this.setState({
           types: types.data,
           packages: packages.data,
@@ -149,7 +159,7 @@ export class FormFallMenu extends Component {
           salads: salads.data,
           snacks: snacks.data,
           snackSizes: snackSizes.data,
-          fallMenu: fallMenu.data,
+          winterMenu: winterMenu.data,
           juices: juices.data,
           isDataLoaded: true,
         });
@@ -186,7 +196,7 @@ export class FormFallMenu extends Component {
       }
     } else if (this.state.step === 2) {
       // this.addCustomizationToOrder();
-      if (this.state.fallMenusRemaining === 0) {
+      if (this.state.winterMenusRemaining === 0) {
         // if user has no customizations left to customize, simply go to next step without saving
         this.setState({ step: this.state.step + 1 });
       } else {
@@ -205,15 +215,15 @@ export class FormFallMenu extends Component {
     if (selection.acf) {
       this.setState({
         selectedPackage: selection,
-        fallMenusRemaining: +selection.acf.meal_count,
+        winterMenusRemaining: +selection.acf.meal_count,
       });
     }
   };
-  handleFallMenuChange = (item, count) => {
+  handleWinterMenuChange = (item, count) => {
     this.setState({
-      selectedFallMenus: [
-        ...this.state.selectedFallMenus.filter(
-          (selectedFallMenu) => selectedFallMenu.item.id !== item.id
+      selectedWinterMenus: [
+        ...this.state.selectedWinterMenus.filter(
+          (selectedWinterMenu) => selectedWinterMenu.item.id !== item.id
         ),
         { item, count },
       ]
@@ -305,14 +315,14 @@ export class FormFallMenu extends Component {
           <Customize
             // snacks={this.state.snacks}
             // salads={[...this.state.salads, ...this.state.snacks]}
-            fallMenus={this.state.fallMenu}
+            winterMenus={this.state.winterMenu}
           />
         );
       case 3:
         return (
           <>
             <Review
-              fallMenus={this.state.selectedFallMenus}
+              winterMenus={this.state.selectedWinterMenus}
               selectedPackage={this.state.selectedPackage}
               selectedGoal={this.state.selectedGoal}
               selectedDelivery={this.state.selectedDeliveryLocation}
@@ -360,8 +370,8 @@ export class FormFallMenu extends Component {
           snacksRemaining: this.state.addOnsRemaining,
           handleComments: this.handleComments,
           comments: this.state.comments,
-          fallMenusRemaining: this.state.fallMenusRemaining,
-          handleFallMenuChange: this.handleFallMenuChange,
+          winterMenusRemaining: this.state.winterMenusRemaining,
+          handleWinterMenuChange: this.handleWinterMenuChange,
           allowedAddons: ALLOWED_ADDONS,
           total: this.state.total,
           shippingOptions: this.state.shippingOptions,
@@ -390,4 +400,4 @@ export class FormFallMenu extends Component {
   }
 }
 
-export default FormFallMenu;
+export default FormWinterMenu;
