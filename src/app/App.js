@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import Form from '../components/Form';
 import FormSnack from '../components/FormSnack';
@@ -8,8 +8,6 @@ import FormVegan from '../components/FormVegan';
 import FormJuice from '../components/FormJuice';
 import FormFallMenu from '../components/FormFallMenu';
 import { AppProvider } from '../contexts/AppContext';
-import FormWinterMenu from '../components/FormWinterMenu';
-import axios from 'axios';
 // import Button from "../components/pagination/PaginationButton";
 // import CardItem from "../components/cards/CardItem_Title";
 const SNACK = 'snack';
@@ -17,12 +15,10 @@ const MEAL = 'meal';
 const VEGAN = 'vegan';
 const JUICE = 'juice';
 const PREMADE = 'fall_menu';
-const WINTER = 'winter_menu';
 const App = ({ homeUrl }) => {
   const [formType, setFormType] = useState(null);
   const [codeInput, setCodeInput] = useState('');
   const [discount, setDiscount] = useState(0);
-  const [winterMenuCount, setWinterMenuCount] = useState(0);
   const renderForm = (type) => {
     switch (type) {
       case SNACK:
@@ -35,21 +31,10 @@ const App = ({ homeUrl }) => {
         return <FormJuice homeUrl={homeUrl} discount={discount} />;
       case PREMADE:
         return <FormFallMenu homeUrl={homeUrl} discount={discount} />;
-      case WINTER:
-        return <FormWinterMenu homeUrl={homeUrl} discount={discount} />;
       default:
         return null;
     }
   };
-  useEffect(() => {
-    const getWinterMenuCount = async () => {
-      const res = await axios.get(
-        `${homeUrl ?? ''}/wp-json/wp/v2/winter_menu?order=asc&per_page=100&_fields=id`
-      );
-      setWinterMenuCount(+res.headers['x-wp-total']);
-    };
-    getWinterMenuCount();
-  }, [homeUrl]);
   return (
     <AppProvider value={{ homeUrl, discount, setDiscount, codeInput, setCodeInput }}>
       <form
@@ -108,28 +93,6 @@ const App = ({ homeUrl }) => {
                     </button>
                   </div>
                 </div>
-                {winterMenuCount > 0 && (
-                  <div
-                    onClick={() => setFormType(WINTER)}
-                    className={
-                      'card text-center small-12 medium-6 card__item card__item--title card__item--active'
-                    }
-                  >
-                    <div className='card-divider'>{`Winter Menu`}</div>
-                    <div className='card-section'>
-                      <p>{`Choose from our winter menu.`}</p>
-                      <button
-                        onClick={() => setFormType(WINTER)}
-                        className={'input-group select-button '}
-                      >
-                        <span className='input-group-field select-button__text'>{`Select`}</span>
-                        <span
-                          className={'input-group-label select-button__icon fa fa-arrow-right'}
-                        />
-                      </button>
-                    </div>
-                  </div>
-                )}
                 <div
                   onClick={() => setFormType(SNACK)}
                   className={

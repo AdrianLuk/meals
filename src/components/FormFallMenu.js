@@ -22,6 +22,7 @@ export class FormFallMenu extends Component {
       packages: [],
       goals: [],
       fallMenu: [],
+      winterMenu: [],
       selectedFallMenus: [],
       fallMenusRemaining: null,
       salads: [],
@@ -126,6 +127,9 @@ export class FormFallMenu extends Component {
     const getFallMenu = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/fall_menu?order=asc&per_page=100`
     );
+    const getWinterMenu = await axios.get(
+      `${this.baseURL}/wp-json/wp/v2/winter_menu?order=asc&per_page=100`
+    );
     const getJuices = await axios.get(`${this.baseURL}/wp-json/wp/v2/juice?order=asc&per_page=100`);
     Promise.all([
       getTypes,
@@ -136,9 +140,21 @@ export class FormFallMenu extends Component {
       getSnacks,
       getSnackSizes,
       getFallMenu,
+      getWinterMenu,
       getJuices,
     ]).then(
-      ([types, packages, goals, shippingOptions, salads, snacks, snackSizes, fallMenu, juices]) => {
+      ([
+        types,
+        packages,
+        goals,
+        shippingOptions,
+        salads,
+        snacks,
+        snackSizes,
+        fallMenu,
+        winterMenu,
+        juices,
+      ]) => {
         this.setState({
           types: types.data,
           packages: packages.data,
@@ -150,6 +166,7 @@ export class FormFallMenu extends Component {
           snacks: snacks.data,
           snackSizes: snackSizes.data,
           fallMenu: fallMenu.data,
+          winterMenu: winterMenu.data,
           juices: juices.data,
           isDataLoaded: true,
         });
@@ -306,6 +323,7 @@ export class FormFallMenu extends Component {
             // snacks={this.state.snacks}
             // salads={[...this.state.salads, ...this.state.snacks]}
             fallMenus={this.state.fallMenu}
+            winterMenus={this.state.winterMenu}
           />
         );
       case 3:
