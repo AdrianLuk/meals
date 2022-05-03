@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './app/App';
 import * as serviceWorker from './serviceWorker';
@@ -11,16 +11,16 @@ for (let e in element.dataset) {
   parsed = { ...parsed, [e]: element.dataset[e] };
 }
 const props = Object.assign({}, parsed);
+const root = createRoot(element);
 
-ReactDOM.render(
+root.render(
   <App
     // formType={
     //     new URLSearchParams(window.location.search).get("form") || MEAL
     // }
     // homeUrl={`https://fitaxx.test`}
     {...props}
-  />,
-  document.getElementById('root')
+  />
 );
 
 // If you want your app to work offline and load faster, you can change

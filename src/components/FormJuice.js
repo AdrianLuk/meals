@@ -56,18 +56,18 @@ export class FormJuice extends Component {
     if (
       prevState.selectedPackage !== this.state.selectedPackage ||
       prevState.step !== this.state.step ||
-      prevState.selectedDeliveryLocation !==
-        this.state.selectedDeliveryLocation ||
-      prevState.deliveryOption !== this.state.deliveryOption
+      prevState.selectedDeliveryLocation !== this.state.selectedDeliveryLocation ||
+      prevState.deliveryOption !== this.state.deliveryOption ||
+      prevProps.discount !== this.props.discount
     ) {
       const total =
         +this.state.selectedPackage?.acf?.price +
         (this.state.selectedDeliveryLocation !== 'default' &&
         this.state.deliveryOption === 'delivery'
-          ? +this.state.shippingOptions.delivery_locations[
-              this.state.selectedDeliveryLocation
-            ].price
-          : 0);
+          ? +this.state.shippingOptions.delivery_locations[this.state.selectedDeliveryLocation]
+              .price
+          : 0) -
+        (!!this.props.discount ? +this.props?.discount?.discount_amount : 0);
       this.setState({ total });
     }
     if (prevState.selectedJuices !== this.state.selectedJuices) {
@@ -83,18 +83,12 @@ export class FormJuice extends Component {
     const getPackages = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/packages?order=asc&per_page=100`
     );
-    const getGoals = await axios.get(
-      `${this.baseURL}/wp-json/wp/v2/goals?order=asc&per_page=100`
-    );
-    const getShippingOptions = await axios.get(
-      `${this.baseURL}/wp-json/acf/v3/options/options`
-    );
+    const getGoals = await axios.get(`${this.baseURL}/wp-json/wp/v2/goals?order=asc&per_page=100`);
+    const getShippingOptions = await axios.get(`${this.baseURL}/wp-json/acf/v3/options/options`);
     const getSalads = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/salads?order=asc&per_page=100`
     );
-    const getJuices = await axios.get(
-      `${this.baseURL}/wp-json/wp/v2/juice?order=asc&per_page=100`
-    );
+    const getJuices = await axios.get(`${this.baseURL}/wp-json/wp/v2/juice?order=asc&per_page=100`);
     const getJuiceSizes = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/juice_size?order=desc&per_page=100`
     );
@@ -106,30 +100,20 @@ export class FormJuice extends Component {
       getSalads,
       getJuices,
       getJuiceSizes,
-    ]).then(
-      ([
-        types,
-        packages,
-        goals,
-        shippingOptions,
-        salads,
-        juices,
-        juiceSizes,
-      ]) => {
-        this.setState({
-          types: types.data,
-          packages: packages.data,
-          goals: goals.data,
-          shippingOptions: shippingOptions.data.acf,
-          // deliveryTime: shippingOptions.data.acf.delivery_times[0].timeframe,
-          deliveryTime: ``,
-          salads: salads.data,
-          juices: juices.data,
-          juiceSizes: juiceSizes.data,
-          isDataLoaded: true,
-        });
-      }
-    );
+    ]).then(([types, packages, goals, shippingOptions, salads, juices, juiceSizes]) => {
+      this.setState({
+        types: types.data,
+        packages: packages.data,
+        goals: goals.data,
+        shippingOptions: shippingOptions.data.acf,
+        // deliveryTime: shippingOptions.data.acf.delivery_times[0].timeframe,
+        deliveryTime: ``,
+        salads: salads.data,
+        juices: juices.data,
+        juiceSizes: juiceSizes.data,
+        isDataLoaded: true,
+      });
+    });
     // console.log(this.state.salads);
     // console.log(this.state.packages);
     // console.log(this.state.goals);
@@ -140,9 +124,7 @@ export class FormJuice extends Component {
   //     this.setState({ [input]: e.target.value });
   // };
   scrollToTop = () => {
-    document
-      .getElementById('form-anchor')
-      .scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('form-anchor').scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
   isEmptyObject = (object) => {
     if (Object.entries(object).length === 0 && object.constructor === Object) {
@@ -191,9 +173,7 @@ export class FormJuice extends Component {
   handleJuiceChange = (juice, count) => {
     this.setState({
       selectedJuices: [
-        ...this.state.selectedJuices.filter(
-          (selectedJuice) => selectedJuice.juice.id !== juice.id
-        ),
+        ...this.state.selectedJuices.filter((selectedJuice) => selectedJuice.juice.id !== juice.id),
         { juice, count },
       ]
         .filter((s) => s.count > 0)
@@ -239,8 +219,8 @@ export class FormJuice extends Component {
     const { step } = this.state;
     if (!step) {
       return (
-        <div className="spinner-container">
-          <span className="spinner fa fa-spin fa-spinner fa-3x fa-fw" />
+        <div className='spinner-container'>
+          <span className='spinner fa fa-spin fa-spinner fa-3x fa-fw' />
         </div>
       );
     }
@@ -279,8 +259,8 @@ export class FormJuice extends Component {
         );
       default:
         return (
-          <div className="spinner-container">
-            <span className="spinner fa fa-spin fa-spinner fa-3x fa-fw" />
+          <div className='spinner-container'>
+            <span className='spinner fa fa-spin fa-spinner fa-3x fa-fw' />
           </div>
         );
     }
@@ -288,8 +268,8 @@ export class FormJuice extends Component {
   render() {
     if (!this.state.isDataLoaded) {
       return (
-        <div className="spinner-container">
-          <span className="spinner fa fa-spin fa-spinner fa-3x fa-fw" />
+        <div className='spinner-container'>
+          <span className='spinner fa fa-spin fa-spinner fa-3x fa-fw' />
         </div>
       );
     }
@@ -302,17 +282,18 @@ export class FormJuice extends Component {
           handleComments: this.handleComments,
           comments: this.state.comments,
           selectedJuices: this.state.selectedJuices,
+          total: this.state.total,
+          shippingOptions: this.state.shippingOptions,
+          deliveryOption: this.state.deliveryOption,
+          selectedDeliveryLocation: this.state.selectedDeliveryLocation,
         }}
       >
         <SelectedPackageProvider value={this.state?.selectedPackage}>
-          <div className="form__header grid-container grid-x align-justify align-middle">
+          <div className='form__header grid-container grid-x align-justify align-middle'>
             <StepList step={this.state.step} />
-            <Total
-              itemCount={+this.state?.selectedPackage?.acf?.size}
-              total={this.state.total}
-            />
+            <Total itemCount={+this.state?.selectedPackage?.acf?.size} total={this.state.total} />
           </div>
-          <div className="grid-container">{this.renderSections()}</div>
+          <div className='grid-container'>{this.renderSections()}</div>
           <Pagination
             canProceed={this.state.canProceed}
             handleNextStepChange={this.handleNextStepChange}
