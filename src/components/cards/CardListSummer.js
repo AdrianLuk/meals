@@ -30,7 +30,7 @@ export const CardListSummer = ({
   return (
     <div className='section__item'>
       <h2 className='section__heading'>{`Select your ${groupName}s`}</h2>
-      <p className='section__subheading'>{`Select your ${itemsRemaining} items from our ${groupName} options (required)`}</p>
+      <p className='section__subheading'>{`Select your remaining ${itemsRemaining} items from our ${groupName} options (required)`}</p>
       <div className='section__grid grid-x grid-margin-x align-center'>{foodItemRow}</div>
     </div>
   );
