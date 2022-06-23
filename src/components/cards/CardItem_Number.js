@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 // import SplitButton from "./SplitButton";
 
 const CardItemNumber = ({ group, itemsRemaining, handleItemsChange }) => {
@@ -22,54 +22,51 @@ const CardItemNumber = ({ group, itemsRemaining, handleItemsChange }) => {
   //     // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, []);
   return (
-    <Fragment>
-      <div
-        className={
-          'card small-12 medium-6 large-4 card__item card__item--picture '
-        }
-        key={group.id}
-      >
-        {group?.thumbnail && (
-          <div
-            className="card-img card-img--no-filter"
-            style={{ backgroundImage: `url(${group.thumbnail})` }}
-          />
-        )}
-        <div className="card-divider">{group.post_title}</div>
-        <div className="text-center">
-          {+group.acf.extra_charge
-            ? `+ $${parseFloat(group.acf.extra_charge).toFixed(2)}`
-            : null}
-        </div>
+    <div
+      className={'card small-12 medium-6 large-4 card__item card__item--picture '}
+      key={group.id}
+    >
+      {group?.thumbnail && (
         <div
-          style={{ paddingTop: +group.acf?.extra_charge ? 0 : '1rem' }}
-          className="card-section card-section--snack align-right"
-        >
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-            }}
-            className={'input-group select-button select-button--is-snack'}
-          >
-            <span
-              onClick={decrement}
-              className={
-                'input-group-label select-button__icon select-button__icon--before fa fa-minus'
-              }
-            />
-            <span className="input-group-field select-button__text select-button__text--no-bg select-button__text--square">
-              {count}
-            </span>
-            <span
-              onClick={increment}
-              className={
-                'input-group-label select-button__icon select-button__icon--after fa fa-plus'
-              }
-            />
-          </button>
-        </div>
+          className='card-img card-img--no-filter'
+          style={{ backgroundImage: `url(${group.thumbnail})` }}
+        />
+      )}
+      <div className='card-divider'>{group.post_title}</div>
+      <div className='card-info'>
+        {+group.acf.extra_charge ? (
+          <span>{`+ $${parseFloat(group.acf.extra_charge).toFixed(2)}`}</span>
+        ) : null}
+        {+group.acf.calories ? <span>{`Cal: ${group.acf.calories}`}</span> : null}
       </div>
-    </Fragment>
+      <div
+        style={{ paddingTop: +group.acf?.extra_charge ? 0 : '1rem' }}
+        className='card-section card-section--snack align-right'
+      >
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+          }}
+          className={'input-group select-button select-button--is-snack'}
+        >
+          <span
+            onClick={decrement}
+            className={
+              'input-group-label select-button__icon select-button__icon--before fa fa-minus'
+            }
+          />
+          <span className='input-group-field select-button__text select-button__text--no-bg select-button__text--square'>
+            {count}
+          </span>
+          <span
+            onClick={increment}
+            className={
+              'input-group-label select-button__icon select-button__icon--after fa fa-plus'
+            }
+          />
+        </button>
+      </div>
+    </div>
   );
 };
 

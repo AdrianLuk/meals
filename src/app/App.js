@@ -8,6 +8,7 @@ import FormVegan from '../components/FormVegan';
 import FormJuice from '../components/FormJuice';
 import FormFallMenu from '../components/FormFallMenu';
 import { AppProvider } from '../contexts/AppContext';
+import FormSummer from '../components/FormSummer';
 // import Button from "../components/pagination/PaginationButton";
 // import CardItem from "../components/cards/CardItem_Title";
 const SNACK = 'snack';
@@ -15,12 +16,15 @@ const MEAL = 'meal';
 const VEGAN = 'vegan';
 const JUICE = 'juice';
 const PREMADE = 'fall_menu';
+const SUMMER = 'summer';
 const App = ({ homeUrl }) => {
   const [formType, setFormType] = useState(null);
   const [codeInput, setCodeInput] = useState('');
   const [discount, setDiscount] = useState(0);
   const renderForm = (type) => {
     switch (type) {
+      case SUMMER:
+        return <FormSummer homeUrl={homeUrl} discount={discount} />;
       case SNACK:
         return <FormSnack homeUrl={homeUrl} discount={discount} />;
       case MEAL:
@@ -57,6 +61,24 @@ const App = ({ homeUrl }) => {
                 Choose which menu you'd like to order from.
               </p>
               <div className='section__grid grid-x grid-margin-x align-large-justify align-spaced'>
+                <div
+                  onClick={() => setFormType(SUMMER)}
+                  className={
+                    'card text-center small-12 medium-6 card__item card__item--title card__item--active'
+                  }
+                >
+                  <div className='card-divider'>{`Summer Special`}</div>
+                  <div className='card-section'>
+                    <p>{`Choose 6 meals and 6 snacks/juices for $105`}</p>
+                    <button
+                      onClick={() => setFormType(SUMMER)}
+                      className={'input-group select-button '}
+                    >
+                      <span className='input-group-field select-button__text'>{`Select`}</span>
+                      <span className={'input-group-label select-button__icon fa fa-arrow-right'} />
+                    </button>
+                  </div>
+                </div>
                 <div
                   onClick={() => setFormType(MEAL)}
                   className={
