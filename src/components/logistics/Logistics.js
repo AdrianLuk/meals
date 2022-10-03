@@ -43,14 +43,14 @@ const Logistics = ({
           handleClick={setDeliveryOption('delivery')}
           text={`Delivery`}
         />
-        <SplitButton
+        {/* <SplitButton
           isActive={deliveryOption === 'pickup' ? true : false}
           handleClick={setDeliveryOption('pickup')}
           text={`Pick Up`}
-        />
+        /> */}
       </div>
       <div className='logistics__grid logistics__form-fields grid-x grid-margin-x'>
-        {deliveryOption === 'pickup' && (
+        {/* {deliveryOption === 'pickup' && (
           <Fragment>
             <p className='logistics__text small-12 large-5 cell'>
               <span className='logistics__text--label'>Pickup Address:</span>
@@ -71,7 +71,7 @@ const Logistics = ({
               allowFullScreen
             />
           </Fragment>
-        )}
+        )} */}
         <input
           onChange={handleChange}
           value={values.fullName}
@@ -90,9 +90,7 @@ const Logistics = ({
             type='email'
             className='logistics__input'
           />
-          {!isEmailValid && (
-            <p className='error-msg'>Please enter valid email</p>
-          )}
+          {!isEmailValid && <p className='error-msg'>Please enter valid email</p>}
         </div>
         <Cleave
           className='small-12 large-6 cell logistics__input'
@@ -132,9 +130,9 @@ const Logistics = ({
                 City*
               </option>
               {shipping.delivery_locations.map((location, index) => (
-                <option key={index} value={index}>{`${
-                  location.location
-                } ($${parseFloat(location.price).toFixed(2)})`}</option>
+                <option key={index} value={index}>{`${location.location} ($${parseFloat(
+                  location.price
+                ).toFixed(2)})`}</option>
               ))}
             </select>
             <Cleave
