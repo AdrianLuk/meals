@@ -70,8 +70,7 @@ export class Form extends Component {
     if (prevState.addOns !== this.state.addOns) {
       this.setState({
         addOnsRemaining:
-          ALLOWED_ADDONS -
-          +this.state.addOns.reduce((acc, curr) => acc + curr.count, 0),
+          ALLOWED_ADDONS - +this.state.addOns.reduce((acc, curr) => acc + curr.count, 0),
       });
     }
     if (
@@ -79,8 +78,7 @@ export class Form extends Component {
       prevState.selectedGoal !== this.state.selectedGoal ||
       prevState.currentCustomization !== this.state.currentCustomization ||
       prevState.step !== this.state.step ||
-      prevState.selectedDeliveryLocation !==
-        this.state.selectedDeliveryLocation ||
+      prevState.selectedDeliveryLocation !== this.state.selectedDeliveryLocation ||
       prevState.deliveryOption !== this.state.deliveryOption ||
       prevState.addOns !== this.state.addOns ||
       prevProps.discount !== this.props.discount
@@ -88,14 +86,12 @@ export class Form extends Component {
       const total =
         +this.state.selectedPackage?.acf?.price +
         (this.state.selectedGoal.acf && this.state.selectedPackage.acf
-          ? +this.state.selectedPackage.acf.meal_count *
-            +this.state.selectedGoal.acf.portion_price
+          ? +this.state.selectedPackage.acf.meal_count * +this.state.selectedGoal.acf.portion_price
           : 0) +
         (this.state.selectedDeliveryLocation !== 'default' &&
         this.state.deliveryOption === 'delivery'
-          ? +this.state.shippingOptions.delivery_locations[
-              this.state.selectedDeliveryLocation
-            ].price
+          ? +this.state.shippingOptions.delivery_locations[this.state.selectedDeliveryLocation]
+              .price
           : 0) +
         (this.state.currentCustomization.carb !== NO_CARB &&
         this.state.currentCustomization?.carb?.extra_charge
@@ -119,8 +115,7 @@ export class Form extends Component {
           0
         ) +
         (this.state.addOns.length > 0
-          ? this.state.addOns.reduce((acc, curr) => acc + curr.count, 0) *
-            ADDON_PRICE
+          ? this.state.addOns.reduce((acc, curr) => acc + curr.count, 0) * ADDON_PRICE
           : 0) -
         (!!this.props.discount ? +this.props?.discount?.discount_amount : 0);
       this.setState({ total: total });
@@ -131,21 +126,13 @@ export class Form extends Component {
     const getPackages = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/packages?order=asc&per_page=100`
     );
-    const getGoals = await axios.get(
-      `${this.baseURL}/wp-json/wp/v2/goals?order=asc&per_page=100`
-    );
-    const getCarbs = await axios.get(
-      `${this.baseURL}/wp-json/wp/v2/carbs?order=asc&per_page=100`
-    );
-    const getMeats = await axios.get(
-      `${this.baseURL}/wp-json/wp/v2/meats?order=asc&per_page=100`
-    );
+    const getGoals = await axios.get(`${this.baseURL}/wp-json/wp/v2/goals?order=asc&per_page=100`);
+    const getCarbs = await axios.get(`${this.baseURL}/wp-json/wp/v2/carbs?order=asc&per_page=100`);
+    const getMeats = await axios.get(`${this.baseURL}/wp-json/wp/v2/meats?order=asc&per_page=100`);
     const getVegetables = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/vegetables?order=asc&per_page=100`
     );
-    const getShippingOptions = await axios.get(
-      `${this.baseURL}/wp-json/acf/v3/options/options`
-    );
+    const getShippingOptions = await axios.get(`${this.baseURL}/wp-json/acf/v3/options/options`);
     const getSalads = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/salads?order=asc&per_page=100`
     );
@@ -155,9 +142,7 @@ export class Form extends Component {
     const getFallMenu = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/fall_menu?order=asc&per_page=100`
     );
-    const getJuices = await axios.get(
-      `${this.baseURL}/wp-json/wp/v2/juice?order=asc&per_page=100`
-    );
+    const getJuices = await axios.get(`${this.baseURL}/wp-json/wp/v2/juice?order=asc&per_page=100`);
     Promise.all([
       getTypes,
       getPackages,
@@ -211,9 +196,7 @@ export class Form extends Component {
   //     this.setState({ [input]: e.target.value });
   // };
   scrollToTop = () => {
-    document
-      .getElementById('form-anchor')
-      .scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('form-anchor').scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
   handlePrevStepChange = (event) => {
     event.preventDefault();
@@ -226,10 +209,7 @@ export class Form extends Component {
   handleNextStepChange = (event) => {
     event.preventDefault();
     if (this.state.step === 1) {
-      if (
-        isEmptyObject(this.state.selectedPackage) ||
-        isEmptyObject(this.state.selectedGoal)
-      ) {
+      if (isEmptyObject(this.state.selectedPackage) || isEmptyObject(this.state.selectedGoal)) {
       } else {
         this.setState({ step: this.state.step + 1 });
         this.scrollToTop();
@@ -262,11 +242,7 @@ export class Form extends Component {
       //     this.setState({ step: this.state.step + 1 });
       //     this.scrollToTop();
       // }
-      if (
-        this.state.customizationsRemaining -
-          this.state.currentCustomizationCount >
-        0
-      ) {
+      if (this.state.customizationsRemaining - this.state.currentCustomizationCount > 0) {
         this.setState({
           step: 2,
           currentCustomization: {},
@@ -300,8 +276,7 @@ export class Form extends Component {
       //     this.state.currentCustomizationCount,
       currentCustomizationCount: 1,
       customizationsRemaining:
-        this.state.customizationsRemaining -
-        this.state.currentCustomizationCount,
+        this.state.customizationsRemaining - this.state.currentCustomizationCount,
     });
   };
   handleCustomizationAmountDecrement = (event) => {
@@ -325,10 +300,7 @@ export class Form extends Component {
   };
   handleCustomizationAmountIncrement = (event) => {
     event.preventDefault();
-    if (
-      +this.state.currentCustomizationCount >=
-      +this.state.customizationsRemaining
-    ) {
+    if (+this.state.currentCustomizationCount >= +this.state.customizationsRemaining) {
       this.setState({
         currentCustomizationCount: +this.state.customizationsRemaining,
       });
@@ -353,10 +325,7 @@ export class Form extends Component {
   };
   handleProceed = () => {
     if (this.state.step === 1) {
-      if (
-        !isEmptyObject(this.state.selectedPackage) &&
-        !isEmptyObject(this.state.selectedGoal)
-      ) {
+      if (!isEmptyObject(this.state.selectedPackage) && !isEmptyObject(this.state.selectedGoal)) {
         this.setState({ canProceed: true });
         // return true;
       } else {
@@ -414,9 +383,7 @@ export class Form extends Component {
   handleSnackChange = (snack, count) => {
     this.setState({
       addOns: [
-        ...this.state.addOns.filter(
-          (selectedSnack) => selectedSnack.snack.id !== snack.id
-        ),
+        ...this.state.addOns.filter((selectedSnack) => selectedSnack.snack.id !== snack.id),
         { snack, count },
       ]
         .filter((s) => s.count > 0)
@@ -469,15 +436,9 @@ export class Form extends Component {
             salads={this.state.salads}
             currentCustomizationId={this.state.currentCustomizationId}
             customizationCount={this.state.currentCustomizationCount}
-            handleCustomizationAmountDecrement={
-              this.handleCustomizationAmountDecrement
-            }
-            handleCustomizationAmountChange={
-              this.handleCustomizationAmountChange
-            }
-            handleCustomizationAmountIncrement={
-              this.handleCustomizationAmountIncrement
-            }
+            handleCustomizationAmountDecrement={this.handleCustomizationAmountDecrement}
+            handleCustomizationAmountChange={this.handleCustomizationAmountChange}
+            handleCustomizationAmountIncrement={this.handleCustomizationAmountIncrement}
             addToOrder={this.addCustomizationToOrder}
             customizationsRemaining={this.state.customizationsRemaining}
           />
@@ -506,7 +467,7 @@ export class Form extends Component {
               items={[
                 ...this.state.salads,
                 ...this.state.snacks,
-                ...this.state.juices,
+                // ...this.state.juices,
               ]}
               active={this.state.modalActive}
               toggleModal={this.toggleModal}

@@ -317,7 +317,10 @@ export class FormSummer extends Component {
       case 2:
         return (
           <Customize
-            snacks={[...this.state.snacks, ...this.state.juices]}
+            snacks={[
+              ...this.state.snacks,
+              //  ...this.state.juices
+            ]}
             fallMenus={this.state.fallMenu}
           />
         );

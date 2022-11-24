@@ -347,7 +347,11 @@ export class FormFallMenu extends Component {
               addOns={this.state.addOns}
             />
             <Popup
-              items={[...this.state.salads, ...this.state.snacks, ...this.state.juices]}
+              items={[
+                ...this.state.salads,
+                ...this.state.snacks,
+                // ...this.state.juices
+              ]}
               active={this.state.modalActive}
               toggleModal={this.toggleModal}
               handleNoThanks={this.handleNoThanks}

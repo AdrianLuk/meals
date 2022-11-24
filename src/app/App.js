@@ -5,7 +5,7 @@ import FormSnack from '../components/FormSnack';
 // import "./foundation.min.css";
 import './App.scss';
 import FormVegan from '../components/FormVegan';
-import FormJuice from '../components/FormJuice';
+// import FormJuice from '../components/FormJuice';
 import FormFallMenu from '../components/FormFallMenu';
 import { AppProvider } from '../contexts/AppContext';
 import FormSummer from '../components/FormSummer';
@@ -14,7 +14,7 @@ import FormSummer from '../components/FormSummer';
 const SNACK = 'snack';
 const MEAL = 'meal';
 const VEGAN = 'vegan';
-const JUICE = 'juice';
+// const JUICE = 'juice';
 const PREMADE = 'fall_menu';
 const SUMMER = 'summer';
 const App = ({ homeUrl }) => {
@@ -31,8 +31,8 @@ const App = ({ homeUrl }) => {
         return <Form homeUrl={homeUrl} discount={discount} />;
       case VEGAN:
         return <FormVegan homeUrl={homeUrl} discount={discount} />;
-      case JUICE:
-        return <FormJuice homeUrl={homeUrl} discount={discount} />;
+      // case JUICE:
+      //   return <FormJuice homeUrl={homeUrl} discount={discount} />;
       case PREMADE:
         return <FormFallMenu homeUrl={homeUrl} discount={discount} />;
       default:
@@ -69,7 +69,7 @@ const App = ({ homeUrl }) => {
                 >
                   <div className='card-divider'>{`Summer Special`}</div>
                   <div className='card-section'>
-                    <p>{`Choose 6 meals and 6 snacks/juices for $105`}</p>
+                    <p>{`Choose 6 meals and 6 snacks for $105`}</p>
                     <button
                       onClick={() => setFormType(SUMMER)}
                       className={'input-group select-button '}
@@ -151,7 +151,7 @@ const App = ({ homeUrl }) => {
                     </button>
                   </div>
                 </div>
-                <div
+                {/* <div
                   onClick={() => setFormType(JUICE)}
                   className={
                     'card text-center small-12 medium-6 card__item card__item--title card__item--active'
@@ -168,7 +168,7 @@ const App = ({ homeUrl }) => {
                       <span className={'input-group-label select-button__icon fa fa-arrow-right'} />
                     </button>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </section>
