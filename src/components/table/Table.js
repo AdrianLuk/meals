@@ -51,9 +51,9 @@ const Table = ({
             <td />
             <td>
               {parseFloat(goal.acf.portion_price) > 0
-                ? `$${parseFloat(
-                    +goal.acf.portion_price * +selectedPackage.acf.meal_count
-                  ).toFixed(2)}`
+                ? `$${parseFloat(+goal.acf.portion_price * +selectedPackage.acf.meal_count).toFixed(
+                    2
+                  )}`
                 : `Included`}
             </td>
           </tr>
@@ -68,9 +68,7 @@ const Table = ({
             {isEmptyObject(cust.fall_menu) ? (
               <>
                 <tr className='table__row table__row--indent-1-5'>
-                  <td>
-                    {cust.carb.variation || cust.carb.post_title || NO_CARB}
-                  </td>
+                  <td>{cust.carb.variation || cust.carb.post_title || NO_CARB}</td>
                   <td />
                   <td>
                     {+cust.carb.extra_charge > 0
@@ -97,8 +95,7 @@ const Table = ({
                   <td>
                     {cust.vegetable.acf && cust.vegetable.acf.extra_charge
                       ? `$${parseFloat(
-                          cust.vegetable.acf.extra_charge *
-                            cust.customization_quantity
+                          cust.vegetable.acf.extra_charge * cust.customization_quantity
                         ).toFixed(2)}`
                       : ''}
                   </td>
@@ -111,8 +108,7 @@ const Table = ({
                 <td>
                   {+cust.fall_menu?.acf?.extra_charge > 0
                     ? `$${parseFloat(
-                        cust.fall_menu?.acf?.extra_charge *
-                          cust.customization_quantity
+                        cust.fall_menu?.acf?.extra_charge * cust.customization_quantity
                       ).toFixed(2)}`
                     : ''}
                 </td>
@@ -137,15 +133,21 @@ const Table = ({
               <td>Snacks (+$5.00 each)</td>
               <td />
               <td>{`$${parseFloat(
-                addOns.reduce((acc, curr) => acc + curr.count, 0) * ADDON_PRICE
+                addOns.reduce(
+                  (acc, curr) =>
+                    +curr.count * (parseFloat(+curr.snack?.acf?.extra_charge || 0) + ADDON_PRICE) +
+                    +acc,
+                  0
+                )
               ).toFixed(2)}`}</td>
             </tr>
             {addOns.map((addOn) => (
-              <tr
-                key={addOn.snack.id}
-                className='table__row table__row--indent-1'
-              >
-                <td>{addOn.snack.post_title}</td>
+              <tr key={addOn.snack.id} className='table__row table__row--indent-1'>
+                <td>{`${addOn.snack.post_title} ${
+                  +addOn?.snack?.acf?.extra_charge
+                    ? `(+$${parseFloat(addOn?.snack?.acf?.extra_charge).toFixed(2)} each)`
+                    : ''
+                }`}</td>
                 <td className={`text-bold text-center`}>{`x${addOn.count}`}</td>
                 <td />
               </tr>
@@ -162,9 +164,9 @@ const Table = ({
             <tr className='table__row table__row--indent-1'>
               <td>{shipping.delivery_locations[selectedDelivery].location}</td>
               <td />
-              <td>{`$${parseFloat(
-                shipping.delivery_locations[selectedDelivery].price
-              ).toFixed(2)}`}</td>
+              <td>{`$${parseFloat(shipping.delivery_locations[selectedDelivery].price).toFixed(
+                2
+              )}`}</td>
             </tr>
           </Fragment>
         )}
@@ -178,9 +180,7 @@ const Table = ({
             <tr className='table__row table__row--indent-1'>
               <td>{`$${appContext.discount?.discount_amount} off orders over $${appContext.discount?.minimum_order_amount}`}</td>
               <td></td>
-              <td>{`- $${parseFloat(
-                appContext.discount?.discount_amount
-              ).toFixed(2)}`}</td>
+              <td>{`- $${parseFloat(appContext.discount?.discount_amount).toFixed(2)}`}</td>
             </tr>
           </>
         )}

@@ -43,9 +43,9 @@ const Table = ({
             <td />
             <td>
               {parseFloat(goal.acf.portion_price) > 0
-                ? `$${parseFloat(
-                    +goal.acf.portion_price * +selectedPackage.acf.meal_count
-                  ).toFixed(2)}`
+                ? `$${parseFloat(+goal.acf.portion_price * +selectedPackage.acf.meal_count).toFixed(
+                    2
+                  )}`
                 : `Included`}
             </td>
           </tr>
@@ -55,9 +55,7 @@ const Table = ({
             <tr className='table__row table__row--bold'>
               <td>{`${fallMenuItem.item.post_title} ${
                 +fallMenuItem?.item?.acf?.extra_charge
-                  ? `(+$${parseFloat(
-                      fallMenuItem?.item?.acf?.extra_charge
-                    ).toFixed(2)} each)`
+                  ? `(+$${parseFloat(fallMenuItem?.item?.acf?.extra_charge).toFixed(2)} each)`
                   : ''
               }`}</td>
               <td className='text-center'>{`x${fallMenuItem.count}`}</td>
@@ -88,15 +86,21 @@ const Table = ({
               <td>Snacks (+$5.00 each)</td>
               <td />
               <td>{`$${parseFloat(
-                addOns.reduce((acc, curr) => acc + curr.count, 0) * ADDON_PRICE
+                addOns.reduce(
+                  (acc, curr) =>
+                    +curr.count * (parseFloat(+curr.snack?.acf?.extra_charge || 0) + ADDON_PRICE) +
+                    +acc,
+                  0
+                )
               ).toFixed(2)}`}</td>
             </tr>
             {addOns.map((addOn) => (
-              <tr
-                key={addOn.snack.id}
-                className='table__row table__row--indent-1'
-              >
-                <td>{addOn.snack.post_title}</td>
+              <tr key={addOn.snack.id} className='table__row table__row--indent-1'>
+                <td>{`${addOn.snack.post_title} ${
+                  +addOn?.snack?.acf?.extra_charge
+                    ? `(+$${parseFloat(addOn?.snack?.acf?.extra_charge).toFixed(2)} each)`
+                    : ''
+                }`}</td>
                 <td className={`text-bold text-center`}>{`x${addOn.count}`}</td>
                 <td />
               </tr>
@@ -113,9 +117,9 @@ const Table = ({
             <tr className='table__row table__row--indent-1'>
               <td>{shipping.delivery_locations[selectedDelivery].location}</td>
               <td />
-              <td>{`$${parseFloat(
-                shipping.delivery_locations[selectedDelivery].price
-              ).toFixed(2)}`}</td>
+              <td>{`$${parseFloat(shipping.delivery_locations[selectedDelivery].price).toFixed(
+                2
+              )}`}</td>
             </tr>
           </Fragment>
         )}
@@ -129,9 +133,7 @@ const Table = ({
             <tr className='table__row table__row--indent-1'>
               <td>{`$${appContext.discount?.discount_amount} off orders over $${appContext.discount?.minimum_order_amount}`}</td>
               <td></td>
-              <td>{`- $${parseFloat(
-                appContext.discount?.discount_amount
-              ).toFixed(2)}`}</td>
+              <td>{`- $${parseFloat(appContext.discount?.discount_amount).toFixed(2)}`}</td>
             </tr>
           </>
         )}

@@ -1,3 +1,4 @@
+// This is now called Premade meals
 import React, { Component } from 'react';
 import StepList from './steps/StepList';
 import Choose from './fall-menu-steps/Choose';
@@ -29,6 +30,7 @@ export class FormFallMenu extends Component {
       juices: [],
       snackSizes: [],
       snacks: [],
+      smoothies: [],
       selectedSnacks: [],
       addOns: [],
       addOnsRemaining: ALLOWED_ADDONS,
@@ -95,7 +97,12 @@ export class FormFallMenu extends Component {
             )
           : 0) +
         (this.state.addOns.length > 0
-          ? this.state.addOns.reduce((acc, curr) => acc + curr.count, 0) * ADDON_PRICE
+          ? this.state.addOns.reduce(
+              (acc, curr) =>
+                +curr.count * (parseFloat(+curr.snack?.acf?.extra_charge || 0) + ADDON_PRICE) +
+                +acc,
+              0
+            )
           : 0) -
         (!!this.props.discount ? +this.props?.discount?.discount_amount : 0);
       this.setState({ total });
@@ -131,6 +138,9 @@ export class FormFallMenu extends Component {
       `${this.baseURL}/wp-json/wp/v2/winter_menu?order=asc&per_page=100`
     );
     const getJuices = await axios.get(`${this.baseURL}/wp-json/wp/v2/juice?order=asc&per_page=100`);
+    const getSmoothies = await axios.get(
+      `${this.baseURL}/wp-json/wp/v2/smoothie?order=asc&per_page=100`
+    );
     Promise.all([
       getTypes,
       getPackages,
@@ -142,6 +152,7 @@ export class FormFallMenu extends Component {
       getFallMenu,
       getWinterMenu,
       getJuices,
+      getSmoothies,
     ]).then(
       ([
         types,
@@ -154,6 +165,7 @@ export class FormFallMenu extends Component {
         fallMenu,
         winterMenu,
         juices,
+        smoothies,
       ]) => {
         this.setState({
           types: types.data,
@@ -168,6 +180,7 @@ export class FormFallMenu extends Component {
           fallMenu: fallMenu.data,
           winterMenu: winterMenu.data,
           juices: juices.data,
+          smoothies: smoothies.data,
           isDataLoaded: true,
         });
       }
@@ -348,6 +361,7 @@ export class FormFallMenu extends Component {
             />
             <Popup
               items={[
+                ...this.state.smoothies,
                 ...this.state.salads,
                 ...this.state.snacks,
                 // ...this.state.juices

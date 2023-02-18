@@ -21,6 +21,7 @@ export class FormSnack extends Component {
       salads: [],
       snackSizes: [],
       snacks: [],
+      smoothies: [],
       selectedSnacks: [],
       shippingOptions: null,
       selectedPackage: {},
@@ -58,7 +59,8 @@ export class FormSnack extends Component {
       prevState.step !== this.state.step ||
       prevState.selectedDeliveryLocation !== this.state.selectedDeliveryLocation ||
       prevState.deliveryOption !== this.state.deliveryOption ||
-      prevProps.discount !== this.props.discount
+      prevProps.discount !== this.props.discount ||
+      prevState.selectedSnacks !== this.state.selectedSnacks
     ) {
       const total =
         +this.state.selectedPackage?.acf?.price +
@@ -66,6 +68,12 @@ export class FormSnack extends Component {
         this.state.deliveryOption === 'delivery'
           ? +this.state.shippingOptions.delivery_locations[this.state.selectedDeliveryLocation]
               .price
+          : 0) +
+        (this.state.selectedSnacks.length > 0
+          ? this.state.selectedSnacks.reduce(
+              (acc, curr) => +curr.count * parseFloat(+curr.snack?.acf?.extra_charge || 0) + +acc,
+              0
+            )
           : 0) -
         (!!this.props.discount ? +this.props?.discount?.discount_amount : 0);
       this.setState({ total });
@@ -94,6 +102,9 @@ export class FormSnack extends Component {
     const getSnackSizes = await axios.get(
       `${this.baseURL}/wp-json/wp/v2/snack_sizes?order=asc&per_page=100`
     );
+    const getSmoothies = await axios.get(
+      `${this.baseURL}/wp-json/wp/v2/smoothie?order=asc&per_page=100`
+    );
     Promise.all([
       getTypes,
       getPackages,
@@ -102,7 +113,8 @@ export class FormSnack extends Component {
       getSalads,
       getSnacks,
       getSnackSizes,
-    ]).then(([types, packages, goals, shippingOptions, salads, snacks, snackSizes]) => {
+      getSmoothies,
+    ]).then(([types, packages, goals, shippingOptions, salads, snacks, snackSizes, smoothies]) => {
       this.setState({
         types: types.data,
         packages: packages.data,
@@ -113,6 +125,7 @@ export class FormSnack extends Component {
         salads: salads.data,
         snacks: snacks.data,
         snackSizes: snackSizes.data,
+        smoothies: smoothies.data,
         isDataLoaded: true,
       });
     });
@@ -243,7 +256,7 @@ export class FormSnack extends Component {
         return (
           <Customize
             // snacks={this.state.snacks}
-            salads={[...this.state.salads, ...this.state.snacks]}
+            salads={[...this.state.smoothies, ...this.state.salads, ...this.state.snacks]}
           />
         );
       case 3:

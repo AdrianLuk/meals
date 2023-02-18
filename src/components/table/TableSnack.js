@@ -40,7 +40,11 @@ const Table = ({
         {snacks?.map((snack, index) => (
           <Fragment key={index}>
             <tr className='table__row table__row--bold table__row--indent-1'>
-              <td>{`${snack.snack.post_title}`}</td>
+              <td>{`${snack.snack.post_title} ${
+                +snack?.snack?.acf?.extra_charge
+                  ? `(+$${parseFloat(snack?.snack?.acf?.extra_charge).toFixed(2)} each)`
+                  : ''
+              }`}</td>
               <td className='text-center'>{`x${snack.count}`}</td>
               <td />
             </tr>

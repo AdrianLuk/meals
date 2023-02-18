@@ -28,6 +28,7 @@ export class FormVegan extends Component {
       juices: [],
       snackSizes: [],
       snacks: [],
+      smoothies: [],
       selectedSnacks: [],
       addOns: [],
       addOnsRemaining: ALLOWED_ADDONS,
@@ -86,7 +87,12 @@ export class FormVegan extends Component {
               .price
           : 0) +
         (this.state.addOns.length > 0
-          ? this.state.addOns.reduce((acc, curr) => acc + curr.count, 0) * ADDON_PRICE
+          ? this.state.addOns.reduce(
+              (acc, curr) =>
+                +curr.count * (parseFloat(+curr.snack?.acf?.extra_charge || 0) + ADDON_PRICE) +
+                +acc,
+              0
+            )
           : 0) -
         (!!this.props.discount ? +this.props?.discount?.discount_amount : 0);
       this.setState({ total });
@@ -117,6 +123,9 @@ export class FormVegan extends Component {
     );
     const getVegans = await axios.get(`${this.baseURL}/wp-json/wp/v2/vegan?order=asc&per_page=100`);
     const getJuices = await axios.get(`${this.baseURL}/wp-json/wp/v2/juice?order=asc&per_page=100`);
+    const getSmoothies = await axios.get(
+      `${this.baseURL}/wp-json/wp/v2/smoothie?order=asc&per_page=100`
+    );
     Promise.all([
       getTypes,
       getPackages,
@@ -127,8 +136,20 @@ export class FormVegan extends Component {
       getSnackSizes,
       getVegans,
       getJuices,
+      getSmoothies,
     ]).then(
-      ([types, packages, goals, shippingOptions, salads, snacks, snackSizes, vegans, juices]) => {
+      ([
+        types,
+        packages,
+        goals,
+        shippingOptions,
+        salads,
+        snacks,
+        snackSizes,
+        vegans,
+        juices,
+        smoothies,
+      ]) => {
         this.setState({
           types: types.data,
           packages: packages.data,
@@ -141,6 +162,7 @@ export class FormVegan extends Component {
           snackSizes: snackSizes.data,
           vegans: vegans.data,
           juices: juices.data,
+          smoothies: smoothies.data,
           isDataLoaded: true,
         });
       }
@@ -318,6 +340,7 @@ export class FormVegan extends Component {
             />
             <Popup
               items={[
+                ...this.state.smoothies,
                 ...this.state.salads,
                 ...this.state.snacks,
                 // ...this.state.juices,

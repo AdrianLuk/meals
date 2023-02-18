@@ -1,3 +1,4 @@
+// This is now called Fitaxx Special
 import React, { Component } from 'react';
 import StepList from './steps/StepListSummer';
 import Choose from './summer-steps/Choose';

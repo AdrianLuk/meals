@@ -26,6 +26,7 @@ export class Form extends Component {
       salads: [],
       juices: [],
       snacks: [],
+      smoothies: [],
       fallMenu: [],
       addOns: [],
       addOnsRemaining: ALLOWED_ADDONS,
@@ -115,7 +116,12 @@ export class Form extends Component {
           0
         ) +
         (this.state.addOns.length > 0
-          ? this.state.addOns.reduce((acc, curr) => acc + curr.count, 0) * ADDON_PRICE
+          ? this.state.addOns.reduce(
+              (acc, curr) =>
+                +curr.count * (parseFloat(+curr.snack?.acf?.extra_charge || 0) + ADDON_PRICE) +
+                +acc,
+              0
+            )
           : 0) -
         (!!this.props.discount ? +this.props?.discount?.discount_amount : 0);
       this.setState({ total: total });
@@ -143,6 +149,9 @@ export class Form extends Component {
       `${this.baseURL}/wp-json/wp/v2/fall_menu?order=asc&per_page=100`
     );
     const getJuices = await axios.get(`${this.baseURL}/wp-json/wp/v2/juice?order=asc&per_page=100`);
+    const getSmoothies = await axios.get(
+      `${this.baseURL}/wp-json/wp/v2/smoothie?order=asc&per_page=100`
+    );
     Promise.all([
       getTypes,
       getPackages,
@@ -155,6 +164,7 @@ export class Form extends Component {
       getSnacks,
       getFallMenu,
       getJuices,
+      getSmoothies,
     ]).then(
       ([
         types,
@@ -168,6 +178,7 @@ export class Form extends Component {
         snacks,
         fallMenu,
         juices,
+        smoothies,
       ]) => {
         this.setState({
           types: types.data,
@@ -183,6 +194,7 @@ export class Form extends Component {
           snacks: snacks.data,
           fallMenu: fallMenu.data,
           juices: juices.data,
+          smoothies: smoothies.data,
           isDataLoaded: true,
         });
       }
@@ -465,6 +477,7 @@ export class Form extends Component {
             />
             <Popup
               items={[
+                ...this.state.smoothies,
                 ...this.state.salads,
                 ...this.state.snacks,
                 // ...this.state.juices,
