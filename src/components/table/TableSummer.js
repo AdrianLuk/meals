@@ -33,7 +33,7 @@ const Table = ({
       </thead>
       <tbody>
         <tr className='table__row table__row--bold'>
-          <td>{`Summer Deal`}</td>
+          <td>{`Fitaxx Special`}</td>
           <td />
           <td>{`$${parseFloat(SUMMER_PRICE).toFixed(2)}`}</td>
         </tr>

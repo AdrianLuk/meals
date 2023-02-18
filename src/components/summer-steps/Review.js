@@ -256,7 +256,7 @@ const Review = ({
         </div>
 
         <input type='hidden' name='1' value={values.fullName} />
-        <input type='hidden' name='2' value={`Summer Deal`} />
+        <input type='hidden' name='2' value={`Fitaxx Special`} />
         <input type='hidden' name='3' value={`No Goal`} />
         <input type='hidden' name='5' value={total.toFixed(2)} />
         <input type='hidden' name='6' value={deliveryOption} />

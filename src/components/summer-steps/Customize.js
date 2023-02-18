@@ -26,7 +26,7 @@ const Customize = ({
   return (
     <section className='section section--customize'>
       <CardList
-        groupName='premade item'
+        groupName='fitaxx special item'
         groups={fallMenus}
         itemsRemaining={form.fallMenusRemaining}
         handleItemsChange={form.handleFallMenuChange}

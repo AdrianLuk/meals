@@ -9,6 +9,11 @@ import FormVegan from '../components/FormVegan';
 import FormFallMenu from '../components/FormFallMenu';
 import { AppProvider } from '../contexts/AppContext';
 import FormSummer from '../components/FormSummer';
+import {
+  SUMMER_ADDONS_REMAINING,
+  SUMMER_FALL_MENUS_REMAINING,
+  SUMMER_PRICE,
+} from '../components/constants';
 // import Button from "../components/pagination/PaginationButton";
 // import CardItem from "../components/cards/CardItem_Title";
 const SNACK = 'snack';
@@ -67,9 +72,9 @@ const App = ({ homeUrl }) => {
                     'card text-center small-12 medium-6 card__item card__item--title card__item--active'
                   }
                 >
-                  <div className='card-divider'>{`Summer Special`}</div>
+                  <div className='card-divider'>{`Fitaxx Special`}</div>
                   <div className='card-section'>
-                    <p>{`Choose 6 meals and 6 snacks for $105`}</p>
+                    <p>{`Choose ${SUMMER_FALL_MENUS_REMAINING} meals and ${SUMMER_ADDONS_REMAINING} snacks for $${SUMMER_PRICE}`}</p>
                     <button
                       onClick={() => setFormType(SUMMER)}
                       className={'input-group select-button '}
