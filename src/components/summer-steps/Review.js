@@ -242,7 +242,7 @@ const Review = ({
               <div className='card-section'>
                 <p>
                   {`Paid to `}
-                  <a href='mailto:roundaxxfitness@gmail.com'>roundaxxfitness@gmail.com</a>
+                  <a href='mailto:fitaxxmeals@gmail.com'>fitaxxmeals@gmail.com</a>
                 </p>
                 <p>Transferred by Sunday 9PM latest</p>
                 <SplitButton

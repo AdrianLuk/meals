@@ -138,11 +138,7 @@ const Review = ({
       }
     } else {
       //validate for when selected delivery method is pickup
-      if (
-        values.fullName.length > 0 &&
-        values.phone.length > 0 &&
-        isEmailValid
-      ) {
+      if (values.fullName.length > 0 && values.phone.length > 0 && isEmailValid) {
         handleIsContactValid(true);
       } else {
         handleIsContactValid(false);
@@ -175,8 +171,7 @@ const Review = ({
         <div className='section__item'>
           <h2 className='section__heading'>Review Your Order</h2>
           <p className='section__subheading'>
-            Take a look at your orders and make sure that we have everything you
-            want and need!
+            Take a look at your orders and make sure that we have everything you want and need!
           </p>
           <div className='grid-x grid-margin-x section__grid'>
             <div className='cell small-12 large-6'>
@@ -199,9 +194,7 @@ const Review = ({
                 deliveryOption={deliveryOption}
                 values={values}
                 handleChange={handleChange}
-                city={
-                  selectedDelivery === 'default' ? 'default' : selectedDelivery
-                }
+                city={selectedDelivery === 'default' ? 'default' : selectedDelivery}
                 email={email}
                 setEmail={handleEmail}
                 checkEmail={checkEmail}
@@ -217,8 +210,8 @@ const Review = ({
         <div className='section__item'>
           <h2 className='section__heading'>Payment Option</h2>
           <p className='section__subheading'>
-            Unfortunately, we currently do not accept pre-payment via credit
-            card or debit card. Cash or e-Transfer only.
+            Unfortunately, we currently do not accept pre-payment via credit card or debit card.
+            Cash or e-Transfer only.
           </p>
           <div className='grid-x grid-margin-x section__grid align-center'>
             <div
@@ -249,9 +242,7 @@ const Review = ({
               <div className='card-section'>
                 <p>
                   {`Paid to `}
-                  <a href='mailto:roundaxxfitness@gmail.com'>
-                    roundaxxfitness@gmail.com
-                  </a>
+                  <a href='mailto:fitaxxmeals@gmail.com'>fitaxxmeals@gmail.com</a>
                 </p>
                 <p>Transferred by Sunday 9PM latest</p>
                 <SplitButton
