@@ -4,4 +4,4 @@ export const ADDON_PRICE = 5;
 
 export const SUMMER_FALL_MENUS_REMAINING = 6;
 export const SUMMER_ADDONS_REMAINING = 6;
-export const SUMMER_PRICE = 110;
+export const SUMMER_PRICE = 115;
