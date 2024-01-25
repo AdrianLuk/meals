@@ -1,10 +1,11 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment, useEffect, useContext } from 'react';
 import Table from '../table/TableSnack';
 import Logistics from '../logistics/Logistics';
 // import CardItem from "../cards/CardItem_Title";
 import SplitButton from '../SplitButton';
 import './section.scss';
 import { capitalize } from 'lodash';
+import AppContext from '../../contexts/AppContext';
 const useForm = (initialValues) => {
   const [values, setValues] = useState(initialValues);
   return [
@@ -36,6 +37,7 @@ const Review = ({
   handleIsContactValid,
   handleProceed,
 }) => {
+  const appContext = useContext(AppContext);
   const [submittedCust, setSubmittedCust] = useState('');
   const [paymentOption, setPaymentOption] = useState('cash');
   const setPayment = (option) => (e) => {
@@ -253,6 +255,7 @@ const Review = ({
         <input type='hidden' name='15' value={values.specialInstructions} />
         <input type='hidden' name='16' value={submittedCust} />
         <input type='hidden' name='17' value={`No`} />
+        <input type='hidden' name='19' value={appContext.codeInput} />
       </section>
     </Fragment>
   );
