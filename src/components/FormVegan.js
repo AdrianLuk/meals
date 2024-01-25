@@ -16,6 +16,7 @@ export class FormVegan extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isSubmitting: false,
       step: 1,
       isDataLoaded: false,
       types: {},
@@ -186,6 +187,7 @@ export class FormVegan extends Component {
       step: this.state.step - 1,
       // only works because modal is shown right before the last step...needs refactor if any steps added after review
       modalActive: true,
+      isSubmitting: false,
     });
   };
   handleNextStepChange = (event) => {
@@ -207,6 +209,7 @@ export class FormVegan extends Component {
       }
     } else {
       if (this.state.isContactValid) {
+        this.setState({ isSubmitting: true });
         document.getElementById('order-form').submit();
       }
     }
@@ -394,6 +397,7 @@ export class FormVegan extends Component {
           </div>
           <div className='grid-container'>{this.renderSections()}</div>
           <Pagination
+            isSubmitting={this.state.isSubmitting}
             canProceed={this.state.canProceed}
             handleNextStepChange={this.handleNextStepChange}
             handlePrevStepChange={this.handlePrevStepChange}
