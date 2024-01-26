@@ -22,6 +22,7 @@ export class FormSummer extends Component {
     super(props);
     this.state = {
       isSubmitting: false,
+      // users don't need to select package for fitaxx special menu so we start on step 2
       step: 2,
       isDataLoaded: false,
       types: {},
@@ -50,6 +51,7 @@ export class FormSummer extends Component {
       selectedDeliveryLocation: 'default',
       deliveryOption: 'delivery',
       deliveryTime: '',
+      deliveryDay: 'default',
       isContactValid: false,
       canProceed: false,
       total: SUMMER_PRICE,
@@ -281,6 +283,9 @@ export class FormSummer extends Component {
     e.preventDefault();
     this.setState({ deliveryTime: option });
   };
+  setDeliveryDay = (option) => {
+    this.setState({ deliveryDay: option });
+  };
   handleIsContactValid = (isValid) => {
     this.setState({ isContactValid: isValid });
   };
@@ -341,6 +346,8 @@ export class FormSummer extends Component {
             setDeliveryOption={this.setDeliveryOption}
             deliveryTime={this.state.deliveryTime}
             setDeliveryTime={this.setDeliveryTime}
+            deliveryDay={this.state.deliveryDay}
+            setDeliveryDay={this.setDeliveryDay}
             total={this.state.total}
             isContactValid={this.state.isContactValid}
             handleIsContactValid={this.handleIsContactValid}

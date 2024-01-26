@@ -32,6 +32,8 @@ const Review = ({
   setDeliveryOption,
   deliveryTime,
   setDeliveryTime,
+  deliveryDay,
+  setDeliveryDay,
   total,
   isContactValid,
   handleIsContactValid,
@@ -45,6 +47,7 @@ const Review = ({
     setPaymentOption(option);
   };
   // const [cityIndex, setCityIndex] = useState("");
+  const [deliveryDayValue, setDeliveryDayValue] = useState('');
   const [cityValue, setCityValue] = useState('');
   const [email, setEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
@@ -103,9 +106,12 @@ const Review = ({
   }, [snacks, submittedCust]);
 
   useEffect(() => {
+    setDeliveryDayValue(shipping.delivery_days[+deliveryDay]?.day);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deliveryDayValue, deliveryDay]);
+
+  useEffect(() => {
     setCityValue(shipping.delivery_locations[+selectedDelivery]);
-    // console.log(cityValue);
-    return setCityValue(shipping.delivery_locations[+selectedDelivery]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cityValue, selectedDelivery]);
 
@@ -113,6 +119,7 @@ const Review = ({
     // validate for when selected delivery method is delivery
     if (deliveryOption === 'delivery') {
       if (
+        deliveryDay !== 'default' &&
         selectedDelivery !== 'default' &&
         values.fullName.length > 0 &&
         values.phone.length > 0 &&
@@ -135,6 +142,7 @@ const Review = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     deliveryOption,
+    deliveryDay,
     selectedDelivery,
     isEmailValid,
     values.address,
@@ -186,6 +194,8 @@ const Review = ({
                 isEmailValid={isEmailValid}
                 deliveryTime={deliveryTime}
                 setDeliveryTime={setDeliveryTime}
+                deliveryDay={deliveryDay}
+                setDeliveryDay={setDeliveryDay}
               />
             </div>
           </div>
@@ -256,6 +266,7 @@ const Review = ({
         <input type='hidden' name='16' value={submittedCust} />
         <input type='hidden' name='17' value={`No`} />
         <input type='hidden' name='19' value={appContext.codeInput} />
+        <input type='hidden' name='20' value={deliveryDayValue} />
       </section>
     </Fragment>
   );

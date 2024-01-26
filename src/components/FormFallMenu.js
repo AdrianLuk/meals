@@ -47,6 +47,7 @@ export class FormFallMenu extends Component {
       selectedDeliveryLocation: 'default',
       deliveryOption: 'delivery',
       deliveryTime: '',
+      deliveryDay: 'default',
       isContactValid: false,
       canProceed: false,
       total: null,
@@ -296,6 +297,9 @@ export class FormFallMenu extends Component {
     e.preventDefault();
     this.setState({ deliveryTime: option });
   };
+  setDeliveryDay = (option) => {
+    this.setState({ deliveryDay: option });
+  };
   handleIsContactValid = (isValid) => {
     this.setState({ isContactValid: isValid });
   };
@@ -356,6 +360,8 @@ export class FormFallMenu extends Component {
               setDeliveryOption={this.setDeliveryOption}
               deliveryTime={this.state.deliveryTime}
               setDeliveryTime={this.setDeliveryTime}
+              deliveryDay={this.state.deliveryDay}
+              setDeliveryDay={this.setDeliveryDay}
               total={this.state.total}
               isContactValid={this.state.isContactValid}
               handleIsContactValid={this.handleIsContactValid}

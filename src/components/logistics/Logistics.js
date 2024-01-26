@@ -26,6 +26,8 @@ const Logistics = ({
   deliveryOption,
   deliveryTime,
   setDeliveryTime,
+  deliveryDay,
+  setDeliveryDay,
   values,
   handleChange,
   city,
@@ -143,6 +145,23 @@ const Logistics = ({
               value={values.postalCode}
               placeholder={`Postal Code`}
             />
+            <select
+              className='small-12 cell logistics__input'
+              id='deliveryDay'
+              onChange={(e) => {
+                setDeliveryDay(e.target.value);
+              }}
+              value={deliveryDay}
+            >
+              <option value={`default`} disabled>
+                Delivery Day*
+              </option>
+              {shipping.delivery_days.map((day, index) => (
+                <option key={index} value={index}>
+                  {day.day}
+                </option>
+              ))}
+            </select>
           </Fragment>
         )}
         <input
