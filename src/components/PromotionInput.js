@@ -23,10 +23,9 @@ const PromotionInput = ({ email }) => {
     appContext.setCodeInput(e.target.value.toUpperCase().trim());
   };
   const verifyPromoCode = async (email, code) => {
-    const response = await axios.get(
-      `${appContext.homeUrl}/wp-json/fitaxx/v1/verify-promo-code`,
-      { params: { email, code } }
-    );
+    const response = await axios.get(`${appContext.homeUrl}/wp-json/fitaxx/v1/verify-promo-code`, {
+      params: { email, code },
+    });
     return response.data;
   };
 
@@ -58,9 +57,7 @@ const PromotionInput = ({ email }) => {
     return status !== NONE ? (
       <div className='small-12 cell'>
         {status === VALID ? (
-          <div className='msg success-msg'>
-            Promo code successfully applied.
-          </div>
+          <div className='msg success-msg'>Promo code successfully applied.</div>
         ) : (
           <div className='msg error-msg'>{errorMsg}</div>
         )}
@@ -74,6 +71,7 @@ const PromotionInput = ({ email }) => {
       setPromoCodeError(NO_EMAIL_OR_CODE);
       setPromoCodeStatus(INVALID);
       appContext.setDiscount(0);
+      appContext.setAppliedCode('');
       setisCodeApplied(false);
       return false;
     } else if (!email) {
@@ -81,6 +79,7 @@ const PromotionInput = ({ email }) => {
       setPromoCodeError(NO_EMAIL);
       setPromoCodeStatus(INVALID);
       appContext.setDiscount(0);
+      appContext.setAppliedCode('');
       setisCodeApplied(false);
       return false;
     } else if (!appContext.codeInput) {
@@ -88,22 +87,19 @@ const PromotionInput = ({ email }) => {
       setPromoCodeError(NO_CODE);
       setPromoCodeStatus(INVALID);
       appContext.setDiscount(0);
+      appContext.setAppliedCode('');
       setisCodeApplied(false);
       return false;
     }
-    const promoVerification = await verifyPromoCode(
-      email,
-      appContext.codeInput
-    );
+    const promoVerification = await verifyPromoCode(email, appContext.codeInput);
     // console.log(promoVerification);
     if (promoVerification.status === VALID) {
       if (
         +formContext.total -
           (formContext.selectedDeliveryLocation !== 'default' &&
           formContext.deliveryOption === 'delivery'
-            ? +formContext.shippingOptions.delivery_locations[
-                formContext.selectedDeliveryLocation
-              ].price
+            ? +formContext.shippingOptions.delivery_locations[formContext.selectedDeliveryLocation]
+                .price
             : 0) <
           +promoVerification.data?.minimum_order_amount &&
         !isCodeApplied
@@ -112,12 +108,14 @@ const PromotionInput = ({ email }) => {
         setPromoCodeError(MINIMUM_UNMET);
         setPromoCodeStatus(INVALID);
         appContext.setDiscount(0);
+        appContext.setAppliedCode('');
         setisCodeApplied(false);
         return false;
       } else {
         setPromoCodeError(null);
         setPromoCodeStatus(VALID);
         appContext.setDiscount(promoVerification.data);
+        appContext.setAppliedCode(appContext.codeInput);
         setisCodeApplied(true);
       }
     } else {
@@ -129,6 +127,7 @@ const PromotionInput = ({ email }) => {
       }
       setPromoCodeStatus(INVALID);
       appContext.setDiscount(0);
+      appContext.setAppliedCode('');
       setisCodeApplied(false);
     }
     // code is only valid if is_active is true

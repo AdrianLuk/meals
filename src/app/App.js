@@ -25,6 +25,7 @@ const SUMMER = 'summer';
 const App = ({ homeUrl }) => {
   const [formType, setFormType] = useState(null);
   const [codeInput, setCodeInput] = useState('');
+  const [appliedCode, setAppliedCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const renderForm = (type) => {
     switch (type) {
@@ -45,7 +46,17 @@ const App = ({ homeUrl }) => {
     }
   };
   return (
-    <AppProvider value={{ homeUrl, discount, setDiscount, codeInput, setCodeInput }}>
+    <AppProvider
+      value={{
+        homeUrl,
+        discount,
+        setDiscount,
+        codeInput,
+        setCodeInput,
+        appliedCode,
+        setAppliedCode,
+      }}
+    >
       <form
         id='order-form'
         className='order'

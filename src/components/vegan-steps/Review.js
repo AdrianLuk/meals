@@ -280,7 +280,7 @@ const Review = ({
         <input type='hidden' name='15' value={values.specialInstructions} />
         <input type='hidden' name='16' value={submittedCust} />
         <input type='hidden' name='17' value={`No`} />
-        <input type='hidden' name='19' value={appContext.codeInput} />
+        <input type='hidden' name='19' value={appContext.appliedCode} />
         <input type='hidden' name='20' value={deliveryDayValue} />
       </section>
     </Fragment>
