@@ -18,7 +18,7 @@ root.render(
     // formType={
     //     new URLSearchParams(window.location.search).get("form") || MEAL
     // }
-    // homeUrl={`https://fitaxx.test`}
+    // homeUrl={`http://fitaxx.test`}
     {...props}
   />
 );
